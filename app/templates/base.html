@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#3e2723">
-  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon-32.png') }}" type="image/png" sizes="32x32">
   <link rel="alternate icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
   <title>{% block title %}SUMAS Fees{% endblock %} · SUMAS Fees System</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +31,7 @@
   <nav class="navbar app-navbar">
     <div class="container-fluid">
       <a class="navbar-brand" href="{{ url_for('index') }}">
-        <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+        <div class="brand-icon"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
         <div class="brand-text">
           SUMAS Fees
           <small>State University of Medical &amp; Applied Sciences</small>
@@ -123,7 +124,7 @@
   <nav class="navbar record-strip">
     <div class="container-fluid">
       <a class="brand-link" href="{{ url_for('index') }}">
-        <div class="crest">S</div>
+        <div class="crest"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
         <div class="wordmark d-none d-sm-block">State University of Medical &amp; Applied Sciences</div>
       </a>
       <div class="d-flex align-items-center gap-3">

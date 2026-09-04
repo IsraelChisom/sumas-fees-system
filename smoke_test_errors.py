@@ -17,7 +17,7 @@ Tests:
   3. A logged-in student's 404 page points "back" at their own dashboard
   4. A logged-in admin's 404 page points "back" at their own dashboard
   5. The 500 handler renders the custom branded page with a 500 status
-  6. The favicon files are actually served (SVG and ICO), not a 404
+  6. The favicon files are actually served (PNG and ICO), not a 404
 """
 import sys
 import tempfile
@@ -73,8 +73,8 @@ check("The 500 handler returns a 500 status", status == 500)
 check("The 500 page is the custom branded one", "Something Went Wrong" in body and "SUMAS Fees System" in body)
 
 # 6. Favicon files are actually served
-resp = client.get("/static/favicon.svg")
-check("favicon.svg is served, not a 404", resp.status_code == 200)
+resp = client.get("/static/images/favicon-32.png")
+check("favicon-32.png is served, not a 404", resp.status_code == 200)
 resp = client.get("/static/favicon.ico")
 check("favicon.ico is served, not a 404", resp.status_code == 200)
 

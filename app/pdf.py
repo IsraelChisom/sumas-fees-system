@@ -42,7 +42,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 # ---------------------------------------------------------------------------
 # Brand palette — lifted directly from style.css's :root custom properties,
@@ -58,6 +58,14 @@ STATUS_CONFIRMED = colors.HexColor("#2f855a")
 STATUS_PENDING = colors.HexColor("#b7791f")
 
 CONTENT_WIDTH = 18 * cm
+
+# The real SUMAS crest (downloaded from sumas.edu.ng), used in the
+# letterhead in place of a plain lettered placeholder. Kept as a path
+# lookup rather than a hard import so a missing/renamed asset degrades
+# to the old "S" monogram instead of breaking PDF generation.
+CREST_IMAGE_PATH = os.path.join(
+    os.path.dirname(__file__), "static", "images", "sumas-crest.png"
+)
 
 # The departmental report has eight columns of tabular data — landscape,
 # with its own (wider) content width, rather than squeezing a roster into
@@ -230,9 +238,21 @@ def _styles():
     }
 
 
+def _crest_flowable(s):
+    """The letterhead crest: the real SUMAS shield image when the asset is
+    present, otherwise the old lettered "S" monogram — a missing/corrupt
+    image file must degrade the crest, never fail PDF generation."""
+    if os.path.exists(CREST_IMAGE_PATH):
+        try:
+            return Image(CREST_IMAGE_PATH, width=1.3 * cm, height=1.46 * cm)
+        except Exception:
+            pass
+    return Paragraph("S", s["crest"])
+
+
 def _letterhead(subtitle_text, content_width=CONTENT_WIDTH):
     s = _styles()
-    crest = Paragraph("S", s["crest"])
+    crest = _crest_flowable(s)
     title_block = [
         Paragraph("STATE UNIVERSITY OF MEDICAL &amp; APPLIED SCIENCES", s["title"]),
         Paragraph(_esc(subtitle_text).upper(), s["subtitle"]),

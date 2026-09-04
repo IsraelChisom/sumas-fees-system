@@ -217,6 +217,12 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   color: var(--gold);
   font-size: 1.05rem;
   flex-shrink: 0;
+  padding: 3px;
+}
+.app-navbar .navbar-brand .brand-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .app-navbar .navbar-brand .brand-text {
   display: flex;
@@ -272,9 +278,8 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   text-decoration: none;
 }
 .record-strip .crest {
-  width: 22px;
-  height: 22px;
-  border: 1.5px solid var(--gold);
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -283,6 +288,11 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   font-weight: 700;
   font-size: .8rem;
   flex-shrink: 0;
+}
+.record-strip .crest img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .record-strip .wordmark {
   color: #F5EFE6;
@@ -593,6 +603,12 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   justify-content: center;
   font-size: 1.4rem;
   margin: 0 auto .8rem;
+  padding: 5px;
+}
+.auth-brand .brand-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .auth-brand .brand-title {
   font-family: var(--font-heading);
@@ -925,6 +941,12 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   justify-content: center;
   font-size: 1.3rem;
   flex-shrink: 0;
+  padding: 5px;
+}
+.print-letterhead-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .print-letterhead-title { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; color: var(--espresso); }
 .print-letterhead-subtitle {
