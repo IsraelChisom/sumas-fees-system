@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}Search Payments{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">Search Payment Records</h1>
+    <p class="muted-note mb-0">Look up any invoice by student, registration number, or payment reference &mdash; awaiting or paid.</p>
+  </div>
+</div>
+
+<form method="get" class="d-flex flex-wrap gap-2 align-items-end mb-4">
+  <div style="min-width:280px;">
+    <label for="q" class="form-label mb-1" style="font-size:.78rem;">Student name, reg. number, or payment reference</label>
+    <input type="text" name="q" id="q" class="form-control" value="{{ q }}"
+           placeholder="e.g. a reg. number, a surname, or a payment reference">
+  </div>
+  <div>
+    <label for="status" class="form-label mb-1" style="font-size:.78rem;">Status</label>
+    <select name="status" id="status" class="form-select">
+      <option value="">All Statuses</option>
+      <option value="Awaiting Payment" {{ 'selected' if status == 'Awaiting Payment' }}>Awaiting Payment</option>
+      <option value="Paid" {{ 'selected' if status == 'Paid' }}>Paid</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-outline-primary">
+    <i class="bi bi-search me-1"></i> Search
+  </button>
+  {% if q or status %}
+  <a href="{{ url_for('admin.search_payments') }}" class="btn btn-outline-secondary">Clear</a>
+  {% endif %}
+</form>
+
+<div style="margin-top:-1rem; margin-bottom:1.5rem;">
+  <span class="muted-note" style="font-size:.82rem;">
+    {{ rows|length }} record{{ '' if rows|length == 1 else 's' }}
+    {% if q %} matching &ldquo;{{ q }}&rdquo;{% endif %}
+    {% if status %}, {{ status }}{% endif %}
+  </span>
+</div>
+
+<div class="table-card">
+  <table class="table mb-0">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Reg. Number</th>
+        <th>Fee Category</th>
+        <th>Reference</th>
+        <th class="text-end">Amount</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td class="fw-semibold">{{ row['full_name'] }}</td>
+        <td class="text-muted" style="font-size:.85rem;">{{ row['reg_number'] }}</td>
+        <td>
+          {{ row['category_name'] }}
+          <div class="text-muted" style="font-size:.78rem;">{{ row['session'] }} &middot; {{ row['payment_plan'] }}</div>
+        </td>
+        <td style="font-size:.85rem; font-family:var(--font-body);">{{ row['payment_reference'] }}</td>
+        <td class="text-end">
+          <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(row['amount']) }}</span>
+        </td>
+        <td>
+          {% if row['status'] == 'Paid' %}
+            <span class="badge rounded-pill badge-status-confirmed">Paid</span>
+            {% if row['receipt_number'] %}
+            <div class="text-muted" style="font-size:.72rem; margin-top:.25rem;">{{ row['receipt_number'] }}</div>
+            {% endif %}
+          {% else %}
+            <span class="badge rounded-pill badge-status-pending">Awaiting Payment</span>
+          {% endif %}
+        </td>
+        <td class="text-muted" style="font-size:.83rem;">
+          {{ row['date_paid'] if row['status'] == 'Paid' else row['date_generated'] }}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" class="text-center py-5">
+          <i class="bi bi-search display-6 text-muted d-block mb-2"></i>
+          <span class="muted-note">No payment records match this search.</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

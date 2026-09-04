@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3e2723">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="alternate icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <title>{% block title %}SUMAS Fees{% endblock %} · SUMAS Fees System</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+{% set layout = layout|default('app') %}
+
+{% if layout == 'plain' %}
+
+  {% block content_plain %}{% endblock %}
+
+{% elif layout == 'admin' %}
+
+  {# ── Top Navbar (admin) ──────────────────────────────────────── #}
+  <nav class="navbar app-navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+        <div class="brand-text">
+          SUMAS Fees
+          <small>State University of Medical &amp; Applied Sciences</small>
+        </div>
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        {% if g.user %}
+          <span class="who d-none d-md-inline">
+            Signed in as <strong>{{ g.user['full_name'] }}</strong>
+          </span>
+          <a class="logout-link" href="{{ url_for('auth.logout') }}">Log out</a>
+        {% else %}
+          <a class="logout-link" href="{{ url_for('auth.login') }}">Log in</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+    {# ── Admin shell: sidebar + main ────────────────────────────── #}
+    <div class="d-flex admin-shell">
+
+      <aside class="sidebar">
+        <div class="nav-section-label">Navigation</div>
+
+        <nav class="nav flex-lg-column">
+          <a class="nav-link {{ 'active' if request.endpoint == 'admin.dashboard' }}"
+             href="{{ url_for('admin.dashboard') }}">
+            <i class="bi bi-speedometer2"></i> Dashboard
+          </a>
+
+          <a class="nav-link {{ 'active' if request.endpoint in ['admin.list_students', 'admin.add_student', 'admin.edit_student'] }}"
+             href="{{ url_for('admin.list_students') }}">
+            <i class="bi bi-people-fill"></i> Students
+          </a>
+
+          <a class="nav-link {{ 'active' if request.endpoint in ['admin.list_fees', 'admin.add_fee', 'admin.edit_fee'] }}"
+             href="{{ url_for('admin.list_fees') }}">
+            <i class="bi bi-cash-coin"></i> Fees
+          </a>
+
+          <a class="nav-link {{ 'active' if request.endpoint in ['admin.list_unmatched'] }}"
+             href="{{ url_for('admin.list_unmatched') }}">
+            <i class="bi bi-exclamation-triangle"></i> Unmatched Payments
+          </a>
+
+          <a class="nav-link {{ 'active' if request.endpoint in ['admin.search_payments'] }}"
+             href="{{ url_for('admin.search_payments') }}">
+            <i class="bi bi-search"></i> Search Payments
+          </a>
+
+          <a class="nav-link {{ 'active' if request.endpoint in ['admin.departmental_report', 'admin.departmental_report_export'] }}"
+             href="{{ url_for('admin.departmental_report') }}">
+            <i class="bi bi-bar-chart-fill"></i> Reports
+          </a>
+        </nav>
+
+        {# Profile chip pinned at the bottom #}
+        {% if g.user %}
+        <div class="sidebar-footer">
+          <div class="user-chip">
+            <div class="user-chip-avatar">
+              {{ g.user['full_name'].split()[0][0] }}{{ g.user['full_name'].split()[-1][0] if g.user['full_name'].split()|length > 1 else '' }}
+            </div>
+            <div>
+              <div class="user-chip-name">{{ g.user['full_name'] }}</div>
+              <div class="user-chip-role">Administrator</div>
+            </div>
+            <a href="{{ url_for('auth.logout') }}" class="user-chip-logout" title="Log out">
+              <i class="bi bi-box-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+        {% endif %}
+      </aside>
+
+      <main class="admin-main">
+        <div class="container-fluid p-4">
+          {% include "_flashes.html" %}
+          {% block content %}{% endblock %}
+        </div>
+      </main>
+
+    </div>
+
+{% else %}
+
+  {# ── Top strip (student) — a plain institutional strip, not the
+       admin's boxed navbar; see DESIGN_BRIEF.md's "Academic Ledger"
+       student-section direction. ─────────────────────────────────── #}
+  <nav class="navbar record-strip">
+    <div class="container-fluid">
+      <a class="brand-link" href="{{ url_for('index') }}">
+        <div class="crest">S</div>
+        <div class="wordmark d-none d-sm-block">State University of Medical &amp; Applied Sciences</div>
+      </a>
+      <div class="d-flex align-items-center gap-3">
+        {% if g.user %}
+          <span class="who d-none d-md-inline">
+            Signed in as <strong>{{ g.user['full_name'] }}</strong>
+          </span>
+          <a class="logout-link" href="{{ url_for('auth.logout') }}">Log out</a>
+        {% else %}
+          <a class="logout-link" href="{{ url_for('auth.login') }}">Log in</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  <div class="record-strip-accent"></div>
+
+  {# ── Student / plain-app layout ─────────────────────────────── #}
+  <main class="container py-4">
+    {% include "_flashes.html" %}
+    {{ self.content() }}
+  </main>
+
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

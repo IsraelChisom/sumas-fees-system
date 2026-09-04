@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Flask instance folder — holds the local dev SQLite database and any
+# local-only config.py; never the same file two machines should share.
+# Run `python seed.py` after cloning to recreate it.
+instance/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

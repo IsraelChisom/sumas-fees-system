@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}Fee Structures{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">Fee Structures</h1>
+    <p class="muted-note mb-0">Manage all fee categories and their assigned amounts.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('admin.add_fee') }}">
+    <i class="bi bi-plus-lg me-1"></i> Add Fee Category
+  </a>
+</div>
+
+<div class="table-card">
+  <table class="table table-hover mb-0">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Session</th>
+        <th>Scope</th>
+        <th class="text-end">Amount (NGN)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in fees %}
+      <tr>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            {% if f['category_name'] == 'School Fees' %}
+              <i class="bi bi-mortarboard-fill" style="color:var(--espresso); font-size:.95rem;"></i>
+            {% elif f['category_name'] == 'Departmental Fee' %}
+              <i class="bi bi-building" style="color:var(--status-confirmed); font-size:.95rem;"></i>
+            {% else %}
+              <i class="bi bi-bank" style="color:var(--tan); font-size:.95rem;"></i>
+            {% endif %}
+            <span class="fw-semibold">{{ f['category_name'] }}</span>
+          </div>
+        </td>
+        <td class="text-muted" style="font-size:.87rem;">{{ f['session'] }}</td>
+        <td class="text-muted" style="font-size:.87rem;">
+          {% if f['category_name'] == 'School Fees' %}
+            All Students
+          {% elif f['department'] %}
+            Dept: {{ f['department'] }}
+          {% elif f['faculty'] %}
+            Faculty: {{ f['faculty'] }}
+          {% endif %}
+        </td>
+        <td class="text-end">
+          <span class="fw-semibold" style="color:var(--espresso); font-size:.95rem;">
+            &#8358;{{ "{:,.2f}".format(f['amount']) }}
+          </span>
+        </td>
+        <td class="text-end">
+          <a class="btn btn-sm btn-outline-primary"
+             href="{{ url_for('admin.edit_fee', fee_category_id=f['fee_category_id']) }}">
+            <i class="bi bi-pencil-square me-1"></i> Edit
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" class="text-center py-5">
+          <i class="bi bi-cash-coin display-6 text-muted d-block mb-2"></i>
+          <span class="muted-note">No fee categories have been set up yet.</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

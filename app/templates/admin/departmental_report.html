@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}Departmental Report{% endblock %}
+{% block content %}
+
+<div class="page-heading print-hide">
+  <div>
+    <h1 class="h3 mb-1">Departmental Report</h1>
+    <p class="muted-note mb-0">Payment status by department and level &mdash; generate this and send it to the Head of Department; they never log in themselves.</p>
+  </div>
+</div>
+
+<form method="get" class="d-flex flex-wrap gap-2 align-items-end mb-4 print-hide">
+  <div>
+    <label for="department" class="form-label mb-1" style="font-size:.78rem;">Department</label>
+    <select name="department" id="department" class="form-select">
+      <option value="">All Departments</option>
+      {% for d in departments %}
+      <option value="{{ d }}" {{ 'selected' if d == department }}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="level" class="form-label mb-1" style="font-size:.78rem;">Level</label>
+    <select name="level" id="level" class="form-select">
+      <option value="">All Levels</option>
+      {% for lv in levels %}
+      <option value="{{ lv }}" {{ 'selected' if lv == level }}>{{ lv }} Level</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-outline-primary">Filter</button>
+  {% if department or level %}
+  <a href="{{ url_for('admin.departmental_report') }}" class="btn btn-outline-secondary">Clear</a>
+  {% endif %}
+  <div class="ms-auto d-flex gap-2">
+    <a href="{{ url_for('admin.departmental_report_export', department=department, level=level) }}" class="btn btn-outline-primary">
+      <i class="bi bi-download me-1"></i> Download CSV
+    </a>
+    <a href="{{ url_for('admin.departmental_report_pdf', department=department, level=level) }}" class="btn btn-outline-primary">
+      <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
+    </a>
+    <button type="button" class="btn btn-primary" onclick="window.print()">
+      <i class="bi bi-printer me-1"></i> Print / Save as PDF
+    </button>
+  </div>
+</form>
+
+<div class="print-hide" style="margin-top:-1rem; margin-bottom:1.5rem;">
+  <span class="muted-note" style="font-size:.82rem;">
+    {{ rows|length }} student{{ '' if rows|length == 1 else 's' }}
+    {% if department %} in {{ department }}{% endif %}
+    {% if level %}, {{ level }} Level{% endif %}
+  </span>
+</div>
+
+<div class="table-card">
+  <table class="table mb-0">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Reg. Number</th>
+        <th>Department</th>
+        <th>Level</th>
+        <th class="text-end">Total Owed</th>
+        <th class="text-end">Total Paid</th>
+        <th class="text-end">Balance</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td class="fw-semibold">{{ row['full_name'] }}</td>
+        <td class="text-muted" style="font-size:.85rem;">{{ row['reg_number'] }}</td>
+        <td>{{ row['department'] }}</td>
+        <td class="text-muted" style="font-size:.85rem;">{{ row['level'] }}</td>
+        <td class="text-end" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['total_owed']) }}</td>
+        <td class="text-end" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['total_paid']) }}</td>
+        <td class="text-end">
+          <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(row['balance']) }}</span>
+        </td>
+        <td>
+          {% if row['balance'] <= 0 %}
+            <span class="badge rounded-pill badge-status-confirmed">Fully Paid</span>
+          {% else %}
+            <span class="badge rounded-pill badge-status-pending">Outstanding</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="text-center py-5">
+          <i class="bi bi-people display-6 text-muted d-block mb-2"></i>
+          <span class="muted-note">No students match this filter.</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

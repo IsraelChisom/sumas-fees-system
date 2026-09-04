@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}Unmatched Payments{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">Unmatched Payments</h1>
+    <p class="muted-note mb-0">
+      Payment notifications that couldn't be automatically matched to an invoice. Every normal,
+      successful payment is matched and receipted automatically — nothing appears here for it.
+    </p>
+  </div>
+  <span class="badge rounded-pill badge-status-rejected px-3 py-2" style="font-size:.82rem;{{ ' display:none;' if not unmatched }}">
+    {{ unmatched|length }} Unresolved
+  </span>
+</div>
+
+<div class="table-card">
+  <table class="table mb-0">
+    <thead>
+      <tr>
+        <th>Reference Received</th>
+        <th class="text-end">Amount Received</th>
+        <th>Date Received</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in unmatched %}
+      <tr>
+        <td style="font-size:.85rem; font-family:var(--font-body);">{{ row['reference_received'] }}</td>
+        <td class="text-end">
+          <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(row['amount_received']) }}</span>
+        </td>
+        <td class="text-muted" style="font-size:.83rem;">{{ row['date_received'] }}</td>
+        <td class="text-end">
+          <div class="d-flex gap-2 justify-content-end align-items-start">
+            <form method="post" action="{{ url_for('admin.match_unmatched', unmatched_id=row['unmatched_id']) }}"
+                  class="d-flex gap-2">
+              <input type="text" name="correct_reference" class="form-control form-control-sm"
+                     placeholder="Correct reference" style="width:170px;" required>
+              <button type="submit" class="btn btn-sm btn-primary text-nowrap">Match</button>
+            </form>
+            <form method="post" action="{{ url_for('admin.dismiss_unmatched', unmatched_id=row['unmatched_id']) }}">
+              <button type="submit" class="btn btn-sm btn-outline-secondary">Dismiss</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" class="text-center py-5">
+          <i class="bi bi-check-circle display-6 text-muted d-block mb-2"></i>
+          <span class="muted-note">No unmatched payments right now.</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

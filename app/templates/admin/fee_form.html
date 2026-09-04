@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}{{ 'Edit' if fee else 'Add' }} Fee Category{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">{{ 'Edit Fee Category' if fee else 'Add Fee Category' }}</h1>
+    <p class="muted-note mb-0">
+      {{ 'Update the amount for this fee category.' if fee else 'Define a new fee category and assign an amount.' }}
+    </p>
+  </div>
+  <a href="{{ url_for('admin.list_fees') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back to Fees
+  </a>
+</div>
+
+{% if fee %}
+
+  {# ── Edit mode: show category info then amount-only form ─────────── #}
+  <div class="card p-4 mb-3" style="max-width:520px;">
+    <div class="d-flex align-items-start gap-3">
+      <i class="bi bi-cash-coin" style="font-size:1.3rem; color:var(--tan); flex-shrink:0; margin-top:.15rem;"></i>
+      <div>
+        <div class="fw-semibold text-navy" style="font-size:1rem;">{{ fee['category_name'] }}</div>
+        <div class="text-muted" style="font-size:.85rem;">Session: {{ fee['session'] }}</div>
+        <div class="muted-note mt-1" style="font-size:.82rem;">
+          Scope:
+          {% if fee['category_name'] == 'School Fees' %}All students
+          {% elif fee['department'] %}{{ fee['department'] }} department
+          {% elif fee['faculty'] %}{{ fee['faculty'] }} faculty
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-4" style="max-width:520px;">
+    <form method="post">
+      <div class="mb-4">
+        <label for="amount" class="form-label">Amount (NGN)</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-currency-dollar input-icon"></i>
+          <input type="number" step="0.01" name="amount" id="amount"
+                 class="form-control" value="{{ fee['amount'] }}" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">
+        <i class="bi bi-check-lg me-1"></i> Save Changes
+      </button>
+    </form>
+    <p class="muted-note mt-3 mb-0" style="font-size:.8rem;">
+      <i class="bi bi-info-circle me-1"></i>
+      Only the amount can be changed once a fee category is created. Category, session, and scope are fixed to keep existing claims valid.
+    </p>
+  </div>
+
+{% else %}
+
+  {# ── Add mode: full form ──────────────────────────────────────────── #}
+  <div class="card p-4" style="max-width:520px;">
+    <form method="post">
+
+      <div class="mb-3">
+        <label for="category_name" class="form-label">Category Type</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-tag-fill input-icon"></i>
+          <select name="category_name" id="category_name" class="form-select" onchange="toggleScope()">
+            <option value="School Fees">School Fees (applies to every student)</option>
+            <option value="Departmental Fee">Departmental Fee</option>
+            <option value="Faculty Fee">Faculty Fee</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="session" class="form-label">Academic Session</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-calendar-fill input-icon"></i>
+          <input type="text" name="session" id="session"
+                 class="form-control" placeholder="e.g. 2025/2026" required>
+        </div>
+      </div>
+
+      <div id="dept_field" class="mb-3" style="display:none;">
+        <label for="department" class="form-label">Department</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-building input-icon"></i>
+          <input type="text" name="department" id="department"
+                 class="form-control" placeholder="e.g. Computer Science">
+        </div>
+      </div>
+
+      <div id="fac_field" class="mb-3" style="display:none;">
+        <label for="faculty" class="form-label">Faculty</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-bank input-icon"></i>
+          <input type="text" name="faculty" id="faculty"
+                 class="form-control" placeholder="e.g. Faculty of Science">
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="amount" class="form-label">Amount (NGN)</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-currency-dollar input-icon"></i>
+          <input type="number" step="0.01" name="amount" id="amount"
+                 class="form-control" placeholder="0.00" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">
+        <i class="bi bi-plus-lg me-1"></i> Add Fee Category
+      </button>
+
+    </form>
+  </div>
+
+  <script>
+    function toggleScope() {
+      const val = document.getElementById("category_name").value;
+      document.getElementById("dept_field").style.display = (val === "Departmental Fee") ? "block" : "none";
+      document.getElementById("fac_field").style.display  = (val === "Faculty Fee")      ? "block" : "none";
+    }
+  </script>
+
+{% endif %}
+
+{% endblock %}

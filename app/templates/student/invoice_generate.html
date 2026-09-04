@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Generate Invoice{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">Generate Invoice</h1>
+    <p class="muted-note mb-0">
+      Pick a fee category and how you'd like to pay it. You'll get a payment reference to pay against.
+    </p>
+  </div>
+  <a href="{{ url_for('student.list_invoices') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> My Invoices
+  </a>
+</div>
+
+{% if fee_categories %}
+
+  <div class="card p-4" style="max-width: 520px;">
+
+    <form method="post">
+
+      <div class="mb-3">
+        <label for="fee_category_id" class="form-label">Fee Category</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-tag-fill input-icon"></i>
+          <select name="fee_category_id" id="fee_category_id" class="form-select" required>
+            {% for f in fee_categories %}
+            <option value="{{ f['fee_category_id'] }}">
+              {{ f['category_name'] }} &mdash; {{ f['session'] }} &nbsp;(₦{{ "{:,.2f}".format(f['amount']) }})
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="payment_plan" class="form-label">Payment Plan</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-calendar2-week input-icon"></i>
+          <select name="payment_plan" id="payment_plan" class="form-select" required>
+            {% for plan in payment_plans %}
+            <option value="{{ plan }}">{{ plan }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">
+        <i class="bi bi-receipt-cutoff me-1"></i> Generate Invoice
+      </button>
+
+    </form>
+
+  </div>
+
+  <p class="record-quote" style="max-width:520px;">
+    An installment splits the fee evenly in two. Your invoice will show a payment reference &mdash;
+    pay that reference, and the system will mark it paid and issue your receipt automatically.
+  </p>
+
+{% else %}
+
+  <div class="card p-4 text-center" style="max-width:520px;">
+    <i class="bi bi-exclamation-circle display-5 text-muted mb-3"></i>
+    <p class="muted-note mb-3">
+      No fee categories are currently set up for your department or faculty.<br>
+      Please contact the SUMAS Bursary office.
+    </p>
+    <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline-primary">
+      <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+    </a>
+  </div>
+
+{% endif %}
+
+{% endblock %}

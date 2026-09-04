@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% set layout = 'plain' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content_plain %}
+<div class="auth-page">
+  <div>
+
+    <div class="auth-card text-center">
+
+      <div class="auth-brand">
+        <div class="brand-icon"><i class="bi {{ icon }}"></i></div>
+        <div class="brand-title">SUMAS Fees System</div>
+      </div>
+
+      <div class="error-code">{{ code }}</div>
+      <h1 class="auth-welcome">{{ title }}</h1>
+      <p class="auth-hint">{{ message }}</p>
+
+      <a href="{{ home_url }}" class="btn btn-primary w-100 py-2">
+        <i class="bi bi-arrow-left me-1"></i> {{ home_label }}
+      </a>
+
+      <p class="text-center muted-note mt-4 mb-0" style="font-size:.78rem;">
+        If this keeps happening, contact the SUMAS Bursary office.
+      </p>
+
+    </div>
+
+    <p class="auth-footer-note">&copy; {{ current_year }} SUMAS &mdash; Eze Ezekiel (SUMAS/2022/0697)</p>
+
+  </div>
+</div>
+{% endblock %}

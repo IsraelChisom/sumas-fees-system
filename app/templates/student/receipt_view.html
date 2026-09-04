@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Receipt {{ receipt['receipt_number'] }}{% endblock %}
+{% block content %}
+
+<div class="page-heading print-hide">
+  <div>
+    <h1 class="h3 mb-1">Official Receipt</h1>
+    <p class="muted-note mb-0">Keep this for your records — it's proof of a confirmed payment.</p>
+  </div>
+  <a href="{{ url_for('student.list_invoices') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> My Invoices
+  </a>
+</div>
+
+{# Purposeful motion moment #3 (DESIGN_BRIEF.md): a subtle unfold/reveal
+   the moment a receipt becomes available — reinforcing that this is an
+   official document being issued, not just another page loading. #}
+<div class="print-document receipt-reveal" style="max-width:640px;">
+
+  <div class="print-letterhead">
+    <div class="print-letterhead-icon"><i class="bi bi-mortarboard-fill"></i></div>
+    <div>
+      <div class="print-letterhead-title">State University of Medical &amp; Applied Sciences</div>
+      <div class="print-letterhead-subtitle">Official Payment Receipt</div>
+    </div>
+  </div>
+
+  <div class="receipt-number-row">
+    <div>
+      <div class="print-field-label">Receipt No.</div>
+      <div class="print-field-value">{{ receipt['receipt_number'] }}</div>
+    </div>
+    <div class="text-end">
+      <div class="print-field-label">Date Issued</div>
+      <div class="print-field-value">{{ receipt['date_issued'] }}</div>
+    </div>
+  </div>
+
+  <div class="print-field-grid">
+    <div class="print-field"><div class="print-field-label">Student</div><div class="print-field-value">{{ student['full_name'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Reg. Number</div><div class="print-field-value">{{ student['reg_number'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Department</div><div class="print-field-value">{{ student['department'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Faculty</div><div class="print-field-value">{{ student['faculty'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Level</div><div class="print-field-value">{{ student['level'] }} Level</div></div>
+    <div class="print-field"><div class="print-field-label">Fee Category</div><div class="print-field-value">{{ invoice['category_name'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Session</div><div class="print-field-value">{{ invoice['session'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Payment Plan</div><div class="print-field-value">{{ invoice['payment_plan'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Payment Reference</div><div class="print-field-value">{{ invoice['payment_reference'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Date Paid</div><div class="print-field-value">{{ invoice['date_paid'] }}</div></div>
+  </div>
+
+  <div class="print-amount-block">
+    <div class="print-field-label">Amount Paid</div>
+    <div class="print-amount">&#8358;{{ "{:,.2f}".format(invoice['amount']) }}</div>
+    <div class="print-amount-words">{{ amount_words }}</div>
+  </div>
+
+  <p class="receipt-footnote">
+    This is a system-generated receipt and does not require a signature or stamp.
+  </p>
+</div>
+
+<div class="print-actions mt-3 d-flex gap-2" style="max-width:640px;">
+  <button type="button" class="btn btn-outline-secondary" onclick="window.print()">
+    <i class="bi bi-printer me-1"></i> Print
+  </button>
+  <a href="{{ url_for('student.view_receipt_pdf', invoice_id=invoice['invoice_id']) }}" class="btn btn-primary">
+    <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
+  </a>
+  <a href="{{ url_for('student.list_invoices') }}" class="btn btn-outline-secondary">
+    Back to My Invoices
+  </a>
+</div>
+
+{% endblock %}

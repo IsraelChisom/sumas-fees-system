@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}{{ 'Edit' if student else 'Add' }} Student{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">{{ 'Edit Student' if student else 'Add New Student' }}</h1>
+    <p class="muted-note mb-0">
+      {{ 'Update this student\'s details below.' if student else 'Fill in the form below to register a new student.' }}
+    </p>
+  </div>
+  <a href="{{ url_for('admin.list_students') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back to Students
+  </a>
+</div>
+
+<div class="card p-4" style="max-width: 520px;">
+
+  <form method="post">
+
+    {% if not student %}
+    <div class="mb-3">
+      <label for="reg_number" class="form-label">Registration Number</label>
+      <div class="input-icon-wrap">
+        <i class="bi bi-person-badge-fill input-icon"></i>
+        <input type="text" name="reg_number" id="reg_number"
+               class="form-control" placeholder="e.g. SUMAS/2022/0001" required>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="mb-3">
+      <label for="full_name" class="form-label">Full Name</label>
+      <div class="input-icon-wrap">
+        <i class="bi bi-person-fill input-icon"></i>
+        <input type="text" name="full_name" id="full_name"
+               class="form-control" placeholder="Student's full name"
+               value="{{ student['full_name'] if student else '' }}" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="department" class="form-label">Department</label>
+      <div class="input-icon-wrap">
+        <i class="bi bi-building input-icon"></i>
+        <input type="text" name="department" id="department"
+               class="form-control" placeholder="e.g. Computer Science"
+               value="{{ student['department'] if student else '' }}" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="faculty" class="form-label">Faculty</label>
+      <div class="input-icon-wrap">
+        <i class="bi bi-bank input-icon"></i>
+        <input type="text" name="faculty" id="faculty"
+               class="form-control" placeholder="e.g. Faculty of Science"
+               value="{{ student['faculty'] if student else '' }}" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="level" class="form-label">Level</label>
+      <div class="input-icon-wrap">
+        <i class="bi bi-layers-fill input-icon"></i>
+        <input type="text" name="level" id="level"
+               class="form-control" placeholder="e.g. 400"
+               value="{{ student['level'] if student else '' }}" required>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="password" class="form-label">
+        {{ 'New Password' if student else 'Password' }}
+        {% if student %}<span class="text-muted fw-normal">(leave blank to keep current)</span>{% endif %}
+      </label>
+      <div class="input-icon-wrap">
+        <i class="bi bi-lock-fill input-icon"></i>
+        <input type="password" name="password" id="password"
+               class="form-control" placeholder="Set a secure password"
+               {{ 'required' if not student else '' }}>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">
+      <i class="bi bi-check-lg me-1"></i>
+      {{ 'Save Changes' if student else 'Add Student' }}
+    </button>
+
+  </form>
+
+</div>
+{% endblock %}

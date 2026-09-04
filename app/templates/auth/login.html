@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% set layout = 'plain' %}
+{% block title %}Log in{% endblock %}
+
+{% block content_plain %}
+<div class="auth-page">
+  <div>
+
+    <div class="auth-card">
+
+      <div class="auth-brand">
+        <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+        <div class="brand-title">SUMAS Fees System</div>
+        <p class="brand-subtitle">
+          State University of Medical &amp; Applied Sciences<br>
+          School Fees Payment Tracking &amp; Receipt System
+        </p>
+      </div>
+
+      <h1 class="auth-welcome">Sign in to your account</h1>
+      <p class="auth-hint">Enter your credentials to continue.</p>
+
+      {% include "_flashes.html" %}
+
+      <div class="role-toggle mb-4">
+        <button type="button" class="tab-btn active" data-role="student">
+          <i class="bi bi-person-fill me-1"></i> Student
+        </button>
+        <button type="button" class="tab-btn" data-role="admin">
+          <i class="bi bi-shield-fill me-1"></i> Administrator
+        </button>
+      </div>
+
+      <form method="post">
+        <input type="hidden" name="role" id="role" value="student">
+
+        <div class="mb-3">
+          <label id="login_id_label" for="login_id" class="form-label">Registration Number</label>
+          <div class="input-icon-wrap">
+            <i class="bi bi-person-fill input-icon"></i>
+            <input type="text" name="login_id" id="login_id"
+                   class="form-control" required autofocus
+                   placeholder="e.g. SUMAS/2022/0001">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-icon-wrap">
+            <i class="bi bi-lock-fill input-icon"></i>
+            <input type="password" name="password" id="password"
+                   class="form-control" required placeholder="Enter your password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+        </button>
+      </form>
+
+      <p class="text-center muted-note mt-4 mb-0" style="font-size:.78rem;">
+        Having trouble? Contact the SUMAS Bursary office.
+      </p>
+
+    </div>
+
+    <p class="auth-footer-note">&copy; {{ current_year }} SUMAS &mdash; Eze Ezekiel (SUMAS/2022/0697)</p>
+
+  </div>
+</div>
+
+<script>
+  const tabs      = document.querySelectorAll(".tab-btn");
+  const roleField = document.getElementById("role");
+  const label     = document.getElementById("login_id_label");
+  const input     = document.getElementById("login_id");
+
+  tabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabs.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      roleField.value = btn.dataset.role;
+      if (btn.dataset.role === "student") {
+        label.textContent = "Registration Number";
+        input.placeholder = "e.g. SUMAS/2022/0001";
+      } else {
+        label.textContent = "Staff ID";
+        input.placeholder = "Enter your staff ID";
+      }
+    });
+  });
+</script>
+{% endblock %}

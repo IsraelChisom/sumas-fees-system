@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+
+{# ── Header band: identity + balance totals in one strong, full-width
+     element — see DESIGN_BRIEF.md's "Academic Ledger" direction, revised
+     after the first pass read as too plain. Flat espresso, no gradient,
+     no decorative rings, no avatar hero — just real weight. ──────────── #}
+<div class="dashboard-header">
+  <div class="dashboard-header-welcome">
+    <h1>Welcome, {{ student['full_name'] }}</h1>
+    <div class="dashboard-header-tag">
+      <span class="reg-number">{{ student['reg_number'] }}</span>
+      &middot; {{ student['department'] }} &middot; {{ student['faculty'] }} &middot; {{ student['level'] }} Level
+    </div>
+  </div>
+  <div class="dashboard-header-stats">
+    <div class="dashboard-stat">
+      <div class="dashboard-stat-label">Total Owed</div>
+      <div class="dashboard-stat-value">&#8358;{{ "{:,.2f}".format(total_owed) }}</div>
+    </div>
+    <div class="dashboard-stat">
+      <div class="dashboard-stat-label">Total Paid</div>
+      <div class="dashboard-stat-value">&#8358;{{ "{:,.2f}".format(total_paid) }}</div>
+    </div>
+    <div class="dashboard-stat">
+      <div class="dashboard-stat-label">Balance</div>
+      <div class="dashboard-stat-value" style="color:{{ '#E8A0A0' if total_balance > 0 else '#9EE0BC' }};">
+        &#8358;{{ "{:,.2f}".format(total_balance) }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+
+  {# ── Main column: account actions ──────────────────────────────── #}
+  <div class="col-lg-8">
+    <div class="section-label">Account Actions</div>
+    <div class="record-actions">
+      <a href="{{ url_for('student.generate_invoice') }}" class="record-action-row" style="color:inherit; text-decoration:none;">
+        <div>
+          <div class="record-action-title">Generate Invoice</div>
+          <div class="record-action-desc">Pick a fee category and payment plan, get a payment reference.</div>
+        </div>
+        <span class="record-action-link">Open</span>
+      </a>
+      <a href="{{ url_for('student.list_invoices') }}" class="record-action-row" style="color:inherit; text-decoration:none;">
+        <div>
+          <div class="record-action-title">My Invoices &amp; Receipts</div>
+          <div class="record-action-desc">Track payment status and print official receipts.</div>
+        </div>
+        {% if invoices_awaiting or invoices_paid %}
+          <div class="d-flex align-items-center gap-2">
+            {% if invoices_awaiting %}
+            <span class="badge rounded-pill badge-status-pending">{{ invoices_awaiting }} Awaiting</span>
+            {% endif %}
+            {% if invoices_paid %}
+            <span class="badge rounded-pill badge-status-confirmed">{{ invoices_paid }} Paid</span>
+            {% endif %}
+          </div>
+        {% else %}
+          <span class="record-action-link">Open</span>
+        {% endif %}
+      </a>
+      <a href="{{ url_for('student.view_balance') }}" class="record-action-row" style="color:inherit; text-decoration:none;">
+        <div>
+          <div class="record-action-title">Outstanding Balance</div>
+          <div class="record-action-desc">Full statement, across every fee category.</div>
+        </div>
+        <span class="record-action-link">Open</span>
+      </a>
+      <a href="{{ url_for('student.pay_simulator') }}" class="record-action-row" style="color:inherit; text-decoration:none;">
+        <div>
+          <div class="record-action-title">Payment Gateway Simulator</div>
+          <div class="record-action-desc">For demonstration &mdash; simulates paying an invoice.</div>
+        </div>
+        <span class="record-action-link">Open</span>
+      </a>
+    </div>
+
+    <p class="record-quote">
+      &ldquo;No admin action is needed for a normal, successful payment &mdash; it is matched and receipted the instant it is received.&rdquo;
+    </p>
+  </div>
+
+  {# ── Side column: live per-category balance breakdown ──────────── #}
+  <div class="col-lg-4">
+    <div class="section-label">Balance by Fee Category</div>
+    <div class="balance-breakdown">
+      {% for row in balance_rows %}
+      <div class="balance-breakdown-row">
+        <div>
+          <div class="balance-breakdown-category">{{ row['category_name'] }}</div>
+          <div class="balance-breakdown-session">{{ row['session'] }}</div>
+        </div>
+        <div class="balance-breakdown-amount" style="color:{{ 'var(--status-confirmed)' if row['balance'] <= 0 else 'var(--status-rejected)' }};">
+          &#8358;{{ "{:,.2f}".format(row['balance']) }}
+        </div>
+      </div>
+      {% else %}
+      <div class="balance-breakdown-empty">No fee categories are set up for your department or faculty yet.</div>
+      {% endfor %}
+    </div>
+    {% if balance_rows %}
+    <a href="{{ url_for('student.view_balance') }}" class="muted-note d-block mt-2" style="font-size:.8rem;">
+      View full statement &rarr;
+    </a>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

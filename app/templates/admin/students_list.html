@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}Students{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">Student Records</h1>
+    <p class="muted-note mb-0">Manage all registered students in the system.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('admin.add_student') }}">
+    <i class="bi bi-plus-lg me-1"></i> Add Student
+  </a>
+</div>
+
+{# ── Search bar ───────────────────────────────────────────────────── #}
+<form method="get" class="d-flex gap-2 align-items-center mb-4" style="max-width: 460px;">
+  <div class="input-icon-wrap flex-grow-1">
+    <i class="bi bi-search input-icon"></i>
+    <input type="text" class="form-control" name="q"
+           placeholder="Search by name or reg. number"
+           value="{{ q }}">
+  </div>
+  <button type="submit" class="btn btn-outline-primary px-3">Search</button>
+  {% if q %}
+  <a class="btn btn-outline-secondary px-3" href="{{ url_for('admin.list_students') }}">Clear</a>
+  {% endif %}
+</form>
+
+{# ── Table ───────────────────────────────────────────────────────── #}
+<div class="table-card">
+  <table class="table table-hover mb-0">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Reg. Number</th>
+        <th>Department</th>
+        <th>Faculty</th>
+        <th class="text-end">Level</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <div class="avatar-sm">
+              {{ s['full_name'].split()[0][0] }}{{ s['full_name'].split()[-1][0] if s['full_name'].split()|length > 1 else '' }}
+            </div>
+            <span class="fw-semibold">{{ s['full_name'] }}</span>
+          </div>
+        </td>
+        <td class="text-muted" style="font-size:.85rem;">{{ s['reg_number'] }}</td>
+        <td>{{ s['department'] }}</td>
+        <td>{{ s['faculty'] }}</td>
+        <td class="text-end text-muted" style="font-size:.85rem;">{{ s['level'] }} Level</td>
+        <td class="text-end">
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.edit_student', student_id=s['student_id']) }}">
+            <i class="bi bi-pencil-square me-1"></i> Edit
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="text-center py-5">
+          <i class="bi bi-people display-6 text-muted d-block mb-2"></i>
+          <span class="muted-note">No students found{% if q %} for "{{ q }}"{% endif %}.</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

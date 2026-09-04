@@ -1,0 +1,1056 @@
+/*
+  SUMAS Fees System — brand stylesheet.
+
+  Design system: Bootstrap 5.3 (CSS-variable theming, no build step),
+  restyled per DESIGN_BRIEF.md — an institutional, document-like look
+  (espresso brown / warm ivory / antique gold, Lora + IBM Plex Sans)
+  rather than a generic SaaS dashboard. See that file for the full brief.
+
+  Motion is intentionally minimal: standard ~150ms hover/focus state
+  changes on buttons, links and nav items, plus exactly two purposeful,
+  user-triggered moments — a self-drawing checkmark on claim submission
+  (student/claims_list.html) and a "stamp" landing on a confirmed claim's
+  badge (admin/claims_list.html, wired up in its own <script> block).
+  Nothing here animates automatically or on scroll. Everything respects
+  prefers-reduced-motion (see the end of this file).
+*/
+
+/* =====================================================================
+   1. CSS VARIABLES & BOOTSTRAP RE-THEME
+===================================================================== */
+:root {
+  /* ---- SUMAS brand tokens ---- */
+  --espresso:      #3e2723;   /* primary — deep, authoritative brown */
+  --espresso-dark: #2a1a16;
+  --tan:           #8b5e3c;   /* secondary brown — borders, secondary buttons */
+  --gold:          #b8935a;   /* accent — used sparingly: CTA buttons, active nav */
+  --gold-dark:     #9c7a47;
+  --ivory:         #faf6f0;   /* page background — paper, not stark white */
+  --paper:         #ffffff;   /* card/table surface, distinct from page bg */
+  --ink:           #2b211d;   /* body text — warm near-black */
+  --muted:         #6e5d53;
+  --border:        #ded1bf;
+  --border-strong: #c9b79e;
+
+  /* Status colors stay functional/conventional — never brown-tinted */
+  --status-pending:        #b7791f;
+  --status-pending-bg:     #fbf0dd;
+  --status-pending-border: #f0d6a0;
+  --status-confirmed:        #2f855a;
+  --status-confirmed-bg:     #e8f3ec;
+  --status-confirmed-border: #bfe0cc;
+  --status-rejected:        #c53030;
+  --status-rejected-bg:     #fbe8e8;
+  --status-rejected-border: #f2b8b8;
+
+  --font-heading: "Lora", Georgia, "Times New Roman", serif;
+  --font-body:    "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  /* Back-compat: a few older templates still reference --navy/--gold-subtle */
+  --navy: var(--espresso);
+  --gold-subtle: rgba(184, 147, 90, .14);
+  --ice: var(--ivory);
+
+  /* Re-theme Bootstrap 5.3 */
+  --bs-primary:               var(--espresso);
+  --bs-primary-rgb:           62, 39, 35;
+  --bs-primary-text-emphasis: var(--espresso);
+  --bs-primary-bg-subtle:     #f1e7dc;
+  --bs-primary-border-subtle: #d8c4ac;
+  --bs-link-color:            var(--espresso);
+  --bs-link-color-rgb:        62, 39, 35;
+  --bs-link-hover-color:      var(--gold-dark);
+  --bs-link-hover-color-rgb:  156, 122, 71;
+  --bs-body-font-family:      var(--font-body);
+  --bs-body-bg:               var(--ivory);
+  --bs-body-color:            var(--ink);
+}
+
+/* =====================================================================
+   2. GLOBAL RESETS & BASE
+===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+body { min-height: 100vh; }
+
+a { text-decoration: none; color: var(--espresso); }
+a:hover { color: var(--gold-dark); }
+
+h1, h2, h3, h4, h5, .brand {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--espresso);
+}
+
+/* Standard, expected hover/focus transitions — nothing decorative */
+a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
+  transition: background-color .15s ease, border-color .15s ease,
+              color .15s ease, box-shadow .15s ease;
+}
+
+/* =====================================================================
+   3. UTILITY CLASSES
+===================================================================== */
+.text-gold   { color: var(--gold-dark) !important; }
+.text-navy   { color: var(--espresso) !important; }
+.bg-navy     { background-color: var(--espresso) !important; }
+.bg-ice      { background-color: var(--ivory) !important; }
+.muted-note  { color: var(--muted); font-size: .88rem; }
+.fw-800      { font-weight: 800 !important; }
+
+/* =====================================================================
+   4. BUTTONS
+   Gold is the accent — reserved for the primary call-to-action button
+   and the sidebar's active-page indicator, per DESIGN_BRIEF.md. It is
+   not used as the default "primary" brand color everywhere.
+===================================================================== */
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: .55rem 1.15rem;
+}
+
+.btn-primary {
+  --bs-btn-color:              #fff;
+  --bs-btn-bg:                 var(--gold);
+  --bs-btn-border-color:       var(--gold);
+  --bs-btn-hover-color:        #fff;
+  --bs-btn-hover-bg:           var(--gold-dark);
+  --bs-btn-hover-border-color: var(--gold-dark);
+  --bs-btn-active-bg:          var(--gold-dark);
+  --bs-btn-active-border-color: var(--gold-dark);
+  --bs-btn-focus-shadow-rgb:   184, 147, 90;
+}
+
+.btn-outline-primary {
+  --bs-btn-color:               var(--espresso);
+  --bs-btn-border-color:        var(--tan);
+  --bs-btn-hover-bg:            var(--espresso);
+  --bs-btn-hover-border-color:  var(--espresso);
+  --bs-btn-hover-color:         #fff;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color:               var(--muted);
+  --bs-btn-border-color:        var(--border-strong);
+  --bs-btn-hover-bg:            var(--espresso);
+  --bs-btn-hover-border-color:  var(--espresso);
+  --bs-btn-hover-color:         #fff;
+}
+
+/* Reject stays Bootstrap's conventional red — a functional color, not brand */
+.btn-outline-danger { border-radius: var(--radius-sm); }
+
+/* =====================================================================
+   5. FORMS
+===================================================================== */
+.form-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--espresso);
+  font-size: .85rem;
+  margin-bottom: .35rem;
+}
+
+.form-control,
+.form-select {
+  font-family: var(--font-body);
+  border-color: var(--border);
+  border-radius: var(--radius-sm);
+  padding: .55rem .85rem;
+  font-size: .92rem;
+  color: var(--ink);
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 .15rem rgba(184, 147, 90, .25);
+}
+
+/* Input with leading icon */
+.input-icon-wrap { position: relative; }
+.input-icon-wrap .input-icon {
+  position: absolute;
+  left: .85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 1rem;
+  pointer-events: none;
+}
+.input-icon-wrap .form-control,
+.input-icon-wrap .form-select { padding-left: 2.5rem; }
+
+/* =====================================================================
+   6. TOP NAVBAR — flat, solid, no gradient
+===================================================================== */
+.app-navbar {
+  background: var(--espresso-dark);
+  padding: .65rem 1.5rem;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .15);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+.app-navbar .navbar-brand {
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: .2px;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+}
+.app-navbar .navbar-brand .brand-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: rgba(184, 147, 90, .16);
+  border: 1px solid rgba(184, 147, 90, .4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+.app-navbar .navbar-brand .brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.app-navbar .navbar-brand .brand-text small {
+  font-family: var(--font-body);
+  font-size: .6rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .55);
+  letter-spacing: .04em;
+}
+.app-navbar .who {
+  font-family: var(--font-body);
+  color: rgba(255, 255, 255, .7);
+  font-size: .82rem;
+  margin-right: .75rem;
+}
+.app-navbar .who strong { color: #fff; font-weight: 600; }
+
+/* Plain underlined text link for "Log out"/"Log in" — used by BOTH the
+   admin navbar and the student record-strip, deliberately, so the same
+   low-key action looks the same everywhere rather than a button chip on
+   one page and a text link on the other. */
+.logout-link {
+  font-family: var(--font-body);
+  color: #F5EFE6;
+  font-size: .8rem;
+  text-decoration: underline;
+}
+.logout-link:hover { color: var(--gold); }
+
+/* =====================================================================
+   6b. RECORD STRIP — the student section's top bar. Deliberately NOT
+   the admin's boxed navbar-brand + button-chip logout: a plain
+   institutional strip (small bordered crest mark, letter-spaced small
+   caps wordmark, plain underlined text links) closer to a university
+   letterhead than a SaaS app bar. See DESIGN_BRIEF.md's "Academic
+   Ledger" student-section direction.
+===================================================================== */
+.record-strip {
+  background: var(--espresso);
+  padding: .7rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+.record-strip .brand-link {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  text-decoration: none;
+}
+.record-strip .crest {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: .8rem;
+  flex-shrink: 0;
+}
+.record-strip .wordmark {
+  color: #F5EFE6;
+  font-size: .68rem;
+  letter-spacing: .12em;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.record-strip .who {
+  font-family: var(--font-body);
+  color: rgba(245, 239, 230, .7);
+  font-size: .8rem;
+}
+.record-strip .who strong { color: #fff; font-weight: 600; }
+.record-strip-accent { height: 2px; background: var(--gold); }
+
+/* =====================================================================
+   7. ADMIN SIDEBAR — flat espresso, gold left-border indicator
+===================================================================== */
+.admin-shell {
+  align-items: stretch;
+  min-height: calc(100vh - 60px);
+}
+
+.sidebar {
+  background: var(--espresso);
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem .75rem;
+}
+
+.sidebar .nav-section-label {
+  font-family: var(--font-body);
+  color: rgba(255, 255, 255, .38);
+  font-size: .74rem;
+  font-weight: 500;
+  padding: .25rem .9rem .6rem;
+}
+
+.sidebar .nav-link {
+  font-family: var(--font-body);
+  color: rgba(255, 255, 255, .78);
+  padding: .58rem .9rem;
+  margin-bottom: .1rem;
+  font-size: .9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  border-left: 3px solid transparent;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.sidebar .nav-link i { font-size: 1rem; width: 1.15rem; text-align: center; flex-shrink: 0; }
+.sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, .06);
+  color: #fff;
+}
+.sidebar .nav-link.active {
+  background: rgba(255, 255, 255, .05);
+  color: #fff;
+  border-left-color: var(--gold);
+  font-weight: 600;
+}
+.sidebar .nav-link.active i { color: var(--gold); }
+.sidebar .nav-link.disabled { color: rgba(255, 255, 255, .28); cursor: default; }
+
+.sidebar .badge-soon {
+  background: rgba(255, 255, 255, .1);
+  color: rgba(255, 255, 255, .5);
+  font-weight: 500;
+  font-size: .62rem;
+  margin-left: auto;
+  border-radius: 3px;
+  padding: .2rem .4rem;
+}
+
+.sidebar nav { flex-grow: 1; }
+
+.sidebar-footer {
+  padding-top: .75rem;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  margin-top: .75rem;
+}
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .5rem .65rem;
+}
+.user-chip-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(184, 147, 90, .18);
+  border: 1px solid rgba(184, 147, 90, .4);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: .76rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.user-chip-name {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 118px;
+}
+.user-chip-role {
+  font-family: var(--font-body);
+  font-size: .68rem;
+  color: rgba(255, 255, 255, .45);
+}
+.user-chip-logout { margin-left: auto; color: rgba(255, 255, 255, .4); font-size: 1rem; flex-shrink: 0; }
+.user-chip-logout:hover { color: #fff; }
+
+.admin-main { flex-grow: 1; min-width: 0; }
+
+/* =====================================================================
+   8. CARDS — plain bordered panels, not identical shadowed tiles
+===================================================================== */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+/* =====================================================================
+   9. STAT TILES (dashboard figures — plain numerals, no icon tiles,
+      no count-up, no hover lift; see .qa-list below for actions)
+   A colored left border here was a left-border-accent-card — a named
+   AI-dashboard tell (DESIGN_BRIEF.md) — so tiles get a plain top rule
+   like a ledger entry instead, matching .table-card's top rule. Where a
+   figure needs to read as urgent (e.g. unresolved exceptions > 0), that's
+   done with the NUMBER's color, not a colored box — see .stat-tile-alert.
+===================================================================== */
+.stat-tile {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--espresso);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.4rem;
+}
+.stat-tile .stat-num {
+  font-family: var(--font-heading);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--espresso);
+  line-height: 1;
+}
+.stat-tile.stat-tile-alert .stat-num { color: var(--status-rejected); }
+.stat-tile .stat-label {
+  font-family: var(--font-body);
+  color: var(--muted);
+  font-size: .82rem;
+  margin-top: .3rem;
+}
+
+/* =====================================================================
+   10. PAGE HEADING
+===================================================================== */
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-heading h1 { margin-bottom: .15rem; font-size: 1.5rem; }
+
+/* =====================================================================
+   11. TABLES — clean ledger/register: subtle row dividers, no heavy
+       rounding, right-aligned numeric columns (via .text-end in markup)
+===================================================================== */
+.table-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--espresso);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+}
+.table-card .table { margin-bottom: 0; }
+
+.table { background: var(--paper); font-family: var(--font-body); }
+.table thead th {
+  background: var(--ivory);
+  color: var(--espresso);
+  text-transform: uppercase;
+  font-size: .7rem;
+  letter-spacing: .04em;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-strong);
+  white-space: nowrap;
+  padding: .8rem 1rem;
+}
+.table td {
+  vertical-align: middle;
+  font-size: .89rem;
+  padding: .78rem 1rem;
+  border-color: var(--border);
+}
+.table-hover tbody tr:hover { background-color: var(--ivory); }
+
+/* Avatar initials — flat, no gradient */
+.avatar-sm {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--espresso);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: .7rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* =====================================================================
+   12. STATUS BADGES — functional, conventional colors (never brown)
+===================================================================== */
+.badge-status-pending {
+  background-color: var(--status-pending-bg);
+  color: var(--status-pending);
+  border: 1px solid var(--status-pending-border);
+}
+.badge-status-confirmed {
+  background-color: var(--status-confirmed-bg);
+  color: var(--status-confirmed);
+  border: 1px solid var(--status-confirmed-border);
+}
+.badge-status-rejected {
+  background-color: var(--status-rejected-bg);
+  color: var(--status-rejected);
+  border: 1px solid var(--status-rejected-border);
+}
+.badge-status-pending::before,
+.badge-status-confirmed::before,
+.badge-status-rejected::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+.badge-status-pending::before   { background: var(--status-pending); }
+.badge-status-confirmed::before { background: var(--status-confirmed); }
+.badge-status-rejected::before  { background: var(--status-rejected); }
+
+/* Purposeful motion moment: a claim's badge "stamps" into place the
+   instant an admin confirms it (triggered by JS in admin/claims_list.html
+   — see that file's <script> block). Never runs automatically. */
+@keyframes stampIn {
+  0%   { transform: scale(2.1) rotate(-8deg); opacity: 0; }
+  55%  { transform: scale(.94) rotate(2deg);  opacity: 1; }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+.stamp-in { animation: stampIn .4s cubic-bezier(.34, 1.56, .64, 1) both; }
+
+/* =====================================================================
+   13. LOGIN PAGE — centered card, clear branding, subtle shadow
+===================================================================== */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem;
+  background: var(--ivory);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 430px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 4px rgba(43, 33, 29, .04), 0 12px 32px rgba(43, 33, 29, .1);
+  padding: 2.25rem 2rem;
+}
+
+.auth-brand { text-align: center; margin-bottom: 1.6rem; }
+.auth-brand .brand-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-sm);
+  background: var(--espresso);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto .8rem;
+}
+.auth-brand .brand-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.28rem;
+  color: var(--espresso);
+}
+.auth-brand .brand-subtitle {
+  font-family: var(--font-body);
+  font-size: .78rem;
+  color: var(--muted);
+  margin-top: .2rem;
+  line-height: 1.5;
+}
+
+.auth-welcome {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--espresso);
+  margin-bottom: .2rem;
+}
+.auth-hint { font-size: .85rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+.role-toggle {
+  display: flex;
+  background: var(--ivory);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  margin-bottom: 1.4rem;
+}
+.role-toggle .tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--espresso);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .84rem;
+  padding: .48rem;
+  border-radius: 3px;
+}
+.role-toggle .tab-btn.active { background: var(--espresso); color: #fff; }
+.role-toggle .tab-btn:not(.active):hover { background: rgba(62, 39, 35, .06); }
+
+.auth-footer-note {
+  text-align: center;
+  font-size: .72rem;
+  color: var(--muted);
+  margin-top: 1.5rem;
+}
+
+/* Error pages (404/500) reuse this whole .auth-page/.auth-card vocabulary
+   rather than inventing a second "empty state" look — same card, same
+   brand block, just a status code in place of the login form. See
+   errors/error.html. */
+.error-code {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.6rem;
+  color: var(--gold);
+  text-align: center;
+  line-height: 1;
+  margin-bottom: .3rem;
+}
+
+/* =====================================================================
+   14. STUDENT DASHBOARD — the "Academic Ledger" direction (DESIGN_BRIEF.md),
+   revised: the dashboard specifically read as too plain even with the
+   restrained ledger treatment, so it was given real weight back —
+   still flat, square-ish, and typographic (no gradient, no decorative
+   rings, no floating hero-card avatar), just bigger and denser:
+   - .dashboard-header: a full-width, flat espresso band carrying BOTH
+     identity (name, reg number, department/faculty/level) AND the
+     balance totals — one strong element instead of a thin bordered
+     strip plus a separate quiet heading.
+   - .balance-breakdown: a per-fee-category ledger list, sat alongside
+     the account actions in a two-column layout so the page uses the
+     full width instead of one narrow centered column.
+   .record-actions / .record-action-row / .record-quote (below) are
+   unchanged and still used.
+===================================================================== */
+.dashboard-header {
+  background: var(--espresso);
+  border-radius: var(--radius-sm);
+  padding: 1.75rem 2rem;
+  margin-bottom: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.dashboard-header-welcome h1 {
+  color: #fff;
+  font-size: 1.7rem;
+  margin-bottom: .4rem;
+}
+.dashboard-header-tag {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  color: rgba(245, 239, 230, .7);
+}
+.dashboard-header-tag .reg-number { color: var(--gold); font-weight: 600; }
+.dashboard-header-stats { display: flex; gap: 2.25rem; }
+.dashboard-stat-label {
+  font-family: var(--font-body);
+  font-size: .64rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, .55);
+  margin-bottom: .3rem;
+}
+.dashboard-stat-value {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #fff;
+}
+
+.balance-breakdown {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}
+.balance-breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .9rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.balance-breakdown-row:last-child { border-bottom: none; }
+.balance-breakdown-category { font-family: var(--font-body); font-weight: 600; font-size: .86rem; color: var(--espresso); }
+.balance-breakdown-session { font-size: .72rem; color: var(--muted); }
+.balance-breakdown-amount { font-family: var(--font-heading); font-weight: 700; font-size: .92rem; }
+.balance-breakdown-empty { padding: 1.5rem 1.1rem; text-align: center; font-size: .82rem; color: var(--muted); }
+
+@media (max-width: 767.98px) {
+  .dashboard-header { flex-direction: column; align-items: flex-start; }
+  .dashboard-header-stats { width: 100%; justify-content: space-between; gap: 1rem; }
+}
+
+.section-label {
+  font-family: var(--font-body);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: .5rem;
+  margin-bottom: 0;
+}
+
+.record-actions { margin-top: 0; }
+.record-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  margin: 0 -1rem;
+}
+.record-action-row:last-child { border-bottom: none; }
+.record-action-row:hover { background: var(--paper); }
+.record-action-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--espresso);
+  margin-bottom: .3rem;
+}
+.record-action-desc { font-family: var(--font-body); font-size: .84rem; color: var(--muted); }
+.record-action-link {
+  font-family: var(--font-body);
+  font-size: .78rem;
+  color: var(--espresso);
+  border-bottom: 1px solid var(--gold);
+  white-space: nowrap;
+  padding-bottom: 1px;
+  flex-shrink: 0;
+}
+.record-action-link:hover { color: var(--gold-dark); }
+
+.record-quote {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: .82rem;
+  color: var(--muted);
+  margin-top: 2.5rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 767.98px) {
+  .record-action-row { flex-direction: column; align-items: flex-start; gap: .5rem; }
+}
+
+/* =====================================================================
+   15. QUICK ACTIONS — a clean bordered list, not identical icon-tiles
+===================================================================== */
+.qa-list {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.qa-item {
+  display: flex;
+  align-items: center;
+  gap: .95rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  color: inherit;
+}
+.qa-item:last-child { border-bottom: none; }
+.qa-item:hover { background: var(--ivory); color: inherit; }
+.qa-item .qa-glyph {
+  font-size: 1.1rem;
+  color: var(--tan);
+  width: 1.5rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+.qa-item .qa-title { font-family: var(--font-body); font-weight: 600; color: var(--espresso); font-size: .92rem; margin-bottom: .1rem; }
+.qa-item .qa-desc  { font-family: var(--font-body); color: var(--muted); font-size: .8rem; }
+.qa-item .qa-chevron { margin-left: auto; color: var(--muted); font-size: .85rem; }
+
+/* =====================================================================
+   16. FLASH MESSAGES
+===================================================================== */
+.alert {
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-size: .9rem;
+  padding: .8rem 1rem;
+}
+.alert-success { background: var(--status-confirmed-bg); color: var(--status-confirmed); border-color: var(--status-confirmed-border); }
+.alert-danger  { background: var(--status-rejected-bg);  color: var(--status-rejected);  border-color: var(--status-rejected-border); }
+.alert-warning { background: var(--status-pending-bg);   color: var(--status-pending);   border-color: var(--status-pending-border); }
+.alert-info    { background: var(--ivory); color: var(--espresso); border-color: var(--border); }
+
+/* =====================================================================
+   17. ACTION CONFIRMATION — a self-drawing checkmark, shown once, right
+   after a student completes a specific action worth celebrating (e.g.
+   generating an invoice — see student/invoice_view.html). Not a generic
+   success alert; only used where a template deliberately renders it.
+===================================================================== */
+.action-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--status-confirmed-bg);
+  border: 1px solid var(--status-confirmed-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.action-confirmation .checkmark-badge {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+}
+.action-confirmation .checkmark-circle {
+  fill: none;
+  stroke: var(--status-confirmed);
+  stroke-width: 2.5;
+  stroke-dasharray: 105;
+  stroke-dashoffset: 105;
+  animation: drawCircle .4s ease forwards;
+}
+.action-confirmation .checkmark-check {
+  fill: none;
+  stroke: var(--status-confirmed);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: drawCheck .3s .35s ease forwards;
+}
+@keyframes drawCircle { to { stroke-dashoffset: 0; } }
+@keyframes drawCheck  { to { stroke-dashoffset: 0; } }
+
+.action-confirmation .action-confirmation-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--status-confirmed);
+  font-size: 1rem;
+  margin-bottom: .15rem;
+}
+.action-confirmation .action-confirmation-note {
+  font-family: var(--font-body);
+  font-size: .84rem;
+  color: var(--muted);
+}
+
+/* =====================================================================
+   18. PRINT DOCUMENTS — invoices and receipts. A bordered, letterhead-
+   style document rather than a plain card (DESIGN_BRIEF.md), and
+   print-ready: .print-hide / .print-actions disappear on paper.
+===================================================================== */
+.print-document {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-top: 4px double var(--espresso);
+  border-radius: var(--radius-sm);
+  padding: 2rem 2.25rem;
+}
+
+.print-letterhead {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.print-letterhead-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--espresso);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.print-letterhead-title { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; color: var(--espresso); }
+.print-letterhead-subtitle {
+  font-family: var(--font-body);
+  font-size: .8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-top: .1rem;
+}
+
+.print-status-row { margin-bottom: 1.25rem; }
+
+.print-field-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem 1.5rem; margin-bottom: 1.5rem; }
+.print-field-label {
+  font-family: var(--font-body);
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--muted);
+  margin-bottom: .2rem;
+}
+.print-field-value { font-family: var(--font-body); font-size: .92rem; font-weight: 600; color: var(--espresso); }
+
+.print-amount-block {
+  text-align: center;
+  padding: 1.25rem;
+  background: var(--ivory);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.25rem;
+}
+.print-amount { font-family: var(--font-heading); font-size: 2rem; font-weight: 700; color: var(--espresso); margin: .15rem 0; }
+.print-amount-words { font-family: var(--font-body); font-style: italic; color: var(--muted); font-size: .85rem; }
+
+.print-reference-block {
+  text-align: center;
+  padding: 1rem;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  margin-bottom: .5rem;
+}
+.print-reference { font-family: var(--font-body); font-size: 1.3rem; font-weight: 700; letter-spacing: .08em; color: var(--espresso); }
+
+.receipt-number-row { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
+
+.receipt-footnote {
+  text-align: center;
+  font-size: .75rem;
+  color: var(--muted);
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+/* Purposeful motion moment #3 (DESIGN_BRIEF.md): a subtle unfold/reveal
+   the instant a receipt becomes available. Nowhere else uses this. */
+@keyframes receiptReveal {
+  0%   { opacity: 0; transform: scaleY(.96) translateY(-10px); }
+  100% { opacity: 1; transform: scaleY(1) translateY(0); }
+}
+.receipt-reveal { transform-origin: top center; animation: receiptReveal .45s cubic-bezier(.2, .7, .3, 1) both; }
+
+/* Payment gateway simulator — clearly marked as a stand-in, never styled
+   to look like a real payment page. */
+.simulator-banner {
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+  background: var(--status-pending-bg);
+  border: 1px solid var(--status-pending-border);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  padding: .9rem 1.1rem;
+  font-size: .85rem;
+}
+.simulator-banner i { color: var(--status-pending); font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
+
+@media print {
+  .app-navbar, .sidebar, .sidebar-footer, .print-hide, .print-actions, .alert { display: none !important; }
+  body { background: #fff !important; }
+  main.container, .admin-main { padding: 0 !important; max-width: 100% !important; }
+  .print-document { border: none !important; padding: 0 !important; max-width: 100% !important; }
+  .receipt-reveal { animation: none !important; }
+}
+
+/* =====================================================================
+   19. RESPONSIVE
+===================================================================== */
+@media (max-width: 991.98px) {
+  .admin-shell { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: .6rem .75rem;
+    gap: .2rem;
+  }
+  .sidebar nav { display: flex; gap: .2rem; flex-grow: 0; }
+  .sidebar .nav-section-label { display: none; }
+  .sidebar .nav-link {
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    padding: .5rem .8rem;
+  }
+  .sidebar .nav-link.active { border-left-color: transparent; border-bottom-color: var(--gold); }
+  .sidebar-footer { display: none; }
+}
+
+@media (max-width: 767.98px) {
+  .student-record .meta-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* =====================================================================
+   20. ACCESSIBILITY — respect "reduce motion": every purposeful motion
+   moment (checkmark draw, badge stamp, receipt reveal) shows its end
+   state instantly.
+===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

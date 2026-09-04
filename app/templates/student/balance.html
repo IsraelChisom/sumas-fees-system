@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Outstanding Balance{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">Outstanding Balance</h1>
+    <p class="muted-note mb-0">What you owe per fee category, recomputed from your confirmed payments &mdash; never stored, so it's always current.</p>
+  </div>
+  <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Dashboard
+  </a>
+</div>
+
+<div class="table-card">
+  <table class="table mb-0">
+    <thead>
+      <tr>
+        <th>Fee Category</th>
+        <th>Session</th>
+        <th class="text-end">Amount Owed</th>
+        <th class="text-end">Amount Paid</th>
+        <th class="text-end">Balance</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td class="fw-semibold">{{ row['category_name'] }}</td>
+        <td class="text-muted" style="font-size:.85rem;">{{ row['session'] }}</td>
+        <td class="text-end" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['amount_owed']) }}</td>
+        <td class="text-end" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['amount_paid']) }}</td>
+        <td class="text-end">
+          <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(row['balance']) }}</span>
+        </td>
+        <td>
+          {% if row['balance'] <= 0 %}
+            <span class="badge rounded-pill badge-status-confirmed">Fully Paid</span>
+          {% else %}
+            <span class="badge rounded-pill badge-status-pending">Outstanding</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" class="text-center py-5">
+          <i class="bi bi-wallet2 display-6 text-muted d-block mb-2"></i>
+          <span class="muted-note">No fee categories are set up for your department or faculty.</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    {% if rows %}
+    <tfoot>
+      <tr style="border-top: 2px solid var(--ink);">
+        <td colspan="2" class="fw-semibold" style="font-family:var(--font-heading);">Total</td>
+        <td class="text-end fw-semibold" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(total_owed) }}</td>
+        <td class="text-end fw-semibold" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(total_paid) }}</td>
+        <td class="text-end fw-semibold" style="color:var(--espresso); font-size:1rem;">&#8358;{{ "{:,.2f}".format(total_balance) }}</td>
+        <td></td>
+      </tr>
+    </tfoot>
+    {% endif %}
+  </table>
+</div>
+
+<p class="record-quote">
+  A balance only drops once an invoice for that fee category is marked Paid &mdash; an invoice still Awaiting Payment doesn't count yet.
+</p>
+
+{% endblock %}

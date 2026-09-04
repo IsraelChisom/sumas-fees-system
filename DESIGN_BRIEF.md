@@ -1,0 +1,217 @@
+# SUMAS Fees Project — Design Brief
+
+This is the authoritative visual design brief for the SUMAS Fees System,
+given verbatim by the project owner and implemented across the app's
+existing pages. **Every page or module built from now on must follow this
+brief automatically** — it supersedes the earlier brown/gold "Design
+system" description in `PROJECT_BRIEF.md`, which was a generic first pass.
+
+## The brief
+
+A complete visual redesign of the existing pages (login, student
+dashboard, admin dashboard, student list, student form, fees list, fee
+form) — professional and distinctive enough to genuinely impress a
+university supervisor and lecturers at first glance, not a generic
+default-looking AI template.
+
+### Ground the design in what this actually is
+
+This is an official school fees and receipt system for a university, so
+it should feel institutional, trustworthy, and precise — closer to a bank
+statement or an official certificate than a generic startup SaaS
+dashboard.
+
+### Specifically avoid these common AI-generated design tells
+
+- A warm cream background with a terracotta/orange accent
+- Every panel as an identical rounded card with the same soft grey shadow
+- ALL-CAPS tracked-out labels above every heading
+- Numbered badges (01 / 02 / 03) on things that aren't actually a sequence
+- Buttons with a "→" arrow appended to the text
+- Generic fade-in-on-scroll animation on every section
+- Animated numbers counting up on dashboard stats, animated gradients,
+  hover animations on every card/row
+
+### Color — the school's actual brand colors are brown and white
+
+- **Primary:** deep espresso brown `#3E2723` (dark and authoritative, like
+  an old ledger cover — not a light coffee-shop terracotta)
+- **Secondary brown:** warm coffee tan `#8B5E3C`, for secondary
+  buttons/borders
+- **Background:** warm ivory `#FAF6F0` (paper-like, not stark white)
+- **Accent** (use sparingly — 1–2 places per page only, not everywhere):
+  deep antique gold `#B8935A`, evoking an official seal — for the active
+  sidebar indicator and primary call-to-action buttons
+- **Body text:** warm near-black `#2B211D`, not pure black
+- **Status colors stay functional and conventional, NOT brown-tinted**, so
+  they remain instantly readable: muted green `#2F855A` (confirmed), muted
+  amber `#B7791F` (pending), muted red `#C53030` (rejected)
+
+### Typography
+
+- **Headings:** "Lora" (serif, via Google Fonts) — classic, official,
+  letterhead feel appropriate to a university document
+- **Body, data, and tables:** "IBM Plex Sans" (via Google Fonts)
+
+### Layout and motifs — grounded in the subject matter (fees, receipts, official records)
+
+- The receipt page should visually resemble an actual official
+  receipt/certificate — a bordered document with the school name at the
+  top like a letterhead, not a plain card
+- Tables (student lists, fee lists, claims) should look like a clean
+  ledger/register: subtle row dividers, no heavy rounded corners,
+  right-aligned numeric/currency columns
+- Admin sidebar: flat solid espresso-brown background, with a gold
+  left-border indicator on the active page — not a floating pill/badge
+- Login page: a centered card with clear school branding at the top,
+  subtle shadow — a proper product login screen, not a bare form
+
+### Motion — a small number of deliberate, purposeful moments only, each tied to something the user actually did, never decorative or automatic
+
+1. **Claim submission:** a brief, satisfying confirmation animation (e.g.
+   a checkmark that draws itself) when a student successfully submits a
+   payment claim
+2. **Admin confirming a claim:** a short "stamped" animation on the status
+   badge as it changes from Pending (amber) to Confirmed (green) — like an
+   official approval stamp landing, under half a second
+3. **Receipt reveal:** a subtle unfold/reveal effect when a receipt
+   becomes available, reinforcing that this is an official document being
+   issued
+4. Standard 150ms hover transitions on buttons/links are fine and
+   expected — this is not decoration, just normal polish
+
+Respect `prefers-reduced-motion` — skip animations and show the end state
+instantly if a user has that setting on.
+
+### Framework
+
+Use Bootstrap 5 via CDN for the underlying structure (navbars, forms,
+tables) but restyle it fully with the palette and fonts above — it should
+not look like default Bootstrap.
+
+## Implementation notes (added during the redesign, for future reference)
+
+- Palette, fonts, and every restyled component live in
+  `app/static/css/style.css`. The CSS custom properties were renamed to
+  match this palette directly (`--espresso`, `--tan`, `--gold`, `--ivory`,
+  `--ink`, plus `--status-confirmed` / `--status-pending` /
+  `--status-rejected`) — there's no more legacy `--navy`/`--gold-as-brown`
+  aliasing from the previous palette pass.
+- Motion moments 1 and 3 are wired up specifically, not generically (see
+  PROJECT_BRIEF.md for the payment-claim → invoice workflow redesign that
+  moved motion moment 1 from claim submission to invoice generation, and
+  built motion moment 3 for the first time):
+  - Generating an invoice redirects to its invoice page with
+    `?generated=1`; `student/invoice_view.html` reads that flag to show a
+    one-time, self-drawing SVG checkmark (`.action-confirmation` in
+    `style.css` — a generic class, not claim-specific). It never appears
+    on any other success flash.
+  - A receipt becomes available the instant a payment is matched
+    (`app/payments.py`'s `handle_payment_notification()`), and
+    `student/receipt_view.html` always shows it via the `.receipt-reveal`
+    unfold animation on `.print-document` — this page only ever renders
+    once a receipt exists, so the reveal always plays.
+  - Motion moment 2 ("stamped" confirm) doesn't apply anymore: it was
+    built for the old admin claim-confirm workflow, which the invoice
+    redesign removed entirely (a normal payment is matched automatically,
+    with no admin click to animate). The admin exception queue
+    (`admin/unmatched_list.html`) uses plain full-page form submits — if a
+    future admin action ever again changes a status in front of the
+    admin's eyes the way Confirm did, revive this pattern (a small
+    fetch()-based script checking for an `X-Requested-With` header, falling
+    back to a normal POST + redirect if JS fails) rather than reinventing it.
+- Every other animation from the previous design pass (ambient gradient
+  drift, floating particles, confetti, animated count-up numbers, card
+  hover-lift/glow) was deliberately removed per this brief's avoid-list.
+  Only standard button/link hover transitions remain automatic.
+
+## The student section's "Academic Ledger" direction (adopted after the first pass still read as generic)
+
+The first implementation of this brief — while following its letter (the
+palette, the fonts, the ledger tables) — still read as a generic AI
+dashboard on the student-facing pages specifically: a filled hero card for
+the student's info, and a list of quick actions as icon-in-a-box tiles
+with trailing chevrons. That's a recognizable SaaS-dashboard pattern, not
+an institutional one, and it's what was actually driving the "this feels
+like AI design" reaction — not the palette.
+
+Three genuinely different directions were sketched (a design canvas, not
+kept) and the student picked **"Academic Ledger"**: typographic and
+document-like, closer to a real university portal than a dashboard. It's
+now the committed look for the **student section specifically** — the
+admin section (sidebar, stat tiles, `.qa-list`/`.qa-item` quick actions)
+was deliberately left untouched, since it wasn't the complaint. Concretely,
+for student-facing pages:
+
+- **Top strip, not a boxed navbar** (`.record-strip` in `style.css`,
+  wired into `base.html`'s non-admin branch): a plain espresso strip — a
+  small bordered square crest mark with a single gold-outlined letter, a
+  small-caps letter-spaced wordmark, and plain underlined text links
+  ("Signed in as NAME" / "Log out"), not a rounded brand-icon box and a
+  button-styled logout chip. Capped with a single 2px gold rule
+  (`.record-strip-accent`) — the brief's "accent used sparingly" taken
+  literally: one deliberate line, not repeated as a border treatment
+  everywhere.
+- **A bordered record strip, not a hero card** (`.record-panel` /
+  `.record-field` — since superseded on the dashboard specifically by
+  `.dashboard-header`, see the follow-up below; the identity-strip pattern
+  itself is still correct and still used as-is on every other student
+  page): the student's name/reg number/department/faculty/level sit in one
+  hairline-bordered row with vertical dividers between fields, like a
+  table header — no avatar square, no filled background, no gradient.
+- **A plain typographic action list, not icon tiles**
+  (`.record-actions` / `.record-action-row`): each action is a Lora title
+  + muted description, hairline-divided, with a plain gold-underlined
+  "Open" text link — no icon glyph, no chevron, no rounded/left-bordered
+  box. (`.qa-list`/`.qa-item` — icon + chevron tiles — still exist and are
+  still correct for the **admin** dashboard's quick actions; they were
+  intentionally not touched or reused here.)
+- **Callouts are italic serif notes, not left-border-accent cards**
+  (`.record-quote`): a rounded card with a colored left border stripe is
+  a specifically named AI-dashboard tell. Where earlier student pages used
+  that pattern for a tip or note (e.g. `invoice_generate.html`'s
+  installment explanation, and `admin/fee_form.html`'s edit-mode info
+  card), it's now a plain italic `.record-quote` paragraph (student) or a
+  plain `.card` with no accent (admin) instead.
+
+New student-facing pages should extend this vocabulary — hairline
+dividers and typography for hierarchy, not colored boxes — rather than
+falling back to card-with-icon defaults.
+
+**Follow-up applied to the admin dashboard too** (the left-border-accent
+tell isn't student-specific): `.stat-tile` now uses a plain top rule
+(matching `.table-card`'s), the same treatment on every tile — no more
+colored left border. Where a figure needs to read as urgent (the
+exception queue's unresolved count), that's `.stat-tile-alert`, which
+colors the **number** red when the count is nonzero, rather than coloring
+a box around it. `.qa-list`/`.qa-item` (icon + chevron quick actions)
+were deliberately left alone — that pattern wasn't the complaint, and
+it's still the right fit for the admin dashboard.
+
+**Second follow-up: the student dashboard specifically, "too plain"**
+(the `.record-panel` identity strip, on its own above a bare list of
+actions, read as thin once the rest of the section had been redesigned).
+Kept the Academic Ledger vocabulary but gave the dashboard — the page a
+student sees most — real weight in three ways:
+
+- **`.dashboard-header` replaces `.record-panel` on this page only**: a
+  full-width flat espresso band (no gradient, no rounded avatar) carrying
+  both the welcome heading + reg number/department/faculty/level tag line
+  on the left, and live Total Owed / Total Paid / Balance figures on the
+  right — so the header now states the student's actual standing instead
+  of only their identity. Every other student page keeps `.record-panel`
+  as-is; this substitution is specific to the dashboard.
+- **A two-column layout** (`Bootstrap` `.row`/`.col-lg-8`/`.col-lg-4`)
+  uses the full page width instead of a narrow single column: Account
+  Actions (unchanged `.record-actions` markup) on the left, a new
+  `.balance-breakdown` panel on the right.
+- **`.balance-breakdown`** is a per-fee-category ledger list (category
+  name + session, right-aligned balance colored red if owing / green if
+  settled) — live data pulled from the same `_balance_rows()` helper the
+  full balance statement uses, not just another menu entry. It links out
+  to `/student/balance` for the full statement rather than duplicating it.
+
+No new AI-dashboard tells were introduced: `.dashboard-header` is a flat
+fill with no border-radius pretending to be a card, and
+`.balance-breakdown-row` uses the same hairline-divider-row idiom as
+`.record-action-row`, not icon tiles.

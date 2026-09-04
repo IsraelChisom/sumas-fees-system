@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}Administrator Dashboard{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">Dashboard</h1>
+    <p class="muted-note mb-0">
+      Welcome, {{ admin['full_name'] }} &mdash; here's what's happening today.
+    </p>
+  </div>
+</div>
+
+{# ── Stat tiles ─────────────────────────────────────────────────────── #}
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-4">
+    <div class="stat-tile">
+      <div class="stat-num">{{ awaiting_count }}</div>
+      <div class="stat-label">Invoices Awaiting Payment</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-4">
+    <div class="stat-tile{{ ' stat-tile-alert' if unresolved_count else '' }}">
+      <div class="stat-num">{{ unresolved_count }}</div>
+      <div class="stat-label">Unresolved Payment Exceptions</div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-4">
+    <div class="stat-tile">
+      <div class="stat-num">{{ student_count }}</div>
+      <div class="stat-label">Registered Students</div>
+    </div>
+  </div>
+</div>
+
+{# ── Quick actions ─────────────────────────────────────────────────── #}
+<h2 class="h6 mb-3" style="color:var(--muted); font-family:var(--font-body); font-weight:600;">Quick Actions</h2>
+
+<div class="qa-list mb-3">
+  <a href="{{ url_for('admin.list_students') }}" class="qa-item">
+    <i class="bi bi-people-fill qa-glyph"></i>
+    <div>
+      <div class="qa-title">Manage Students</div>
+      <div class="qa-desc">Add and edit student records</div>
+    </div>
+    <i class="bi bi-chevron-right qa-chevron"></i>
+  </a>
+  <a href="{{ url_for('admin.list_fees') }}" class="qa-item">
+    <i class="bi bi-cash-coin qa-glyph"></i>
+    <div>
+      <div class="qa-title">Manage Fee Structures</div>
+      <div class="qa-desc">Create and edit fee categories</div>
+    </div>
+    <i class="bi bi-chevron-right qa-chevron"></i>
+  </a>
+  <a href="{{ url_for('admin.list_unmatched') }}" class="qa-item">
+    <i class="bi bi-exclamation-triangle qa-glyph"></i>
+    <div>
+      <div class="qa-title">Review Unmatched Payments</div>
+      <div class="qa-desc">Payments that couldn't be auto-matched to an invoice</div>
+    </div>
+    <i class="bi bi-chevron-right qa-chevron"></i>
+  </a>
+  <a href="{{ url_for('admin.departmental_report') }}" class="qa-item">
+    <i class="bi bi-bar-chart-fill qa-glyph"></i>
+    <div>
+      <div class="qa-title">Departmental Report</div>
+      <div class="qa-desc">Payment status by department and level, for the HOD</div>
+    </div>
+    <i class="bi bi-chevron-right qa-chevron"></i>
+  </a>
+</div>
+
+<p class="muted-note mb-0">
+  <i class="bi bi-info-circle me-1"></i>
+  A normal, successful payment is matched to its invoice and receipted automatically — nothing to do here for it.
+</p>
+
+{% endblock %}

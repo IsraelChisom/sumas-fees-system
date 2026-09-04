@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Invoice{% endblock %}
+{% block content %}
+
+{% if request.args.get('generated') %}
+{# Purposeful motion moment #1 (DESIGN_BRIEF.md), adapted for the invoice
+   workflow: a self-drawing checkmark shown once, right after a student
+   successfully generates an invoice. #}
+<div class="action-confirmation print-hide">
+  <svg class="checkmark-badge" viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="checkmark-circle" cx="20" cy="20" r="16.7" />
+    <path class="checkmark-check" d="M12 20.5 17.5 26 29 14" />
+  </svg>
+  <div>
+    <div class="action-confirmation-title">Invoice generated</div>
+    <div class="action-confirmation-note">Pay the reference number below to settle it — your receipt will be issued automatically.</div>
+  </div>
+</div>
+{% endif %}
+
+<div class="page-heading print-hide">
+  <div>
+    <h1 class="h3 mb-1">Invoice</h1>
+    <p class="muted-note mb-0">Pay using the reference number below to settle this invoice.</p>
+  </div>
+  <a href="{{ url_for('student.list_invoices') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> My Invoices
+  </a>
+</div>
+
+<div class="print-document" style="max-width:640px;">
+  <div class="print-letterhead">
+    <div class="print-letterhead-icon"><i class="bi bi-mortarboard-fill"></i></div>
+    <div>
+      <div class="print-letterhead-title">State University of Medical &amp; Applied Sciences</div>
+      <div class="print-letterhead-subtitle">Fees Invoice</div>
+    </div>
+  </div>
+
+  <div class="print-status-row">
+    {% if invoice['status'] == 'Paid' %}
+      <span class="badge rounded-pill badge-status-confirmed">Paid</span>
+    {% else %}
+      <span class="badge rounded-pill badge-status-pending">Awaiting Payment</span>
+    {% endif %}
+  </div>
+
+  <div class="print-field-grid">
+    <div class="print-field"><div class="print-field-label">Student</div><div class="print-field-value">{{ student['full_name'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Reg. Number</div><div class="print-field-value">{{ student['reg_number'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Department</div><div class="print-field-value">{{ student['department'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Faculty</div><div class="print-field-value">{{ student['faculty'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Fee Category</div><div class="print-field-value">{{ invoice['category_name'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Session</div><div class="print-field-value">{{ invoice['session'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Payment Plan</div><div class="print-field-value">{{ invoice['payment_plan'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Date Generated</div><div class="print-field-value">{{ invoice['date_generated'] }}</div></div>
+  </div>
+
+  <div class="print-amount-block">
+    <div class="print-field-label">Amount Payable</div>
+    <div class="print-amount">&#8358;{{ "{:,.2f}".format(invoice['amount']) }}</div>
+  </div>
+
+  <div class="print-reference-block">
+    <div class="print-field-label">Payment Reference</div>
+    <div class="print-reference">{{ invoice['payment_reference'] }}</div>
+  </div>
+
+  <p class="muted-note mt-3 mb-0" style="font-size:.82rem;">
+    Pay this exact amount using the reference number above. The moment payment is received, this
+    invoice is marked Paid and an official receipt is generated automatically — no further action
+    is needed from you or the Bursary office.
+  </p>
+</div>
+
+<div class="print-actions mt-3 d-flex gap-2" style="max-width:640px;">
+  {% if invoice['status'] == 'Paid' %}
+    <a href="{{ url_for('student.view_receipt', invoice_id=invoice['invoice_id']) }}" class="btn btn-primary">
+      <i class="bi bi-receipt me-1"></i> View Receipt
+    </a>
+  {% else %}
+    <a href="{{ url_for('student.pay_simulator', reference=invoice['payment_reference']) }}" class="btn btn-primary">
+      <i class="bi bi-credit-card me-1"></i> Pay Now (Simulate Payment)
+    </a>
+  {% endif %}
+  <button type="button" class="btn btn-outline-secondary" onclick="window.print()">
+    <i class="bi bi-printer me-1"></i> Print
+  </button>
+  <a href="{{ url_for('student.view_invoice_pdf', invoice_id=invoice['invoice_id']) }}" class="btn btn-outline-secondary">
+    <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
+  </a>
+</div>
+
+{% endblock %}
