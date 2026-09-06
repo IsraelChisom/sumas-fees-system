@@ -126,6 +126,7 @@
       <a class="brand-link" href="{{ url_for('index') }}">
         <div class="crest"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
         <div class="wordmark d-none d-sm-block">State University of Medical &amp; Applied Sciences</div>
+        <div class="wordmark-short d-sm-none">SUMAS</div>
       </a>
       <div class="d-flex align-items-center gap-3">
         {% if g.user %}
@@ -146,6 +147,11 @@
     {% include "_flashes.html" %}
     {{ self.content() }}
   </main>
+
+  {# Full-bleed site footer — empty on every page except home.html, which
+     overrides it. Lives outside the .container above so it can span the
+     full width like a real institutional site footer. #}
+  {% block footer %}{% endblock %}
 
 {% endif %}
 

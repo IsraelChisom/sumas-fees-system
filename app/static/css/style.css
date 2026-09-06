@@ -301,6 +301,17 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   font-weight: 500;
   text-transform: uppercase;
 }
+/* Below the breakpoint where the full institution name shows, keep a
+   short brand mark visible instead of dropping text entirely — a phone
+   visitor should still see "SUMAS" next to the crest, not just a bare
+   icon. See DESIGN_BRIEF.md's responsiveness pass. */
+.record-strip .wordmark-short {
+  color: var(--gold);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .04em;
+}
 .record-strip .who {
   font-family: var(--font-body);
   color: rgba(245, 239, 230, .7);
@@ -1047,12 +1058,23 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 .home-hero {
   background: var(--espresso);
   border-radius: var(--radius-sm);
-  padding: 3.25rem 2rem;
-  margin-bottom: 3rem;
+  /* Fluid padding: scales continuously between phone and desktop instead
+     of jumping once at a single breakpoint. */
+  padding: clamp(2rem, 5vw + 1rem, 3.25rem) clamp(1.1rem, 4vw, 2rem);
+  margin-bottom: clamp(2rem, 4vw + 1rem, 3rem);
   text-align: center;
 }
-.home-hero-crest { width: 68px; height: 68px; margin: 0 auto 1.1rem; }
+.home-hero-crest { width: 64px; height: 64px; margin: 0 auto .9rem; }
 .home-hero-crest img { width: 100%; height: 100%; object-fit: contain; }
+/* A thin letterhead rule under the crest — the "official document"
+   framing device DESIGN_BRIEF.md asks for, used sparingly (one line, one
+   place) rather than as a repeated border treatment. */
+.home-hero-rule {
+  width: 48px;
+  height: 2px;
+  background: var(--gold);
+  margin: 0 auto 1.1rem;
+}
 .home-hero-eyebrow {
   font-family: var(--font-body);
   font-size: .72rem;
@@ -1063,8 +1085,9 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 }
 .home-hero-title {
   color: #fff;
-  font-size: 1.9rem;
-  max-width: 640px;
+  font-size: clamp(1.5rem, 3.2vw + .9rem, 2.5rem);
+  line-height: 1.2;
+  max-width: 680px;
   margin: 0 auto;
 }
 .home-hero-desc {
@@ -1080,7 +1103,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 1.4rem;
+  gap: 1rem 1.4rem;
   margin-top: 1.85rem;
 }
 .home-hero-link {
@@ -1092,7 +1115,27 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 }
 .home-hero-link:hover { color: #fff; }
 
-.home-capabilities .record-action-row { padding: 1.25rem 1rem; }
+/* Each capability column becomes a bordered panel with the same top-rule
+   idiom as .table-card/.stat-tile elsewhere in the app, rather than a
+   list floating with no frame — gives the section real weight without
+   introducing a new "AI card" pattern (no shadow, no rounded corners on
+   every side, no icon). */
+.home-panel {
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--espresso);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  padding: 1.5rem 1.5rem .25rem;
+  height: 100%;
+}
+.home-panel-intro {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: .86rem;
+  color: var(--muted);
+  margin: .6rem 0 .25rem;
+}
+.home-panel .record-action-row { padding: 1.25rem 0; margin: 0; }
 
 .how-steps {
   border: 1px solid var(--border);
@@ -1139,9 +1182,77 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 }
 
 @media (max-width: 767.98px) {
-  .home-hero { padding: 2.25rem 1.25rem; }
-  .home-hero-title { font-size: 1.5rem; }
   .how-step { flex-direction: column; gap: .3rem; }
+  .home-panel { padding: 1.25rem 1.25rem .25rem; }
+}
+
+/* =====================================================================
+   19b. SITE FOOTER — home.html only (base.html's empty {% block footer
+   %} everywhere else). A real institutional footer, not a bare
+   copyright line: dark espresso band matching the record-strip/navbar,
+   brand + quick links + contact, hairline-divided bottom bar. Stacks to
+   one column on phones.
+===================================================================== */
+.site-footer {
+  background: var(--espresso-dark);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: 2.5rem 0 0;
+}
+.site-footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 2rem;
+  padding-bottom: 2rem;
+}
+.site-footer-brand { display: flex; align-items: flex-start; gap: .85rem; }
+.site-footer-crest { width: 40px; height: 40px; flex-shrink: 0; }
+.site-footer-crest img { width: 100%; height: 100%; object-fit: contain; }
+.site-footer-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: .95rem;
+  color: #fff;
+  line-height: 1.35;
+}
+.site-footer-tagline {
+  font-family: var(--font-body);
+  font-size: .78rem;
+  color: rgba(245, 239, 230, .6);
+  margin-top: .3rem;
+}
+.site-footer-heading {
+  font-family: var(--font-body);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, .5);
+  margin-bottom: .8rem;
+}
+.site-footer-col { display: flex; flex-direction: column; gap: .55rem; }
+.site-footer-col a {
+  font-family: var(--font-body);
+  font-size: .84rem;
+  color: rgba(245, 239, 230, .85);
+}
+.site-footer-col a:hover { color: var(--gold); }
+.site-footer-text {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  line-height: 1.55;
+  color: rgba(245, 239, 230, .7);
+  margin: 0;
+}
+.site-footer-bottom {
+  font-family: var(--font-body);
+  font-size: .78rem;
+  color: rgba(245, 239, 230, .55);
+  text-align: center;
+  border-top: 1px solid rgba(245, 239, 230, .14);
+  padding: 1.25rem 0;
+}
+
+@media (max-width: 767.98px) {
+  .site-footer-grid { grid-template-columns: 1fr; gap: 1.75rem; }
 }
 
 /* =====================================================================

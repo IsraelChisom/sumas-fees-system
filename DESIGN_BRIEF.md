@@ -215,3 +215,46 @@ No new AI-dashboard tells were introduced: `.dashboard-header` is a flat
 fill with no border-radius pretending to be a card, and
 `.balance-breakdown-row` uses the same hairline-divider-row idiom as
 `.record-action-row`, not icon tiles.
+
+## Public homepage follow-up: "doesn't look like a professional university site" + full responsiveness pass
+
+The first pass at `home.html` (hero band + two `.record-actions` columns +
+`.how-steps` ledger) followed the letter of the brief but still read as
+thin/generic once seen next to a real university site — mainly because it
+had **no footer at all**, which is the single biggest tell that a page
+isn't a real institutional site, plus a hero with no framing device and
+capability lists floating with no visual anchor. Fixed without
+introducing new AI-dashboard tells:
+
+- **`.home-hero-rule`**: a single 2px gold hairline under the crest — a
+  letterhead framing cue, used exactly once, not repeated as a border
+  treatment.
+- **`.home-panel`**: the "For Students"/"For Administrators" columns are
+  now bordered panels with the same top-rule idiom as `.table-card` and
+  `.stat-tile` elsewhere in the app (plain top rule, not a shadowed card),
+  each with a one-line italic intro above its `.record-actions` list —
+  reusing an existing vocabulary rather than inventing a new card style.
+- **`.site-footer`**: a real full-bleed footer (`{% block footer %}` in
+  `base.html`, empty everywhere except `home.html`) — espresso-dark to
+  match the navbar/record-strip, with brand + Quick Links + a Bursary
+  contact note, and a hairline-divided bottom bar reusing the existing
+  `&copy; {{ current_year }} SUMAS — Eze Ezekiel (SUMAS/2022/0697)` line
+  from `login.html`/`error.html` rather than inventing new footer copy.
+
+Responsiveness was tightened at the same time, since students reach the
+portal from phones and tablets at least as often as laptops:
+
+- `.home-hero`'s padding and title size are now `clamp()`-based (fluid
+  between phone and desktop) instead of jumping once at a single
+  breakpoint, so it scales smoothly across the whole phone → tablet →
+  desktop range rather than just at 768px.
+- The student top strip (`.record-strip`) now shows a short `SUMAS`
+  wordmark (`.wordmark-short`) below the `sm` breakpoint instead of
+  dropping the institution name entirely, so brand identity survives on
+  small phones — previously only the crest icon remained.
+- `.site-footer-grid` collapses from three columns to one below 768px.
+
+No fixed-pixel-width elements were found elsewhere in `style.css` that
+would force horizontal scrolling on a phone (the admin sidebar already
+collapses to a horizontal scroller below 992px, tables already scroll
+inside `.table-card`) — the homepage was the actual gap.

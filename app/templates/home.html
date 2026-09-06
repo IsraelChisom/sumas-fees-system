@@ -5,6 +5,7 @@
 
 <div class="home-hero">
   <div class="home-hero-crest"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
+  <div class="home-hero-rule"></div>
   <div class="home-hero-eyebrow">State University of Medical &amp; Applied Sciences</div>
   <h1 class="home-hero-title">School Fees Payment Tracking &amp; Receipt System</h1>
   <p class="home-hero-desc">
@@ -20,62 +21,68 @@
   </div>
 </div>
 
-<div class="row g-5 home-capabilities">
+<div class="row g-4 g-lg-5 home-capabilities">
   <div class="col-lg-6">
-    <div class="section-label mb-1">For Students</div>
-    <div class="record-actions">
-      <div class="record-action-row">
-        <div>
-          <div class="record-action-title">Generate an Invoice</div>
-          <div class="record-action-desc">Pick a fee category and payment plan to get a unique payment reference, ready to pay against.</div>
+    <div class="home-panel">
+      <div class="section-label mb-1">For Students</div>
+      <p class="home-panel-intro">Everything you need to settle your fees without a trip to the Bursary.</p>
+      <div class="record-actions">
+        <div class="record-action-row">
+          <div>
+            <div class="record-action-title">Generate an Invoice</div>
+            <div class="record-action-desc">Pick a fee category and payment plan to get a unique payment reference, ready to pay against.</div>
+          </div>
         </div>
-      </div>
-      <div class="record-action-row">
-        <div>
-          <div class="record-action-title">Pay With Confidence</div>
-          <div class="record-action-desc">Pay externally using your reference. The moment it clears, your invoice is matched and marked paid automatically.</div>
+        <div class="record-action-row">
+          <div>
+            <div class="record-action-title">Pay With Confidence</div>
+            <div class="record-action-desc">Pay externally using your reference. The moment it clears, your invoice is matched and marked paid automatically.</div>
+          </div>
         </div>
-      </div>
-      <div class="record-action-row">
-        <div>
-          <div class="record-action-title">Get Your Receipt Instantly</div>
-          <div class="record-action-desc">An official, letterhead receipt is issued the instant payment is confirmed — view, print, or download it as a PDF.</div>
+        <div class="record-action-row">
+          <div>
+            <div class="record-action-title">Get Your Receipt Instantly</div>
+            <div class="record-action-desc">An official, letterhead receipt is issued the instant payment is confirmed — view, print, or download it as a PDF.</div>
+          </div>
         </div>
-      </div>
-      <div class="record-action-row">
-        <div>
-          <div class="record-action-title">Track Your Balance</div>
-          <div class="record-action-desc">See exactly what you owe and what you've paid, broken down by fee category, at any time.</div>
+        <div class="record-action-row">
+          <div>
+            <div class="record-action-title">Track Your Balance</div>
+            <div class="record-action-desc">See exactly what you owe and what you've paid, broken down by fee category, at any time.</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="col-lg-6">
-    <div class="section-label mb-1">For Administrators</div>
-    <div class="record-actions">
-      <div class="record-action-row">
-        <div>
-          <div class="record-action-title">Manage Students &amp; Fees</div>
-          <div class="record-action-desc">Add and update student records and fee structures for every session, department, and faculty.</div>
+    <div class="home-panel">
+      <div class="section-label mb-1">For Administrators</div>
+      <p class="home-panel-intro">A single system of record for every fee, payment, and receipt on campus.</p>
+      <div class="record-actions">
+        <div class="record-action-row">
+          <div>
+            <div class="record-action-title">Manage Students &amp; Fees</div>
+            <div class="record-action-desc">Add and update student records and fee structures for every session, department, and faculty.</div>
+          </div>
         </div>
-      </div>
-      <div class="record-action-row">
-        <div>
-          <div class="record-action-title">Resolve Payment Exceptions</div>
-          <div class="record-action-desc">Only unmatched or mismatched payments need a manual look — everything else confirms itself.</div>
+        <div class="record-action-row">
+          <div>
+            <div class="record-action-title">Resolve Payment Exceptions</div>
+            <div class="record-action-desc">Only unmatched or mismatched payments need a manual look — everything else confirms itself.</div>
+          </div>
         </div>
-      </div>
-      <div class="record-action-row">
-        <div>
-          <div class="record-action-title">Search Payment Records</div>
-          <div class="record-action-desc">Look up any invoice by student name, registration number, or payment reference in seconds.</div>
+        <div class="record-action-row">
+          <div>
+            <div class="record-action-title">Search Payment Records</div>
+            <div class="record-action-desc">Look up any invoice by student name, registration number, or payment reference in seconds.</div>
+          </div>
         </div>
-      </div>
-      <div class="record-action-row">
-        <div>
-          <div class="record-action-title">Generate Departmental Reports</div>
-          <div class="record-action-desc">Produce a payment-status report for any department or level — print it, export it as CSV, or download it as a PDF.</div>
+        <div class="record-action-row">
+          <div>
+            <div class="record-action-title">Generate Departmental Reports</div>
+            <div class="record-action-desc">Produce a payment-status report for any department or level — print it, export it as CSV, or download it as a PDF.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -117,4 +124,35 @@
   <p class="auth-footer-note mt-3 mb-0">Having trouble signing in? Contact the SUMAS Bursary office.</p>
 </div>
 
+{% endblock %}
+
+{% block footer %}
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer-grid">
+      <div class="site-footer-brand">
+        <div class="site-footer-crest"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
+        <div>
+          <div class="site-footer-name">State University of Medical &amp; Applied Sciences</div>
+          <div class="site-footer-tagline">School Fees Payment Tracking &amp; Receipt System</div>
+        </div>
+      </div>
+
+      <div class="site-footer-col">
+        <div class="site-footer-heading">Quick Links</div>
+        <a href="{{ url_for('auth.login') }}">Log In</a>
+        <a href="#how-it-works">How It Works</a>
+      </div>
+
+      <div class="site-footer-col">
+        <div class="site-footer-heading">Need Help?</div>
+        <p class="site-footer-text">Contact the SUMAS Bursary office for account access or payment queries.</p>
+      </div>
+    </div>
+
+    <div class="site-footer-bottom">
+      &copy; {{ current_year }} SUMAS &mdash; Eze Ezekiel (SUMAS/2022/0697)
+    </div>
+  </div>
+</footer>
 {% endblock %}
