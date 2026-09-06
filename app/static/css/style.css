@@ -1035,7 +1035,117 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 }
 
 /* =====================================================================
-   19. RESPONSIVE
+   19. PUBLIC HOMEPAGE — the signed-out landing page (app/templates/
+   home.html). Same institutional vocabulary as everywhere else: the
+   hero is a flat espresso band (the .dashboard-header pattern, just
+   bigger and centered for an anonymous visitor rather than an
+   identity+balance strip), the capability lists reuse .record-actions/
+   .record-action-row as-is, and "How It Works" is a bordered ledger list
+   (the .balance-breakdown pattern) rather than numbered circle badges or
+   icon tiles. No gradients, no scroll animation, no hover-lift.
+===================================================================== */
+.home-hero {
+  background: var(--espresso);
+  border-radius: var(--radius-sm);
+  padding: 3.25rem 2rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+.home-hero-crest { width: 68px; height: 68px; margin: 0 auto 1.1rem; }
+.home-hero-crest img { width: 100%; height: 100%; object-fit: contain; }
+.home-hero-eyebrow {
+  font-family: var(--font-body);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, .7);
+  margin-bottom: .6rem;
+}
+.home-hero-title {
+  color: #fff;
+  font-size: 1.9rem;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.home-hero-desc {
+  font-family: var(--font-body);
+  font-size: .95rem;
+  line-height: 1.65;
+  color: rgba(245, 239, 230, .82);
+  max-width: 600px;
+  margin: 1.1rem auto 0;
+}
+.home-hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  margin-top: 1.85rem;
+}
+.home-hero-link {
+  font-family: var(--font-body);
+  font-size: .85rem;
+  color: rgba(245, 239, 230, .85);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 1px;
+}
+.home-hero-link:hover { color: #fff; }
+
+.home-capabilities .record-action-row { padding: 1.25rem 1rem; }
+
+.how-steps {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}
+.how-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.4rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.how-step:last-child { border-bottom: none; }
+.how-step-num {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--gold-dark);
+  width: 1.75rem;
+  flex-shrink: 0;
+}
+.how-step-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--espresso);
+  margin-bottom: .3rem;
+}
+.how-step-desc { font-family: var(--font-body); font-size: .86rem; color: var(--muted); }
+
+.home-cta {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+.home-cta-text {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--espresso);
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 767.98px) {
+  .home-hero { padding: 2.25rem 1.25rem; }
+  .home-hero-title { font-size: 1.5rem; }
+  .how-step { flex-direction: column; gap: .3rem; }
+}
+
+/* =====================================================================
+   20. RESPONSIVE
 ===================================================================== */
 @media (max-width: 991.98px) {
   .admin-shell { flex-direction: column; }
@@ -1064,7 +1174,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 }
 
 /* =====================================================================
-   20. ACCESSIBILITY — respect "reduce motion": every purposeful motion
+   21. ACCESSIBILITY — respect "reduce motion": every purposeful motion
    moment (checkmark draw, badge stamp, receipt reveal) shows its end
    state instantly.
 ===================================================================== */

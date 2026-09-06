@@ -84,6 +84,13 @@ def create_app(test_config=None):
 
     @app.route("/")
     def index():
-        return redirect(_home_url_and_label()[0])
+        # A logged-in visitor goes straight to their own dashboard, same
+        # as before. A signed-out visitor — including anyone landing on
+        # the bare URL for the first time — sees the public homepage
+        # instead of being dropped straight onto the login form with no
+        # context for what the system is.
+        if session.get("user_type") in ("student", "admin"):
+            return redirect(_home_url_and_label()[0])
+        return render_template("home.html")
 
     return app

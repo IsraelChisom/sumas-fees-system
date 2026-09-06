@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+
+<div class="home-hero">
+  <div class="home-hero-crest"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
+  <div class="home-hero-eyebrow">State University of Medical &amp; Applied Sciences</div>
+  <h1 class="home-hero-title">School Fees Payment Tracking &amp; Receipt System</h1>
+  <p class="home-hero-desc">
+    Generate an invoice, pay through the payment gateway, and get your official
+    receipt automatically — every school, departmental, and faculty fee, tracked
+    in one place, with no queue at the Bursary.
+  </p>
+  <div class="home-hero-actions">
+    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
+      <i class="bi bi-box-arrow-in-right me-1"></i> Log In
+    </a>
+    <a href="#how-it-works" class="home-hero-link">See how it works</a>
+  </div>
+</div>
+
+<div class="row g-5 home-capabilities">
+  <div class="col-lg-6">
+    <div class="section-label mb-1">For Students</div>
+    <div class="record-actions">
+      <div class="record-action-row">
+        <div>
+          <div class="record-action-title">Generate an Invoice</div>
+          <div class="record-action-desc">Pick a fee category and payment plan to get a unique payment reference, ready to pay against.</div>
+        </div>
+      </div>
+      <div class="record-action-row">
+        <div>
+          <div class="record-action-title">Pay With Confidence</div>
+          <div class="record-action-desc">Pay externally using your reference. The moment it clears, your invoice is matched and marked paid automatically.</div>
+        </div>
+      </div>
+      <div class="record-action-row">
+        <div>
+          <div class="record-action-title">Get Your Receipt Instantly</div>
+          <div class="record-action-desc">An official, letterhead receipt is issued the instant payment is confirmed — view, print, or download it as a PDF.</div>
+        </div>
+      </div>
+      <div class="record-action-row">
+        <div>
+          <div class="record-action-title">Track Your Balance</div>
+          <div class="record-action-desc">See exactly what you owe and what you've paid, broken down by fee category, at any time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="section-label mb-1">For Administrators</div>
+    <div class="record-actions">
+      <div class="record-action-row">
+        <div>
+          <div class="record-action-title">Manage Students &amp; Fees</div>
+          <div class="record-action-desc">Add and update student records and fee structures for every session, department, and faculty.</div>
+        </div>
+      </div>
+      <div class="record-action-row">
+        <div>
+          <div class="record-action-title">Resolve Payment Exceptions</div>
+          <div class="record-action-desc">Only unmatched or mismatched payments need a manual look — everything else confirms itself.</div>
+        </div>
+      </div>
+      <div class="record-action-row">
+        <div>
+          <div class="record-action-title">Search Payment Records</div>
+          <div class="record-action-desc">Look up any invoice by student name, registration number, or payment reference in seconds.</div>
+        </div>
+      </div>
+      <div class="record-action-row">
+        <div>
+          <div class="record-action-title">Generate Departmental Reports</div>
+          <div class="record-action-desc">Produce a payment-status report for any department or level — print it, export it as CSV, or download it as a PDF.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="how-it-works" class="mt-5 pt-3">
+  <div class="section-label mb-3">How It Works</div>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <div>
+        <div class="how-step-title">Generate</div>
+        <div class="how-step-desc">Choose a fee category and payment plan to receive a unique payment reference — modelled on the same reference-based approach used at UNN.</div>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <div>
+        <div class="how-step-title">Pay</div>
+        <div class="how-step-desc">Complete payment against that reference through the payment gateway, using any channel it supports.</div>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <div>
+        <div class="how-step-title">Confirmed — Automatically</div>
+        <div class="how-step-desc">The moment payment succeeds, your invoice is matched and marked paid, and an official receipt is issued. No admin action, no waiting.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-cta">
+  <p class="home-cta-text">Already have an account?</p>
+  <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+    <i class="bi bi-box-arrow-in-right me-1"></i> Log In to Continue
+  </a>
+  <p class="auth-footer-note mt-3 mb-0">Having trouble signing in? Contact the SUMAS Bursary office.</p>
+</div>
+
+{% endblock %}
