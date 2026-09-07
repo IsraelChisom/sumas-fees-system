@@ -258,3 +258,39 @@ No fixed-pixel-width elements were found elsewhere in `style.css` that
 would force horizontal scrolling on a phone (the admin sidebar already
 collapses to a horizontal scroller below 992px, tables already scroll
 inside `.table-card`) — the homepage was the actual gap.
+
+## Public homepage follow-up 2: giving it the depth of a real institutional/bank homepage
+
+Researched how real university portals and bank sites earn trust on a
+first visit (data-driven messaging placed near the hero rather than
+buried in the footer, an FAQ that answers real operational questions, a
+plain-language note on how records are kept private) and added three
+sections to `home.html`, all built from vocabulary the brief already
+established rather than new card/icon patterns:
+
+- **`.home-facts`**: a three-up row directly under the hero, reusing
+  `.stat-tile` (the admin dashboard's plain-top-rule tile) as-is and
+  `.how-step-title`/`.how-step-desc` for the text — short, honest facts
+  about how the system behaves ("One Reference, Every Fee", "Automatic
+  Matching", "One Record, Every Session"), not fabricated usage numbers.
+  This project's payment gateway is a clearly-labelled simulator
+  (`PROJECT_BRIEF.md`), so trust copy anywhere on the site must stay
+  honest about what's real — no invented security/compliance badges.
+- **A `.record-quote` trust note** under "How It Works", stating plainly
+  that every invoice/payment/receipt is scoped to the signed-in student's
+  own account and that only the Bursary resolves an exception — a real
+  fact from the system's ownership-scoping (`PROJECT_BRIEF.md`), reusing
+  the existing italic-serif callout style rather than a new badge/icon
+  trust strip.
+- **`.home-faq`**: a hairline-divided list matching `.how-steps`'
+  bordered-ledger idiom, each question a Bootstrap `collapse` toggle
+  (plain button, chevron rotates 180° on open — a standard user-triggered
+  150ms transition, not automatic/decorative motion) rather than
+  shadowed accordion cards. The five questions answer real behavior from
+  `PROJECT_BRIEF.md` (installment payments, the payment-exception queue,
+  the duplicate-invoice guard, receipt timing, who to contact) instead of
+  generic placeholder FAQ copy.
+
+The footer's Quick Links gained an `#faq` anchor to match. No new color,
+radius, or shadow was introduced — everything above composes existing
+`style.css` tokens and idioms.

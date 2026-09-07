@@ -21,6 +21,27 @@
   </div>
 </div>
 
+<div class="row row-cols-1 row-cols-md-3 g-3 g-lg-4 home-facts">
+  <div class="col">
+    <div class="stat-tile">
+      <div class="how-step-title">One Reference, Every Fee</div>
+      <div class="how-step-desc">A unique payment reference for each fee category and plan — ready to pay against the moment it's generated.</div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="stat-tile">
+      <div class="how-step-title">Automatic Matching</div>
+      <div class="how-step-desc">Payments are matched to invoices the instant they arrive — no manual sign-off in the normal path, no queue at the Bursary.</div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="stat-tile">
+      <div class="how-step-title">One Record, Every Session</div>
+      <div class="how-step-desc">School, departmental, and faculty fees, invoices, and receipts, all kept in a single account you can revisit any time.</div>
+    </div>
+  </div>
+</div>
+
 <div class="row g-4 g-lg-5 home-capabilities">
   <div class="col-lg-6">
     <div class="home-panel">
@@ -114,6 +135,77 @@
       </div>
     </div>
   </div>
+  <p class="record-quote">
+    Every invoice, payment, and receipt is scoped to your own account — no student can
+    ever view another's records by guessing a reference, and only the Bursary can
+    resolve a payment that doesn't match automatically.
+  </p>
+</div>
+
+<div id="faq" class="mt-5 pt-3">
+  <div class="section-label mb-3">Frequently Asked Questions</div>
+  <div class="home-faq" id="homeFaq">
+    <div class="home-faq-item">
+      <button class="home-faq-question" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faq-installments" aria-expanded="false" aria-controls="faq-installments">
+        <span>Can I pay my fees in installments?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div id="faq-installments" class="collapse" data-bs-parent="#homeFaq">
+        <p class="home-faq-answer">Yes — generate an invoice for the First or Second Installment
+          instead of Full Payment. Each installment gets its own payment reference, and your
+          balance updates as each one clears.</p>
+      </div>
+    </div>
+    <div class="home-faq-item">
+      <button class="home-faq-question" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faq-mismatch" aria-expanded="false" aria-controls="faq-mismatch">
+        <span>What happens if the amount I paid doesn't match my invoice?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div id="faq-mismatch" class="collapse" data-bs-parent="#homeFaq">
+        <p class="home-faq-answer">Nothing is lost. If a payment's reference or amount doesn't line
+          up exactly, it's held in the Bursary's exception queue for manual review rather than
+          marked paid incorrectly — it's resolved as soon as an administrator looks at it.</p>
+      </div>
+    </div>
+    <div class="home-faq-item">
+      <button class="home-faq-question" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faq-existing" aria-expanded="false" aria-controls="faq-existing">
+        <span>I already have an invoice for this fee — can I generate another?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div id="faq-existing" class="collapse" data-bs-parent="#homeFaq">
+        <p class="home-faq-answer">Not while one is still outstanding. You can't generate a second
+          invoice for the same fee category and payment plan until the existing one is settled —
+          use it to pay, or contact the Bursary if you believe it's in error.</p>
+      </div>
+    </div>
+    <div class="home-faq-item">
+      <button class="home-faq-question" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faq-receipt" aria-expanded="false" aria-controls="faq-receipt">
+        <span>How soon can I get my official receipt?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div id="faq-receipt" class="collapse" data-bs-parent="#homeFaq">
+        <p class="home-faq-answer">Immediately. The moment your payment is matched to its invoice,
+          the invoice is marked Paid and an official, letterhead receipt is generated — view it,
+          print it, or download it as a PDF straight away.</p>
+      </div>
+    </div>
+    <div class="home-faq-item">
+      <button class="home-faq-question" type="button" data-bs-toggle="collapse"
+              data-bs-target="#faq-help" aria-expanded="false" aria-controls="faq-help">
+        <span>Who do I contact if I have trouble signing in or paying?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div id="faq-help" class="collapse" data-bs-parent="#homeFaq">
+        <p class="home-faq-answer">The SUMAS Bursary office handles account access and payment
+          queries — reach out to them directly and they can look up your record or resolve the
+          issue from the admin side.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="home-cta">
@@ -142,6 +234,7 @@
         <div class="site-footer-heading">Quick Links</div>
         <a href="{{ url_for('auth.login') }}">Log In</a>
         <a href="#how-it-works">How It Works</a>
+        <a href="#faq">FAQ</a>
       </div>
 
       <div class="site-footer-col">

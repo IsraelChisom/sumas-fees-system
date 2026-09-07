@@ -1115,6 +1115,15 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 }
 .home-hero-link:hover { color: #fff; }
 
+/* Three short facts under the hero — the "data-driven messaging near the
+   hero" pattern real institutional/bank sites use to earn trust before the
+   scroll, done honestly (facts about how the system behaves, not vanity
+   numbers). Reuses .stat-tile as-is (the admin dashboard's plain-top-rule
+   tile) and .how-step-title/.how-step-desc for the text, rather than
+   inventing a new tile style. */
+.home-facts { margin-bottom: clamp(2rem, 4vw + 1rem, 3rem); }
+.home-facts .how-step-title { font-size: 1rem; }
+
 /* Each capability column becomes a bordered panel with the same top-rule
    idiom as .table-card/.stat-tile elsewhere in the app, rather than a
    list floating with no frame — gives the section real weight without
@@ -1181,9 +1190,53 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   margin-bottom: 1rem;
 }
 
+/* FAQ — a plain hairline-divided list matching .how-steps, not an accordion
+   of shadowed cards. The chevron rotates 180° on open (a standard, purposeful
+   150ms hover/interaction transition, not decoration) and nothing moves
+   until the visitor actually clicks a question. */
+.home-faq {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}
+.home-faq-item { border-bottom: 1px solid var(--border); }
+.home-faq-item:last-child { border-bottom: none; }
+.home-faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: none;
+  border: 0;
+  padding: 1.1rem 1.5rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: .98rem;
+  color: var(--espresso);
+  text-align: left;
+}
+.home-faq-question:hover { color: var(--gold-dark); }
+.home-faq-question i {
+  color: var(--gold-dark);
+  flex-shrink: 0;
+  transition: transform .15s ease;
+}
+.home-faq-question[aria-expanded="true"] i { transform: rotate(180deg); }
+.home-faq-answer {
+  font-family: var(--font-body);
+  font-size: .87rem;
+  line-height: 1.6;
+  color: var(--muted);
+  padding: 0 1.5rem 1.25rem;
+  margin: 0;
+}
+
 @media (max-width: 767.98px) {
   .how-step { flex-direction: column; gap: .3rem; }
   .home-panel { padding: 1.25rem 1.25rem .25rem; }
+  .home-faq-question { padding: 1rem 1.1rem; font-size: .92rem; }
+  .home-faq-answer { padding: 0 1.1rem 1.1rem; }
 }
 
 /* =====================================================================
