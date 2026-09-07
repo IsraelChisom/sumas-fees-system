@@ -15,8 +15,8 @@ System" — a Flask web app for State University of Medical and Applied Sciences
 **The workflow (redesigned — this replaced an earlier "submit a claim, admin
 verifies it by eye" design that the supervisor rejected as just a digital copy
 of the manual process):** modeled on a real system used at the University of
-Nigeria, Nsukka. A student generates an **Invoice** for a fee category and
-payment plan, gets a unique **payment reference** (modeled on Remita's RRR),
+Nigeria, Nsukka. A student generates an **Invoice** for a level, session, fee
+category, and payment plan, gets a unique **payment reference** (modeled on Remita's RRR),
 and pays that reference externally. The moment a payment notification for that
 reference arrives — for a real gateway, a webhook; for this project, a clearly
 labeled **payment gateway simulator**, since there's no real gateway access —
@@ -115,10 +115,29 @@ Important business rule for `fee_category`: `category_name` is one of
 - Departmental Fee → `department` populated, `faculty` NULL
 - Faculty Fee → `faculty` populated, `department` NULL
 
+`fee_category` is also scoped by `level` (added after the initial build, once
+it became clear tuition realistically varies by level — e.g. School Fees
+commonly charges more at 100 Level than at 200–400 Level). `level` is
+nullable: NULL means "applies to every level" (the default for Departmental/
+Faculty Fee, which don't have to vary), while a specific value (`'100'`..
+`'400'`, matching `student.level`'s free-text values) scopes that row to just
+that level. Any of the three category types may use either. A student's
+Outstanding Balance and the admin's Departmental Report only ever show fee
+categories matching the student's *own* registered level (or level-
+independent ones) — see `_applicable_fee_categories()` in `app/student.py`.
+The invoice-generation form is the one place level is **selectable** rather
+than fixed to the student's own record: `generate_invoice()` uses the wider
+`_fee_categories_for_invoice_form()` (no level filter) so a student can still
+invoice a level other than their current one — e.g. a fee carried over from
+an earlier session — with the Level and Academic Session fields filtering the
+Fee Category options client-side and the chosen category re-validated
+server-side against whatever level/session was actually submitted.
+
 **Known gotcha already fixed once:** SQLite's `UNIQUE` constraint does NOT catch
 duplicates when the differentiating column is NULL (NULL ≠ NULL in SQL). See
 `_normalise_fee_scope()` and the explicit `IS`-based duplicate check in
-`app/admin.py`'s `add_fee()` — replicate this pattern anywhere else duplicate
+`app/admin.py`'s `add_fee()` (now also checking `level IS ?`, alongside
+`department`/`faculty`) — replicate this pattern anywhere else duplicate
 detection involves a nullable column.
 
 **`invoice`** — one row per (student, fee category, payment plan) the student
@@ -187,9 +206,9 @@ external package — e.g. `56000` → `"Fifty Six Thousand Naira Only"`).
    `/admin/fees*`) — admin can add/edit students, add/edit fee categories with
    the scoping rule above enforced both in a Python helper and at the DB level.
    Tested in `smoke_test_admin.py` (12 tests).
-3. **Invoice generation** (`app/student.py`) — student picks a fee category
-   (scoped to them, same rule as fee management) and payment plan, gets a
-   unique payment reference. Tested in `smoke_test_invoices.py` (20 tests).
+3. **Invoice generation** (`app/student.py`) — student picks a level, session,
+   fee category (scoped to them, same rule as fee management), and payment
+   plan, gets a unique payment reference. Tested in `smoke_test_invoices.py`.
 4. **Payment gateway simulator + automatic matching** (`app/student.py`,
    `app/payments.py`) — clearly labeled as a simulation; calls
    `handle_payment_notification()`. Auto-generates the receipt. Tested in
@@ -313,7 +332,8 @@ than a temp one, so it'll fail with "no such table" until you do.
 
 **Student:**
 - [x] Log in
-- [x] Generate an invoice (fee category + payment plan → payment reference)
+- [x] Generate an invoice (level + session + fee category + payment plan →
+      payment reference)
 - [x] Pay via the gateway simulator (stands in for a real gateway)
 - [x] View invoice/receipt history, with current status
 - [x] View/print/download a receipt (browser print, and now a real
