@@ -294,3 +294,42 @@ established rather than new card/icon patterns:
 The footer's Quick Links gained an `#faq` anchor to match. No new color,
 radius, or shadow was introduced — everything above composes existing
 `style.css` tokens and idioms.
+
+## Public homepage follow-up 3: a real campus photograph in the hero, and a closing statement band
+
+A generic Bootstrap "university theme" template (navy blue, a full-bleed
+photo hero with text over a gradient, icon-tile feature row, a photo +
+dark-panel "Apply for Admission" split section) was offered as a visual
+reference. Its color language and icon tiles are exactly what this brief's
+avoid-list rules out, and the project's espresso/gold "Academic Ledger"
+identity was deliberately kept — but two of its *structural* ideas were
+worth adopting, reinterpreted in the existing vocabulary rather than
+copied:
+
+- **A real photograph in the hero**, not a stock/generic image — an aerial
+  shot of the College of Medicine building on the actual SUMAS campus
+  (Igbo Eno, Enugu State), supplied by the project owner and confirmed to
+  be SUMAS's own (other candidate photos carried third-party watermarks —
+  `theeasternupdates.com` / `myschoolgist.com` — and were excluded rather
+  than reproduced without permission). The hero's letterhead masthead
+  (crest/rule/eyebrow) stays centered above a new `.home-hero-grid`:
+  headline/copy/CTAs on the left, the photograph on the right in a thin
+  gold `.home-hero-photo-frame` with an italic serif caption underneath —
+  a captioned figure in a printed document, not a full-bleed image with
+  text overlaid on a dark gradient (the specific pattern being avoided).
+  Collapses to a single centered column below `992px`.
+- **A closing CTA band**, replacing the previous small centered
+  `.home-cta` prompt: the same flat-espresso-fill idiom used everywhere
+  else (`.dashboard-header`, the hero, the footer) broken out to full
+  viewport width immediately before `.site-footer`, so the page ends on
+  one deliberate statement ("Settle Your Fees Without a Trip to the
+  Bursary" + the Log In button) instead of a boxed afterthought. No photo
+  repeated here — there is only the one real photograph, and reusing it a
+  second time in a different crop read as padding rather than substance,
+  so this section stays typographic.
+
+No fabricated contact details (phone/email) were added despite the
+reference's top utility bar — no real Bursary phone/email exists anywhere
+else in this project's copy (every other page says "contact the SUMAS
+Bursary office" without a specific number), and inventing one here would
+break the no-placeholder-content rule this brief itself sets.

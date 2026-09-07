@@ -7,17 +7,30 @@
   <div class="home-hero-crest"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
   <div class="home-hero-rule"></div>
   <div class="home-hero-eyebrow">State University of Medical &amp; Applied Sciences</div>
-  <h1 class="home-hero-title">School Fees Payment Tracking &amp; Receipt System</h1>
-  <p class="home-hero-desc">
-    Generate an invoice, pay through the payment gateway, and get your official
-    receipt automatically — every school, departmental, and faculty fee, tracked
-    in one place, with no queue at the Bursary.
-  </p>
-  <div class="home-hero-actions">
-    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
-      <i class="bi bi-box-arrow-in-right me-1"></i> Log In
-    </a>
-    <a href="#how-it-works" class="home-hero-link">See how it works</a>
+
+  <div class="home-hero-grid">
+    <div class="home-hero-text">
+      <h1 class="home-hero-title">School Fees Payment Tracking &amp; Receipt System</h1>
+      <p class="home-hero-desc">
+        Generate an invoice, pay through the payment gateway, and get your official
+        receipt automatically — every school, departmental, and faculty fee, tracked
+        in one place, with no queue at the Bursary.
+      </p>
+      <div class="home-hero-actions">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Log In
+        </a>
+        <a href="#how-it-works" class="home-hero-link">See how it works</a>
+      </div>
+    </div>
+
+    <figure class="home-hero-photo">
+      <div class="home-hero-photo-frame">
+        <img src="{{ url_for('static', filename='images/sumas-campus.jpg') }}"
+             alt="The College of Medicine building on the SUMAS campus, Igbo Eno, Enugu State">
+      </div>
+      <figcaption class="home-hero-photo-caption">SUMAS campus — Igbo Eno, Enugu State</figcaption>
+    </figure>
   </div>
 </div>
 
@@ -209,11 +222,14 @@
 </div>
 
 <div class="home-cta">
-  <p class="home-cta-text">Already have an account?</p>
-  <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
-    <i class="bi bi-box-arrow-in-right me-1"></i> Log In to Continue
-  </a>
-  <p class="auth-footer-note mt-3 mb-0">Having trouble signing in? Contact the SUMAS Bursary office.</p>
+  <div class="home-cta-inner">
+    <p class="home-cta-eyebrow">Ready When You Are</p>
+    <h2 class="home-cta-heading">Settle Your Fees Without a Trip to the Bursary</h2>
+    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
+      <i class="bi bi-box-arrow-in-right me-1"></i> Log In to Continue
+    </a>
+    <p class="home-cta-note">Having trouble signing in? Contact the SUMAS Bursary office.</p>
+  </div>
 </div>
 
 {% endblock %}

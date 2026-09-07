@@ -1048,19 +1048,29 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 /* =====================================================================
    19. PUBLIC HOMEPAGE — the signed-out landing page (app/templates/
    home.html). Same institutional vocabulary as everywhere else: the
-   hero is a flat espresso band (the .dashboard-header pattern, just
-   bigger and centered for an anonymous visitor rather than an
-   identity+balance strip), the capability lists reuse .record-actions/
-   .record-action-row as-is, and "How It Works" is a bordered ledger list
-   (the .balance-breakdown pattern) rather than numbered circle badges or
-   icon tiles. No gradients, no scroll animation, no hover-lift.
+   hero is a flat espresso band (the .dashboard-header pattern), the
+   capability lists reuse .record-actions/.record-action-row as-is, and
+   "How It Works" is a bordered ledger list (the .balance-breakdown
+   pattern) rather than numbered circle badges or icon tiles. No
+   gradients, no scroll animation, no hover-lift.
+
+   The hero's letterhead masthead (crest/rule/eyebrow) stays centered
+   above a two-column grid: headline/copy/CTAs left, a real campus
+   photograph right, framed as a captioned document "plate" (a thin gold
+   frame + an italic serif caption below it, like a figure in a printed
+   brochure) rather than a full-bleed photo with text overlaid on a
+   gradient — see the homepage follow-up in DESIGN_BRIEF.md. The closing
+   CTA is the same flat-espresso-band idiom broken full-bleed out of
+   .container (via a negative-margin viewport-width trick), so the page
+   ends on a deliberate statement immediately before .site-footer rather
+   than a small boxed prompt.
 ===================================================================== */
 .home-hero {
   background: var(--espresso);
   border-radius: var(--radius-sm);
   /* Fluid padding: scales continuously between phone and desktop instead
      of jumping once at a single breakpoint. */
-  padding: clamp(2rem, 5vw + 1rem, 3.25rem) clamp(1.1rem, 4vw, 2rem);
+  padding: clamp(2rem, 5vw + 1rem, 3.25rem) clamp(1.1rem, 4vw, 2.25rem);
   margin-bottom: clamp(2rem, 4vw + 1rem, 3rem);
   text-align: center;
 }
@@ -1081,27 +1091,35 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   letter-spacing: .12em;
   text-transform: uppercase;
   color: rgba(245, 239, 230, .7);
-  margin-bottom: .6rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* Below the letterhead masthead (crest/rule/eyebrow above), the headline
+   and a real campus photograph sit side by side — a captioned document
+   "plate", not a full-bleed photo with text overlaid on a gradient. */
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: center;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  text-align: left;
 }
 .home-hero-title {
   color: #fff;
-  font-size: clamp(1.5rem, 3.2vw + .9rem, 2.5rem);
+  font-size: clamp(1.4rem, 2.4vw + .9rem, 2.15rem);
   line-height: 1.2;
-  max-width: 680px;
-  margin: 0 auto;
+  margin: 0;
 }
 .home-hero-desc {
   font-family: var(--font-body);
   font-size: .95rem;
   line-height: 1.65;
   color: rgba(245, 239, 230, .82);
-  max-width: 600px;
-  margin: 1.1rem auto 0;
+  margin: 1.1rem 0 0;
 }
 .home-hero-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-wrap: wrap;
   gap: 1rem 1.4rem;
   margin-top: 1.85rem;
@@ -1114,6 +1132,31 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   padding-bottom: 1px;
 }
 .home-hero-link:hover { color: #fff; }
+
+.home-hero-photo { margin: 0; }
+.home-hero-photo-frame {
+  border: 1px solid var(--gold);
+  padding: 5px;
+}
+.home-hero-photo-frame img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.home-hero-photo-caption {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: .78rem;
+  color: rgba(245, 239, 230, .6);
+  text-align: center;
+  margin: .65rem 0 0;
+}
+@media (max-width: 991.98px) {
+  .home-hero-grid { grid-template-columns: 1fr; text-align: center; }
+  .home-hero-actions { justify-content: center; }
+  .home-hero-photo { max-width: 420px; margin: 0 auto; }
+}
 
 /* Three short facts under the hero — the "data-driven messaging near the
    hero" pattern real institutional/bank sites use to earn trust before the
@@ -1176,18 +1219,41 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 }
 .how-step-desc { font-family: var(--font-body); font-size: .86rem; color: var(--muted); }
 
+/* A full-width flat espresso band closing the page — the same
+   .dashboard-header idiom used elsewhere (flat fill, no gradient, no
+   rounded card), broken out of the narrow .container so it reads as a
+   deliberate closing statement rather than another boxed section, the
+   way .site-footer directly below it already does. */
 .home-cta {
+  background: var(--espresso);
+  /* Negative bottom margin cancels out <main class="container py-4">'s
+     fixed 24px bottom padding, so this band sits flush against
+     .site-footer below it (also margin-top: 0, see 19b) — two full-bleed
+     dark bands back to back, not separated by a stray ivory sliver. */
+  margin: clamp(2.5rem, 5vw, 4rem) calc(50% - 50vw) -24px;
+  padding: clamp(2.25rem, 5vw, 3.25rem) 1.5rem;
   text-align: center;
-  margin-top: 3rem;
-  padding-top: 2.5rem;
-  border-top: 1px solid var(--border);
 }
-.home-cta-text {
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--espresso);
-  margin-bottom: 1rem;
+.home-cta-inner { max-width: 620px; margin: 0 auto; }
+.home-cta-eyebrow {
+  font-family: var(--font-body);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, .65);
+  margin-bottom: .6rem;
+}
+.home-cta-heading {
+  color: #fff;
+  font-size: clamp(1.25rem, 1.8vw + .8rem, 1.7rem);
+  line-height: 1.3;
+  margin-bottom: 1.6rem;
+}
+.home-cta-note {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  color: rgba(245, 239, 230, .7);
+  margin: 1.1rem 0 0;
 }
 
 /* FAQ — a plain hairline-divided list matching .how-steps, not an accordion
@@ -1248,7 +1314,10 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 ===================================================================== */
 .site-footer {
   background: var(--espresso-dark);
-  margin-top: clamp(2.5rem, 5vw, 4rem);
+  /* No margin-top: this always follows .home-cta directly (the only page
+     that renders {% block footer %}), which already supplies its own
+     clamp()-based top spacing and cancels the space below it — the two
+     full-bleed bands sit flush, not separated by an ivory gap. */
   padding: 2.5rem 0 0;
 }
 .site-footer-grid {
