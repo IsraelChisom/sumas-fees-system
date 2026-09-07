@@ -54,7 +54,7 @@ with app.app_context():
 
 client = app.test_client()
 client.post("/auth/login", data={"role": "student", "login_id": "SUMAS/2022/0697", "password": "student123"})
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "payment_plan": "Full Payment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "Full Payment"})
 
 with app.app_context():
     db = get_db()
@@ -79,7 +79,7 @@ check("Receipt shows the amount spelled out in words", b"Fifty Six Thousand Nair
 check("Receipt shows a receipt number", b"RCT-" in resp.data)
 
 # 4. Receipt refused for an unpaid invoice
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "payment_plan": "First Installment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "First Installment"})
 with app.app_context():
     db = get_db()
     unpaid = db.execute(

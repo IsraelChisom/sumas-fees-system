@@ -19,6 +19,7 @@
       <tr>
         <th>Category</th>
         <th>Session</th>
+        <th>Level</th>
         <th>Scope</th>
         <th class="text-end">Amount (NGN)</th>
         <th></th>
@@ -40,6 +41,7 @@
           </div>
         </td>
         <td class="text-muted" style="font-size:.87rem;">{{ f['session'] }}</td>
+        <td class="text-muted" style="font-size:.87rem;">{{ (f['level'] ~ ' Level') if f['level'] else 'All Levels' }}</td>
         <td class="text-muted" style="font-size:.87rem;">
           {% if f['category_name'] == 'School Fees' %}
             All Students
@@ -63,7 +65,7 @@
       </tr>
       {% else %}
       <tr>
-        <td colspan="5" class="text-center py-5">
+        <td colspan="6" class="text-center py-5">
           <i class="bi bi-cash-coin display-6 text-muted d-block mb-2"></i>
           <span class="muted-note">No fee categories have been set up yet.</span>
         </td>

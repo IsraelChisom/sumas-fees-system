@@ -74,7 +74,7 @@ check("Invoice form does NOT offer another department's fee", b"30,000.00" not i
 
 # 2. Generate a Full Payment invoice
 resp = client.post("/student/invoices/generate", data={
-    "fee_category_id": dept_fee_id, "payment_plan": "Full Payment",
+    "fee_category_id": dept_fee_id, "session": "2025/2026", "payment_plan": "Full Payment",
 }, follow_redirects=True)
 check("Invoice generated successfully", b"Invoice generated" in resp.data)
 check("Invoice shows a payment reference", b"Payment Reference" in resp.data)
@@ -91,10 +91,10 @@ check("Invoice has a unique, non-empty payment reference", bool(invoice["payment
 
 # 3. Installment amounts split evenly and sum back exactly (odd kobo included)
 resp = client.post("/student/invoices/generate", data={
-    "fee_category_id": dept_fee_id, "payment_plan": "First Installment",
+    "fee_category_id": dept_fee_id, "session": "2025/2026", "payment_plan": "First Installment",
 }, follow_redirects=True)
 resp = client.post("/student/invoices/generate", data={
-    "fee_category_id": dept_fee_id, "payment_plan": "Second Installment",
+    "fee_category_id": dept_fee_id, "session": "2025/2026", "payment_plan": "Second Installment",
 }, follow_redirects=True)
 with app.app_context():
     db = get_db()
@@ -114,13 +114,13 @@ check(
 
 # 4. Fee category outside scope is rejected
 resp = client.post("/student/invoices/generate", data={
-    "fee_category_id": str(other_dept_fee_id), "payment_plan": "Full Payment",
+    "fee_category_id": str(other_dept_fee_id), "session": "2025/2026", "payment_plan": "Full Payment",
 }, follow_redirects=True)
 check("Invoice against a fee category outside student's scope is rejected", b"does not apply to you" in resp.data)
 
 # 5. Duplicate invoice (same category + plan, still unpaid) is rejected
 resp = client.post("/student/invoices/generate", data={
-    "fee_category_id": dept_fee_id, "payment_plan": "Full Payment",
+    "fee_category_id": dept_fee_id, "session": "2025/2026", "payment_plan": "Full Payment",
 }, follow_redirects=True)
 check("Duplicate unpaid invoice for the same category+plan is rejected", b"already have an invoice" in resp.data)
 

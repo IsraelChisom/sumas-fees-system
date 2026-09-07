@@ -28,7 +28,12 @@
     <tbody>
       {% for inv in invoices %}
       <tr>
-        <td class="fw-semibold">{{ inv['category_name'] }}</td>
+        <td>
+          <div class="fw-semibold">{{ inv['category_name'] }}</div>
+          <div class="text-muted" style="font-size:.78rem;">
+            {% if inv['level'] %}{{ inv['level'] }} Level &middot; {% endif %}{{ inv['session'] }}
+          </div>
+        </td>
         <td class="text-muted" style="font-size:.85rem;">{{ inv['payment_plan'] }}</td>
         <td class="text-end">
           <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(inv['amount']) }}</span>

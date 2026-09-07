@@ -68,17 +68,43 @@ def dashboard():
 # ---------------------------------------------------------------------------
 
 def _applicable_fee_categories(db, student):
-    """Given a student, finds the fee_category rows that apply to them:
-    every School Fees row, plus Departmental Fee rows for their own
-    department, plus Faculty Fee rows for their own faculty. Mirrors
-    `_normalise_fee_scope` in admin.py in reverse (same scoping rule from
-    Chapter 3, Section 3.4.3, read the other way round)."""
+    """Given a student, finds the fee_category rows that apply to them right
+    now: every School Fees row, plus Departmental Fee rows for their own
+    department, plus Faculty Fee rows for their own faculty — narrowed to
+    rows whose `level` is either NULL ("all levels") or matches the
+    student's own registered level. Mirrors `_normalise_fee_scope` in
+    admin.py in reverse (same scoping rule from Chapter 3, Section 3.4.3,
+    read the other way round). Used for the student's outstanding balance
+    and the admin's departmental report — both describe what a student
+    owes *at their current level*, not every level a fee category exists
+    for (that wider set is `_fee_categories_for_invoice_form()` below)."""
+    return db.execute(
+        "SELECT * FROM fee_category "
+        "WHERE (level IS NULL OR level = ?) "
+        "  AND (category_name = 'School Fees' "
+        "   OR (category_name = 'Departmental Fee' AND department = ?) "
+        "   OR (category_name = 'Faculty Fee' AND faculty = ?)) "
+        "ORDER BY session DESC, category_name",
+        (student["level"], student["department"], student["faculty"]),
+    ).fetchall()
+
+
+def _fee_categories_for_invoice_form(db, student):
+    """The wider set used only by the invoice-generation form: every fee
+    category scoped to the student's department/faculty as above, but
+    across *every* level and session, not just the student's current one —
+    a student who needs to settle a fee for a level or session other than
+    their present one (e.g. a carried-over balance) can still select it.
+    The form itself narrows this list to one level/session at a time via
+    the Level/Session selects (see invoice_generate.html); the fee
+    category actually chosen is re-validated against this same list on
+    POST, so nothing here has to be trusted from the client."""
     return db.execute(
         "SELECT * FROM fee_category "
         "WHERE category_name = 'School Fees' "
         "   OR (category_name = 'Departmental Fee' AND department = ?) "
         "   OR (category_name = 'Faculty Fee' AND faculty = ?) "
-        "ORDER BY session DESC, category_name",
+        "ORDER BY session DESC, level, category_name",
         (student["department"], student["faculty"]),
     ).fetchall()
 
@@ -137,7 +163,7 @@ def list_invoices():
     db = get_db()
     invoices = db.execute(
         "SELECT invoice.*, fee_category.category_name, fee_category.session, "
-        "       receipt.receipt_number "
+        "       fee_category.level, receipt.receipt_number "
         "FROM invoice "
         "JOIN fee_category ON invoice.fee_category_id = fee_category.fee_category_id "
         "LEFT JOIN receipt ON receipt.invoice_id = invoice.invoice_id "
@@ -152,17 +178,30 @@ def list_invoices():
 @student_required
 def generate_invoice():
     db = get_db()
-    fee_categories = _applicable_fee_categories(db, g.user)
+    fee_categories = _fee_categories_for_invoice_form(db, g.user)
+    levels = sorted({f["level"] for f in fee_categories if f["level"]})
+    sessions = sorted({f["session"] for f in fee_categories}, reverse=True)
 
     if request.method == "POST":
         # Security NFR: which student an invoice belongs to is always
         # taken from the logged-in session (g.user), never from the form.
         fee_category_id = request.form.get("fee_category_id", "").strip()
         payment_plan = request.form.get("payment_plan", "").strip()
+        # Level and Session are UI filter aids (see invoice_generate.html's
+        # JS, which narrows the Fee Category options to whatever's picked
+        # here) — the fee_category_id is what actually determines the
+        # invoice, so they're re-checked against the CHOSEN category below
+        # rather than trusted on their own; a mismatch only happens if a
+        # client sends inconsistent values (e.g. JS disabled/tampered).
+        level = request.form.get("level", "").strip()
+        academic_session = request.form.get("session", "").strip()
 
+        # Level is only required if at least one fee category is actually
+        # level-scoped (see `levels` above) — if none are, there's nothing
+        # to pick, and the "All Levels" fallback option submits blank.
         error = None
-        if not (fee_category_id and payment_plan):
-            error = "Fee category and payment plan are both required."
+        if not (academic_session and fee_category_id and payment_plan) or (levels and not level):
+            error = "Level, session, fee category, and payment plan are all required."
         if error is None and payment_plan not in PAYMENT_PLANS:
             error = "Invalid payment plan."
 
@@ -174,6 +213,8 @@ def generate_invoice():
             )
             if chosen is None:
                 error = "That fee category does not apply to you."
+            elif chosen["session"] != academic_session or (chosen["level"] and chosen["level"] != level):
+                error = "That fee category doesn't match the level/session selected. Please try again."
 
         if error is None:
             existing = db.execute(
@@ -216,17 +257,28 @@ def generate_invoice():
         if error:
             flash(error, "danger")
 
+    # Default the Level/Session selects to the student's own level (if any
+    # fee category actually offers it) and the most recent session, so the
+    # Fee Category list is pre-filtered to the common case on first load —
+    # the student only needs to change either select for a carried-over fee.
+    default_level = g.user["level"] if g.user["level"] in levels else (levels[0] if levels else "")
+    default_session = sessions[0] if sessions else ""
+
     return render_template(
         "student/invoice_generate.html",
         fee_categories=fee_categories,
         payment_plans=PAYMENT_PLANS,
+        levels=levels,
+        sessions=sessions,
+        default_level=default_level,
+        default_session=default_session,
     )
 
 
 def _owned_invoice_or_none(db, invoice_id, student_id):
     return db.execute(
         "SELECT invoice.*, fee_category.category_name, fee_category.session, "
-        "       fee_category.department, fee_category.faculty "
+        "       fee_category.level, fee_category.department, fee_category.faculty "
         "FROM invoice JOIN fee_category "
         "  ON invoice.fee_category_id = fee_category.fee_category_id "
         "WHERE invoice.invoice_id = ? AND invoice.student_id = ?",

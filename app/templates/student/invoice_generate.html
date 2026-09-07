@@ -6,7 +6,7 @@
   <div>
     <h1 class="h3 mb-1">Generate Invoice</h1>
     <p class="muted-note mb-0">
-      Pick a fee category and how you'd like to pay it. You'll get a payment reference to pay against.
+      Pick your level, session, fee category, and how you'd like to pay it. You'll get a payment reference to pay against.
     </p>
   </div>
   <a href="{{ url_for('student.list_invoices') }}" class="btn btn-outline-secondary">
@@ -18,7 +18,33 @@
 
   <div class="card p-4" style="max-width: 520px;">
 
-    <form method="post">
+    <form method="post" id="invoiceForm">
+
+      <div class="mb-3">
+        <label for="level" class="form-label">Level</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-layers-fill input-icon"></i>
+          <select name="level" id="level" class="form-select" required>
+            {% for lvl in levels %}
+            <option value="{{ lvl }}" {{ 'selected' if lvl == default_level }}>{{ lvl }} Level</option>
+            {% else %}
+            <option value="">All Levels</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="session" class="form-label">Academic Year / Session</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-calendar-fill input-icon"></i>
+          <select name="session" id="session" class="form-select" required>
+            {% for sess in sessions %}
+            <option value="{{ sess }}" {{ 'selected' if sess == default_session }}>{{ sess }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
 
       <div class="mb-3">
         <label for="fee_category_id" class="form-label">Fee Category</label>
@@ -26,8 +52,10 @@
           <i class="bi bi-tag-fill input-icon"></i>
           <select name="fee_category_id" id="fee_category_id" class="form-select" required>
             {% for f in fee_categories %}
-            <option value="{{ f['fee_category_id'] }}">
-              {{ f['category_name'] }} &mdash; {{ f['session'] }} &nbsp;(₦{{ "{:,.2f}".format(f['amount']) }})
+            <option value="{{ f['fee_category_id'] }}"
+                    data-level="{{ f['level'] or '' }}" data-session="{{ f['session'] }}">
+              {{ f['category_name'] }} &mdash; {{ (f['level'] ~ ' Level') if f['level'] else 'All Levels' }}
+              &nbsp;(₦{{ "{:,.2f}".format(f['amount']) }})
             </option>
             {% endfor %}
           </select>
@@ -53,6 +81,38 @@
     </form>
 
   </div>
+
+  <script>
+    // Narrows the Fee Category options to whatever Level/Session is picked
+    // above, rather than making the student read session/level out of each
+    // option's label — the fee_category_id is still re-validated against
+    // the chosen level/session server-side, so this is a UX aid only.
+    (function () {
+      var levelSelect = document.getElementById("level");
+      var sessionSelect = document.getElementById("session");
+      var feeSelect = document.getElementById("fee_category_id");
+      var feeOptions = Array.prototype.slice.call(feeSelect.options);
+
+      function filterFeeOptions() {
+        var level = levelSelect.value;
+        var session = sessionSelect.value;
+        var firstVisible = null;
+        feeOptions.forEach(function (opt) {
+          var matches = opt.dataset.session === session &&
+                         (opt.dataset.level === "" || opt.dataset.level === level);
+          opt.hidden = !matches;
+          if (matches && firstVisible === null) firstVisible = opt;
+        });
+        if (firstVisible) {
+          feeSelect.value = firstVisible.value;
+        }
+      }
+
+      levelSelect.addEventListener("change", filterFeeOptions);
+      sessionSelect.addEventListener("change", filterFeeOptions);
+      filterFeeOptions();
+    })();
+  </script>
 
   <p class="record-quote" style="max-width:520px;">
     An installment splits the fee evenly in two. Your invoice will show a payment reference &mdash;

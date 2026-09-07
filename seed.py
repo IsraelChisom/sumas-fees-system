@@ -41,19 +41,25 @@ for reg, name, dept, fac, level, pw in students:
     )
 
 # --- Fee categories (session 2025/2026) ---
+# School Fees varies by level (a NULL level would mean "every level pays
+# the same", which isn't realistic for tuition); Departmental/Faculty Fees
+# stay level = None ("All Levels") here to demonstrate both are supported.
 session = "2025/2026"
 fee_categories = [
-    ("School Fees", session, None, None, 150000.00),
-    ("Departmental Fee", session, "Computer Science", None, 25000.00),
-    ("Departmental Fee", session, "Nursing Science", None, 30000.00),
-    ("Faculty Fee", session, None, "Natural Sciences", 10000.00),
-    ("Faculty Fee", session, None, "Health Sciences", 12000.00),
+    ("School Fees", session, "100", None, None, 180000.00),
+    ("School Fees", session, "200", None, None, 150000.00),
+    ("School Fees", session, "300", None, None, 150000.00),
+    ("School Fees", session, "400", None, None, 150000.00),
+    ("Departmental Fee", session, None, "Computer Science", None, 25000.00),
+    ("Departmental Fee", session, None, "Nursing Science", None, 30000.00),
+    ("Faculty Fee", session, None, None, "Natural Sciences", 10000.00),
+    ("Faculty Fee", session, None, None, "Health Sciences", 12000.00),
 ]
-for name, sess, dept, fac, amount in fee_categories:
+for name, sess, level, dept, fac, amount in fee_categories:
     conn.execute(
-        "INSERT INTO fee_category (category_name, session, department, faculty, amount) "
-        "VALUES (?, ?, ?, ?, ?)",
-        (name, sess, dept, fac, amount),
+        "INSERT INTO fee_category (category_name, session, level, department, faculty, amount) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (name, sess, level, dept, fac, amount),
     )
 
 conn.commit()

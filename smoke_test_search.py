@@ -51,7 +51,7 @@ client = app.test_client()
 # Eze Ezekiel generates and pays an invoice; Chidinma Okafor generates one
 # and leaves it unpaid.
 client.post("/auth/login", data={"role": "student", "login_id": "SUMAS/2022/0697", "password": "student123"})
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "payment_plan": "Full Payment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "Full Payment"})
 with app.app_context():
     db = get_db()
     eze_invoice = db.execute(
@@ -63,7 +63,7 @@ with app.app_context():
 client.get("/auth/logout")
 
 client.post("/auth/login", data={"role": "student", "login_id": "SUMAS/2022/0512", "password": "student123"})
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "payment_plan": "Full Payment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "Full Payment"})
 client.get("/auth/logout")
 
 client.post("/auth/login", data={"role": "admin", "login_id": "ADM/001", "password": "admin123"})

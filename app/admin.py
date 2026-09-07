@@ -184,7 +184,7 @@ def _normalise_fee_scope(category_name, department, faculty):
 def list_fees():
     db = get_db()
     fees = db.execute(
-        "SELECT * FROM fee_category ORDER BY session DESC, category_name, department, faculty"
+        "SELECT * FROM fee_category ORDER BY session DESC, category_name, level, department, faculty"
     ).fetchall()
     return render_template("admin/fees_list.html", fees=fees)
 
@@ -195,6 +195,10 @@ def add_fee():
     if request.method == "POST":
         category_name = request.form.get("category_name", "").strip()
         session = request.form.get("session", "").strip()
+        # Optional for every category type (not just School Fees) — a blank
+        # level means "applies to every level", the same NULL-is-a-wildcard
+        # convention department/faculty already use for the other two types.
+        level = request.form.get("level", "").strip() or None
         department_in = request.form.get("department", "").strip()
         faculty_in = request.form.get("faculty", "").strip()
         amount = request.form.get("amount", "").strip()
@@ -218,29 +222,29 @@ def add_fee():
         if error is None:
             db = get_db()
             # SQLite's UNIQUE constraint does not catch duplicates where
-            # department/faculty are NULL (NULL is never equal to NULL in
-            # SQL), so the same-scope check is also done explicitly here
+            # level/department/faculty are NULL (NULL is never equal to NULL
+            # in SQL), so the same-scope check is also done explicitly here
             # using IS, which treats NULL = NULL as true.
             existing = db.execute(
                 "SELECT 1 FROM fee_category WHERE category_name = ? AND session = ? "
-                "AND department IS ? AND faculty IS ?",
-                (category_name, session, department, faculty),
+                "AND level IS ? AND department IS ? AND faculty IS ?",
+                (category_name, session, level, department, faculty),
             ).fetchone()
             if existing is not None:
-                error = "A fee category with this exact category, session, department, and faculty already exists."
+                error = "A fee category with this exact category, session, level, department, and faculty already exists."
 
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO fee_category (category_name, session, department, faculty, amount) "
-                    "VALUES (?, ?, ?, ?, ?)",
-                    (category_name, session, department, faculty, amount_val),
+                    "INSERT INTO fee_category (category_name, session, level, department, faculty, amount) "
+                    "VALUES (?, ?, ?, ?, ?, ?)",
+                    (category_name, session, level, department, faculty, amount_val),
                 )
                 db.commit()
                 flash(f"{category_name} for {session} added successfully.", "success")
                 return redirect(url_for("admin.list_fees"))
             except sqlite3.IntegrityError:
-                error = "A fee category with this exact category, session, department, and faculty already exists."
+                error = "A fee category with this exact category, session, level, department, and faculty already exists."
 
         flash(error, "danger")
 
@@ -485,7 +489,7 @@ def departmental_report_pdf():
 def _payment_search_rows(db, q, status):
     query = (
         "SELECT invoice.*, student.reg_number, student.full_name, "
-        "       fee_category.category_name, fee_category.session, "
+        "       fee_category.category_name, fee_category.session, fee_category.level, "
         "       receipt.receipt_number "
         "FROM invoice "
         "JOIN student ON invoice.student_id = student.student_id "

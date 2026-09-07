@@ -60,7 +60,9 @@
         <td class="text-muted" style="font-size:.85rem;">{{ row['reg_number'] }}</td>
         <td>
           {{ row['category_name'] }}
-          <div class="text-muted" style="font-size:.78rem;">{{ row['session'] }} &middot; {{ row['payment_plan'] }}</div>
+          <div class="text-muted" style="font-size:.78rem;">
+            {% if row['level'] %}{{ row['level'] }} Level &middot; {% endif %}{{ row['session'] }} &middot; {{ row['payment_plan'] }}
+          </div>
         </td>
         <td style="font-size:.85rem; font-family:var(--font-body);">{{ row['payment_reference'] }}</td>
         <td class="text-end">

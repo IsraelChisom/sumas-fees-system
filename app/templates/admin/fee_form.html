@@ -24,6 +24,7 @@
       <div>
         <div class="fw-semibold text-navy" style="font-size:1rem;">{{ fee['category_name'] }}</div>
         <div class="text-muted" style="font-size:.85rem;">Session: {{ fee['session'] }}</div>
+        <div class="text-muted" style="font-size:.85rem;">Level: {{ fee['level'] ~ ' Level' if fee['level'] else 'All Levels' }}</div>
         <div class="muted-note mt-1" style="font-size:.82rem;">
           Scope:
           {% if fee['category_name'] == 'School Fees' %}All students
@@ -51,7 +52,7 @@
     </form>
     <p class="muted-note mt-3 mb-0" style="font-size:.8rem;">
       <i class="bi bi-info-circle me-1"></i>
-      Only the amount can be changed once a fee category is created. Category, session, and scope are fixed to keep existing claims valid.
+      Only the amount can be changed once a fee category is created. Category, session, level, and scope are fixed to keep existing claims valid.
     </p>
   </div>
 
@@ -80,6 +81,16 @@
           <input type="text" name="session" id="session"
                  class="form-control" placeholder="e.g. 2025/2026" required>
         </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="level" class="form-label">Level</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-layers-fill input-icon"></i>
+          <input type="text" name="level" id="level"
+                 class="form-control" placeholder="e.g. 100 &mdash; leave blank for All Levels">
+        </div>
+        <div class="form-text">Leave blank if this fee is the same for every level.</div>
       </div>
 
       <div id="dept_field" class="mb-3" style="display:none;">

@@ -62,7 +62,7 @@ check("Balance page does NOT show another department's fee", b"30,000.00" not in
 check("With nothing paid, School Fees is marked Outstanding", b"Outstanding" in resp.data)
 
 # 3. An unpaid (Awaiting Payment) invoice doesn't move the balance
-client.post("/student/invoices/generate", data={"fee_category_id": 2, "payment_plan": "Full Payment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 2, "session": "2025/2026", "payment_plan": "Full Payment"})
 resp = client.get("/student/balance")
 check("An Awaiting-Payment invoice does not reduce the balance", b"24,000.00" in resp.data)
 
@@ -78,8 +78,8 @@ check("Paying the Departmental Fee in full brings its balance to 0.00", b"0.00" 
 check("A fully paid category is marked Fully Paid", b"Fully Paid" in resp.data)
 
 # 5. Partial payment: pay one School Fees installment, leave the other unpaid
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "payment_plan": "First Installment"})
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "payment_plan": "Second Installment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "First Installment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "Second Installment"})
 with app.app_context():
     db = get_db()
     first = db.execute(
