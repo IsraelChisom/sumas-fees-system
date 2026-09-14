@@ -334,7 +334,7 @@ else in this project's copy (every other page says "contact the SUMAS
 Bursary office" without a specific number), and inventing one here would
 break the no-placeholder-content rule this brief itself sets.
 
-## Student account area: bank-statement hierarchy for Total Owed/Paid/Balance
+## Statement of Account: bank-statement hierarchy for Total Owed/Paid/Balance
 
 Requested explicitly: make the student "account section" — the dashboard's
 balance summary and the Outstanding Balance page — "look proper, like
@@ -344,28 +344,34 @@ Balance are even needed there, or whether there's an alternative.
 They're kept — a fees system's core job is telling a student what they
 owe, so removing that entirely isn't the right answer — but the
 *presentation* changes to match how a real bank or credit-card statement
-actually weighs these three numbers: they are not equally important. The
-Balance is the one figure a student needs to act on; Billed and Paid are
-supporting context that explains *how* the balance got there. The old
-`.dashboard-header-stats` gave all three equal visual weight (three
-same-size tiles in a row) — a spreadsheet instinct, not a statement one.
+actually weighs these three numbers on `student/balance.html`: they are
+not equally important. The Balance is the one figure a student needs to
+act on; Billed and Paid are supporting context that explains *how* the
+balance got there.
 
-- **`.balance-hero-*`** (new, in both `.dashboard-header` and the new
-  `.statement-summary` on `student/balance.html`): a single large serif
-  figure for the Balance (labelled "Balance Due" while positive, "Balance"
-  once settled), colored with two new tokens —
-  `--status-confirmed-on-dark` / `--status-rejected-on-dark` — lighter
-  tints of the existing status green/red, needed because the plain
-  `--status-confirmed`/`--status-rejected` values are tuned for dark text
-  on a light background and lose contrast on the espresso-dark fill here.
-  Billed and Paid sit underneath as two small right-aligned figures
+**The dashboard header itself was tried this way too and then reverted**
+— asked for explicitly, back to its original `.dashboard-stat` tiles
+(three equal-weight figures side by side). The statement hierarchy stays
+on the Balance page, which is where a student goes specifically to read
+their account standing in detail; the dashboard is a jumping-off point to
+several different actions, and the original three-tile summary is the
+right amount of weight for a glance on the way to one of them.
+
+- **`.balance-hero-*`** (on `student/balance.html`'s `.statement-summary`
+  only): a single large serif figure for the Balance (labelled "Balance
+  Due" while positive, "Balance" once settled), colored with two new
+  tokens — `--status-confirmed-on-dark` / `--status-rejected-on-dark` —
+  lighter tints of the existing status green/red, needed because the
+  plain `--status-confirmed`/`--status-rejected` values are tuned for
+  dark text on a light background and lose contrast on the espresso-dark
+  fill here. Billed and Paid sit underneath as two small centered figures
   separated by a hairline divider, the way a bank app tucks "Money In /
   Money Out" beneath the headline "Available Balance" — not removed, just
-  demoted to supporting detail.
-- **`student/balance.html`** gained a `.statement-summary` — the same
+  demoted to supporting detail, and only on the page dedicated to this
+  detail.
+- **`student/balance.html`** gained a `.statement-summary` — the
   `.balance-hero-*` figures, centered in their own flat espresso band at
-  the top of the page (reusing the component rather than inventing a
-  second figure style) — above the existing per-category ledger table,
+  the top of the page — above the existing per-category ledger table,
   which stays as the itemized detail a statement always has beneath its
   headline total. The table's own total row was left in place beneath the
   ledger; a real statement shows the headline figure both at the top and

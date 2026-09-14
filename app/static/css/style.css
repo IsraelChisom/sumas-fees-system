@@ -732,12 +732,26 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 }
 .dashboard-header-tag .reg-number { color: var(--gold); font-weight: 600; }
 
-/* Bank-statement hierarchy, not three equally-weighted figures: the
-   Balance is the one number a student needs to act on, so it's the
-   dominant figure — Billed/Paid are supporting context underneath it,
-   the way a bank app leads with "Available Balance" and tucks the
-   transaction totals in smaller type beneath. */
-.dashboard-header-balance { text-align: right; }
+.dashboard-header-stats { display: flex; gap: 2.25rem; }
+.dashboard-stat-label {
+  font-family: var(--font-body);
+  font-size: .64rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, .55);
+  margin-bottom: .3rem;
+}
+.dashboard-stat-value {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #fff;
+}
+
+/* .balance-hero-* — the bank-statement figure (large Balance, small
+   supporting Billed/Paid) used by student/balance.html's
+   .statement-summary. Not used on the dashboard header itself, which
+   kept its original equal-weight .dashboard-stat tiles above. */
 .balance-hero-label {
   font-family: var(--font-body);
   font-size: .68rem;
@@ -812,9 +826,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 
 @media (max-width: 767.98px) {
   .dashboard-header { flex-direction: column; align-items: flex-start; }
-  .dashboard-header-balance { text-align: left; width: 100%; }
-  .balance-hero-sub { justify-content: flex-start; }
-  .balance-hero-sub-item { align-items: flex-start; }
+  .dashboard-header-stats { width: 100%; justify-content: space-between; gap: 1rem; }
 }
 
 .section-label {
