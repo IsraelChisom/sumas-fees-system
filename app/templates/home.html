@@ -1,156 +1,196 @@
 {% extends "base.html" %}
 {% block title %}Welcome{% endblock %}
 
+{% block navbar %}
+<header class="site-topbar">
+  <div class="site-topbar-inner">
+    <a class="site-topbar-brand" href="{{ url_for('index') }}">
+      <div class="site-topbar-crest"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
+      SUMAS Fees
+    </a>
+    <nav class="site-topbar-nav">
+      <a href="#how-it-works">How it works</a>
+      <a href="#roles">For you</a>
+      <a href="#fees">Fee structure</a>
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Log In
+      </a>
+    </nav>
+  </div>
+</header>
+{% endblock %}
+
 {% block content %}
 
-<div class="home-hero">
-  <div class="home-hero-crest"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
-  <div class="home-hero-rule"></div>
-  <div class="home-hero-eyebrow">State University of Medical &amp; Applied Sciences</div>
-
+<section class="home-hero-section">
   <div class="home-hero-grid">
-    <div class="home-hero-text">
-      <h1 class="home-hero-title">School Fees Payment Tracking &amp; Receipt System</h1>
+    <div>
+      <span class="home-eyebrow">State University of Medical &amp; Applied Sciences</span>
+      <h1 class="home-hero-title">Pay once.<br>Prove it <em>forever</em>.</h1>
       <p class="home-hero-desc">
-        Generate an invoice, pay through the payment gateway, and get your official
-        receipt automatically — every school, departmental, and faculty fee, tracked
-        in one place, with no queue at the Bursary.
+        Generate a fee invoice, pay against its reference through the payment gateway, and get
+        an official receipt the instant payment clears — automatically matched, automatically
+        issued. No queue at the Bursary, no admin sign-off in the normal path.
       </p>
       <div class="home-hero-actions">
         <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
           <i class="bi bi-box-arrow-in-right me-1"></i> Log In
         </a>
-        <a href="#how-it-works" class="home-hero-link">See how it works</a>
+        <a href="#how-it-works" class="btn btn-outline-primary btn-lg">See how it works</a>
+      </div>
+      <div class="home-hero-meta">
+        <div><strong>0</strong>admin steps for a normal payment</div>
+        <div><strong>12-digit</strong>unique payment reference, every invoice</div>
+        <div><strong>2022&ndash;2028</strong>sessions supported</div>
       </div>
     </div>
 
-    <figure class="home-hero-photo">
-      <div class="home-hero-photo-frame">
-        <img src="{{ url_for('static', filename='images/sumas-campus.jpg') }}"
-             alt="The College of Medicine building on the SUMAS campus, Igbo Eno, Enugu State">
+    <div class="home-ticket">
+      <div class="home-ticket-row">
+        <span class="home-ticket-brand">Fees Invoice</span>
+        <span class="badge rounded-pill badge-status-pending">Awaiting Payment</span>
       </div>
-      <figcaption class="home-hero-photo-caption">SUMAS campus — Igbo Eno, Enugu State</figcaption>
-    </figure>
-  </div>
-</div>
-
-<div class="row row-cols-1 row-cols-md-3 g-3 g-lg-4 home-facts">
-  <div class="col">
-    <div class="stat-tile">
-      <div class="how-step-title">One Reference, Every Fee</div>
-      <div class="how-step-desc">A unique payment reference for each fee category and plan — ready to pay against the moment it's generated.</div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="stat-tile">
-      <div class="how-step-title">Automatic Matching</div>
-      <div class="how-step-desc">Payments are matched to invoices the instant they arrive — no manual sign-off in the normal path, no queue at the Bursary.</div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="stat-tile">
-      <div class="how-step-title">One Record, Every Session</div>
-      <div class="how-step-desc">School, departmental, and faculty fees, invoices, and receipts, all kept in a single account you can revisit any time.</div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-4 g-lg-5 home-capabilities">
-  <div class="col-lg-6">
-    <div class="home-panel">
-      <div class="section-label mb-1">For Students</div>
-      <p class="home-panel-intro">Everything you need to settle your fees without a trip to the Bursary.</p>
-      <div class="record-actions">
-        <div class="record-action-row">
-          <div>
-            <div class="record-action-title">Generate an Invoice</div>
-            <div class="record-action-desc">Pick a fee category and payment plan to get a unique payment reference, ready to pay against.</div>
-          </div>
-        </div>
-        <div class="record-action-row">
-          <div>
-            <div class="record-action-title">Pay With Confidence</div>
-            <div class="record-action-desc">Pay externally using your reference. The moment it clears, your invoice is matched and marked paid automatically.</div>
-          </div>
-        </div>
-        <div class="record-action-row">
-          <div>
-            <div class="record-action-title">Get Your Receipt Instantly</div>
-            <div class="record-action-desc">An official, letterhead receipt is issued the instant payment is confirmed — view, print, or download it as a PDF.</div>
-          </div>
-        </div>
-        <div class="record-action-row">
-          <div>
-            <div class="record-action-title">Track Your Balance</div>
-            <div class="record-action-desc">See exactly what you owe and what you've paid, broken down by fee category, at any time.</div>
-          </div>
-        </div>
+      <div class="home-ticket-amount">&#8358;150,000.00</div>
+      <div class="home-ticket-desc">School Fees &mdash; 400 Level, 2025/2026 &middot; Full Payment</div>
+      <hr class="ledger-divider">
+      <div class="home-ticket-field"><span>Student</span><span>SUMAS/2022/0697</span></div>
+      <div class="home-ticket-field"><span>Department</span><span>Computer Science</span></div>
+      <div class="home-ticket-field"><span>Faculty</span><span>Natural Sciences</span></div>
+      <div class="ref-chip mt-3">
+        <div class="ref-chip-label">Payment Reference</div>
+        <div class="ref-chip-value">4269 5579 6287</div>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="col-lg-6">
-    <div class="home-panel">
-      <div class="section-label mb-1">For Administrators</div>
-      <p class="home-panel-intro">A single system of record for every fee, payment, and receipt on campus.</p>
-      <div class="record-actions">
-        <div class="record-action-row">
-          <div>
-            <div class="record-action-title">Manage Students &amp; Fees</div>
-            <div class="record-action-desc">Add and update student records and fee structures for every session, department, and faculty.</div>
-          </div>
-        </div>
-        <div class="record-action-row">
-          <div>
-            <div class="record-action-title">Resolve Payment Exceptions</div>
-            <div class="record-action-desc">Only unmatched or mismatched payments need a manual look — everything else confirms itself.</div>
-          </div>
-        </div>
-        <div class="record-action-row">
-          <div>
-            <div class="record-action-title">Search Payment Records</div>
-            <div class="record-action-desc">Look up any invoice by student name, registration number, or payment reference in seconds.</div>
-          </div>
-        </div>
-        <div class="record-action-row">
-          <div>
-            <div class="record-action-title">Generate Departmental Reports</div>
-            <div class="record-action-desc">Produce a payment-status report for any department or level — print it, export it as CSV, or download it as a PDF.</div>
-          </div>
-        </div>
-      </div>
+<div class="stat-stripe">
+  <div class="stat-stripe-inner">
+    <div class="stat-stripe-item">
+      <div class="stat-stripe-num">Automatic</div>
+      <div class="stat-stripe-label">Matching runs the instant a payment notification arrives — the same code path a real gateway webhook and the demonstration simulator both call.</div>
+    </div>
+    <div class="stat-stripe-item">
+      <div class="stat-stripe-num">Recomputed</div>
+      <div class="stat-stripe-label">A balance is never stored — it's calculated fresh from confirmed payments on every request, so it can never go stale.</div>
+    </div>
+    <div class="stat-stripe-item">
+      <div class="stat-stripe-num">Scoped</div>
+      <div class="stat-stripe-label">Every invoice, payment, and receipt belongs to one account. No student can view another's records by guessing a reference.</div>
     </div>
   </div>
 </div>
 
-<div id="how-it-works" class="mt-5 pt-3">
-  <div class="section-label mb-3">How It Works</div>
+<section id="how-it-works" class="home-section">
+  <div class="home-section-head">
+    <span class="home-eyebrow">The Workflow</span>
+    <h2>Three steps, modelled on a real university gateway</h2>
+    <p>The same reference-based approach used at the University of Nigeria, Nsukka — a unique reference per fee, paid externally, matched on arrival.</p>
+  </div>
   <div class="how-steps">
     <div class="how-step">
       <span class="how-step-num">Step 01</span>
       <div class="how-step-title">Generate</div>
-      <div class="how-step-desc">Choose a fee category and payment plan to receive a unique payment reference — modelled on the same reference-based approach used at UNN.</div>
+      <div class="how-step-desc">Pick a level, academic session, fee category, and payment plan to receive a unique payment reference — ready to pay against the moment it's generated.</div>
     </div>
     <div class="how-step">
       <span class="how-step-num">Step 02</span>
       <div class="how-step-title">Pay</div>
-      <div class="how-step-desc">Complete payment against that reference through the payment gateway, using any channel it supports.</div>
+      <div class="how-step-desc">Complete payment against that exact reference through the payment gateway, using any channel it supports — full payment, or split across two installments.</div>
     </div>
     <div class="how-step">
       <span class="how-step-num">Step 03</span>
-      <div class="how-step-title">Confirmed — Automatically</div>
-      <div class="how-step-desc">The moment payment succeeds, your invoice is matched and marked paid, and an official receipt is issued. No admin action, no waiting.</div>
+      <div class="how-step-title">Confirmed &mdash; Automatically</div>
+      <div class="how-step-desc">The moment payment succeeds, your invoice is matched and marked Paid, and an official, letterhead receipt is issued. No admin action, no waiting.</div>
     </div>
   </div>
-  <p class="record-quote">
-    Every invoice, payment, and receipt is scoped to your own account — no student can
-    ever view another's records by guessing a reference, and only the Bursary can
-    resolve a payment that doesn't match automatically.
-  </p>
-</div>
+</section>
 
-<div id="faq" class="mt-5 pt-3">
-  <div class="section-label mb-3">Frequently Asked Questions</div>
+<section id="roles" class="home-section">
+  <div class="home-section-head">
+    <span class="home-eyebrow">Two Roles</span>
+    <h2>Built for the student who pays, and the Bursary that reconciles</h2>
+  </div>
+  <div class="roles-grid">
+    <div class="role-card">
+      <span class="home-eyebrow">Student</span>
+      <div class="role-card-title">Settle fees without a trip to the Bursary</div>
+      <ul class="role-list">
+        <li><span class="role-num">01</span><span>Generate an invoice for any fee category, level, and session &mdash; including a fee carried over from an earlier one.</span></li>
+        <li><span class="role-num">02</span><span>Track every invoice's status &mdash; Awaiting Payment or Paid &mdash; in one history.</span></li>
+        <li><span class="role-num">03</span><span>View, print, or download a PDF of any invoice or official receipt.</span></li>
+        <li><span class="role-num">04</span><span>Check an outstanding balance broken down by fee category, always current.</span></li>
+      </ul>
+    </div>
+    <div class="role-card">
+      <span class="home-eyebrow">Administrator</span>
+      <div class="role-card-title">One system of record for every fee on campus</div>
+      <ul class="role-list">
+        <li><span class="role-num">01</span><span>Manage student records and fee structures &mdash; by session, department, faculty, and level.</span></li>
+        <li><span class="role-num">02</span><span>Resolve the exception queue &mdash; the only payments that ever need a manual look.</span></li>
+        <li><span class="role-num">03</span><span>Search any invoice by student, registration number, or payment reference in seconds.</span></li>
+        <li><span class="role-num">04</span><span>Generate a departmental payment-status report &mdash; CSV, print, or PDF.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="fees" class="home-section">
+  <div class="home-section-head">
+    <span class="home-eyebrow">Fee Structure</span>
+    <h2>What's charged, by level &mdash; set by the Bursary, read by everyone</h2>
+    <p>School Fees scale with level; Departmental and Faculty Fees can either vary by level too, or apply across all of them.</p>
+  </div>
+  <div class="fee-table-shell">
+    <table>
+      <thead>
+        <tr><th>Category</th><th>Level</th><th>Scope</th><th style="text-align:right;">Amount</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>School Fees</td><td class="data-mono">100</td><td><span class="mono-tag">All Students</span></td><td class="num">&#8358;180,000.00</td></tr>
+        <tr><td>School Fees</td><td class="data-mono">200 &ndash; 500</td><td><span class="mono-tag">All Students</span></td><td class="num">&#8358;150,000.00</td></tr>
+        <tr><td>Departmental Fee</td><td class="data-mono">All</td><td><span class="mono-tag">e.g. Computer Science</span></td><td class="num">&#8358;25,000.00</td></tr>
+        <tr><td>Faculty Fee</td><td class="data-mono">All</td><td><span class="mono-tag">e.g. Natural Sciences</span></td><td class="num">&#8358;10,000.00</td></tr>
+      </tbody>
+    </table>
+    <div class="fee-table-note">Amounts shown are 2025/2026 session examples &mdash; every value is set by the Bursary and can differ per department, faculty, and level.</div>
+  </div>
+  <div class="session-scroll">
+    <span class="session-chip">2022/2023</span>
+    <span class="session-chip">2023/2024</span>
+    <span class="session-chip">2024/2025</span>
+    <span class="session-chip current">2025/2026</span>
+    <span class="session-chip">2026/2027</span>
+    <span class="session-chip">2027/2028</span>
+  </div>
+</section>
+
+<section class="home-section">
+  <div class="home-section-head">
+    <span class="home-eyebrow">Why Trust It</span>
+    <h2>Built the way an official record should be</h2>
+  </div>
+  <div class="trust-grid">
+    <div class="trust-card">
+      <h3>Nothing partially confirms</h3>
+      <p>Marking an invoice Paid and issuing its receipt happen as one transaction &mdash; if anything fails, nothing commits. A receipt is never generated any other way.</p>
+    </div>
+    <div class="trust-card">
+      <h3>Mismatches are held, not guessed</h3>
+      <p>A payment whose reference or amount doesn't line up exactly is logged to a review queue rather than marked paid incorrectly &mdash; resolved by the Bursary, not assumed.</p>
+    </div>
+    <div class="trust-card">
+      <h3>Ownership is enforced, not assumed</h3>
+      <p>Every invoice and receipt is scoped to the account that generated it. Viewing another student's record by guessing an ID or reference is refused outright.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="home-section">
+  <div class="home-section-head mb-3">
+    <span class="home-eyebrow">Questions</span>
+    <h2>Frequently Asked Questions</h2>
+  </div>
   <div class="home-faq" id="homeFaq">
     <div class="home-faq-item">
       <button class="home-faq-question" type="button" data-bs-toggle="collapse"
@@ -213,16 +253,19 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="home-cta">
-  <div class="home-cta-inner">
-    <p class="home-cta-eyebrow">Ready When You Are</p>
-    <h2 class="home-cta-heading">Settle Your Fees Without a Trip to the Bursary</h2>
-    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
-      <i class="bi bi-box-arrow-in-right me-1"></i> Log In to Continue
-    </a>
-    <p class="home-cta-note">Having trouble signing in? Contact the SUMAS Bursary office.</p>
+<div class="home-closing">
+  <div class="home-closing-inner">
+    <p class="home-closing-eyebrow">Get Started</p>
+    <h2 class="home-closing-heading">Your fees, one reference at a time</h2>
+    <p class="home-closing-sub">Generate an invoice, pay it through the gateway, and watch your receipt appear the moment it clears.</p>
+    <div class="home-closing-actions">
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Log In to Continue
+      </a>
+      <a href="#fees" class="btn btn-outline-light btn-lg">Check the fee structure</a>
+    </div>
   </div>
 </div>
 
@@ -244,6 +287,7 @@
         <div class="site-footer-heading">Quick Links</div>
         <a href="{{ url_for('auth.login') }}">Log In</a>
         <a href="#how-it-works">How It Works</a>
+        <a href="#fees">Fee Structure</a>
         <a href="#faq">FAQ</a>
       </div>
 

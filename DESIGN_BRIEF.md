@@ -500,3 +500,79 @@ That's exactly what changed and what didn't:
   browser-printed HTML versions of every invoice/receipt/report (the
   default view) carry the full rebrand; only the "Download PDF" button's
   output doesn't yet. A known follow-up, not an oversight.
+
+### Correction: the first pass only reskinned, it didn't rebuild
+
+The work above (typography, `.data-mono`, the perforated divider on
+print documents, the ticket-tape "How It Works") was real, but it left
+every page's actual *structure* untouched — the login card, the
+dashboard, the tables, and critically `home.html` kept their original
+layouts. The reference page's real identity is in its composition, not
+just its color and font: a sticky top bar with in-page nav, a
+plain-paper hero next to a tilted mock-invoice card (not a filled dark
+band with a photo), a full-bleed dark stat stripe, two role cards, an
+actual fee-structure table with pill/session chips, a trust grid, a
+closing band. None of that existed anywhere in the app after the first
+pass — pointed out directly, correctly, as "you were giving me the old
+design."
+
+`home.html` was rebuilt component-for-component to match:
+
+- **`base.html` gained a `{% block navbar %}`** around the shared
+  student-section top strip, so `home.html` can replace it outright with
+  its own `.site-topbar` (sticky, blurred backdrop, crest + wordmark,
+  in-page nav to How It Works/For You/Fee Structure, a real Log In
+  button) — every other page keeps the original `.record-strip` as
+  before; only the homepage overrides it.
+- **The hero dropped the filled espresso band and the campus photo
+  entirely**, replacing them with the reference page's actual
+  composition: plain paper background, headline with an italic gold
+  accent word, and — where the photo was — a tilted `.home-ticket` mock
+  invoice card with the notched-edge, dashed-divider, mono-reference-chip
+  treatment `.ref-chip`/`.ledger-divider` already established for the
+  real invoice/receipt documents (section 3b). The campus photograph
+  (`sumas-campus.jpg`) isn't used anywhere on the site now — the
+  reference page's hero never had a photo slot, and forcing one back in
+  would have been a different design again, not this one. It's still in
+  `app/static/images/` if a future page wants it.
+- **New `.stat-stripe`**: a genuine full-bleed dark band (same
+  `calc(50% - 50vw)` breakout as `.home-closing`) with the three
+  "Automatic / Recomputed / Scoped" facts, sitting directly under the
+  hero exactly where the reference page puts it — previously these three
+  facts existed as plain `.stat-tile`s inline in the page flow, not a
+  distinct full-bleed section.
+- **New `.roles-grid` / `.role-card`**: two bordered, `--radius-lg`
+  rounded cards ("Student" / "Administrator"), each a mono-numbered list
+  — replacing `.home-panel`, which used the app's internal
+  `.record-actions` hairline-list idiom. Deliberately different from how
+  the *logged-in* dashboard still presents actions to a student (that
+  one is unchanged) — an anonymous visitor reading what the system does
+  is a different moment than a signed-in user acting on their own
+  record, and the reference page treats it that way.
+- **New `.fee-table-shell` section — content that didn't exist on the
+  homepage at all before**: a real table (Category/Level/Scope/Amount)
+  using `.mono-tag` for scope pills and `.data-mono` for amounts, plus a
+  `.session-chip` row for the 2022/2023–2027/2028 range, with the
+  current session highlighted. On mobile the table scrolls inside its
+  own `.fee-table-shell` container — the first cut of this used
+  `table { width: 100% }` even in the mobile rule, which squeezed all
+  four columns into the phone width instead of scrolling; fixed to
+  `width: auto; min-width: 560px` so the table keeps its natural size
+  and the container's `overflow-x: auto` actually has something to
+  scroll.
+- **New `.trust-grid`**: three `--espresso` top-rule cards (Nothing
+  partially confirms / Mismatches are held not guessed / Ownership is
+  enforced), replacing the single italic `.record-quote` paragraph that
+  used to carry this content.
+- **`.home-closing`** (renamed from `.home-cta`): now has two CTAs side
+  by side (Log In to Continue + a ghost-styled "Check the fee
+  structure"), matching the reference page's closing band instead of one
+  button.
+- **The FAQ section and the richer institutional footer (crest, Quick
+  Links, Bursary contact, copyright bar) were kept** even though the
+  reference page's own footer is a single line — deliberately: earlier
+  follow-ups on this same page (see above) established that a bare
+  footer is one of the biggest tells a page isn't a real institutional
+  site, and the reference page was a marketing mockup with no such
+  requirement to satisfy. FAQ content is additive, not a deviation from
+  the reference — nothing in it was removed to make room for the rebuild.

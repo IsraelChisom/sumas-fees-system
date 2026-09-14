@@ -60,6 +60,7 @@
 
   --radius-sm: 4px;
   --radius-md: 6px;
+  --radius-lg: 10px;  /* the homepage's rounded marketing-card components only */
 
   /* "Clinical ledger" motif tokens — the same espresso/gold/ivory brand
      colors as ever, just given a home for the new mono-data-chip and
@@ -1178,162 +1179,144 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 
 /* =====================================================================
    19. PUBLIC HOMEPAGE — the signed-out landing page (app/templates/
-   home.html). Same institutional vocabulary as everywhere else: the
-   hero is a flat espresso band (the .dashboard-header pattern), the
-   capability lists reuse .record-actions/.record-action-row as-is, and
-   "How It Works" is a bordered ledger list (the .balance-breakdown
-   pattern) rather than numbered circle badges or icon tiles. No
-   gradients, no scroll animation, no hover-lift.
-
-   The hero's letterhead masthead (crest/rule/eyebrow) stays centered
-   above a two-column grid: headline/copy/CTAs left, a real campus
-   photograph right, framed as a captioned document "plate" (a thin gold
-   frame + an italic serif caption below it, like a figure in a printed
-   brochure) rather than a full-bleed photo with text overlaid on a
-   gradient — see the homepage follow-up in DESIGN_BRIEF.md. The closing
-   CTA is the same flat-espresso-band idiom broken full-bleed out of
-   .container (via a negative-margin viewport-width trick), so the page
-   ends on a deliberate statement immediately before .site-footer rather
-   than a small boxed prompt.
+   home.html). Rebuilt to match the "Clinical Ledger" concept page
+   structurally, not just in color/type: a sticky top bar with in-page
+   nav, a plain-paper hero with a tilted mock-invoice "ticket" card
+   (not a filled dark band), a full-bleed dark stat stripe, a three-step
+   ticket-tape flow, two role cards, a real fee-structure table with
+   session chips, a trust grid, and a closing full-bleed band — the
+   exact section order and composition of that reference page, recolored
+   to the brand's actual espresso/gold rather than the reference's green,
+   and using --radius-lg (10px) for these marketing-card components,
+   distinct from the sharper --radius-sm used in the functional app UI.
 ===================================================================== */
-.home-hero {
-  background: var(--espresso);
-  border-radius: var(--radius-sm);
-  /* Fluid padding: scales continuously between phone and desktop instead
-     of jumping once at a single breakpoint. */
-  padding: clamp(2rem, 5vw + 1rem, 3.25rem) clamp(1.1rem, 4vw, 2.25rem);
-  margin-bottom: clamp(2rem, 4vw + 1rem, 3rem);
-  text-align: center;
-}
-.home-hero-crest { width: 64px; height: 64px; margin: 0 auto .9rem; }
-.home-hero-crest img { width: 100%; height: 100%; object-fit: contain; }
-/* A thin letterhead rule under the crest — the "official document"
-   framing device DESIGN_BRIEF.md asks for, used sparingly (one line, one
-   place) rather than as a repeated border treatment. */
-.home-hero-rule {
-  width: 48px;
-  height: 2px;
-  background: var(--gold);
-  margin: 0 auto 1.1rem;
-}
-.home-hero-eyebrow {
-  font-family: var(--font-body);
-  font-size: .72rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: rgba(245, 239, 230, .7);
-  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
-}
 
-/* Below the letterhead masthead (crest/rule/eyebrow above), the headline
-   and a real campus photograph sit side by side — a captioned document
-   "plate", not a full-bleed photo with text overlaid on a gradient. */
+/* ---- Sticky top bar (home.html only — see base.html's {% block navbar %}) */
+.site-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(250, 246, 240, .92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.site-topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .85rem clamp(1.1rem, 4vw, 2rem);
+}
+.site-topbar-brand { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 600; font-size: 1.02rem; color: var(--espresso); }
+.site-topbar-crest { width: 30px; height: 30px; flex-shrink: 0; }
+.site-topbar-crest img { width: 100%; height: 100%; object-fit: contain; }
+.site-topbar-nav { display: flex; align-items: center; gap: 1.7rem; }
+.site-topbar-nav a:not(.btn) { font-family: var(--font-body); font-size: .85rem; font-weight: 600; color: var(--muted); }
+.site-topbar-nav a:not(.btn):hover { color: var(--gold-dark); }
+
+/* ---- Hero: plain paper background, mock-invoice ticket on the right ---- */
+.home-hero-section { padding: clamp(2.25rem, 6vw, 4.5rem) 0 clamp(2rem, 5vw, 3.5rem); }
 .home-hero-grid {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
   align-items: center;
-  gap: clamp(1.75rem, 4vw, 3rem);
-  text-align: left;
+  gap: clamp(2rem, 5vw, 3.5rem);
+}
+.home-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
 }
 .home-hero-title {
-  color: #fff;
-  font-size: clamp(1.4rem, 2.4vw + .9rem, 2.15rem);
-  line-height: 1.2;
-  margin: 0;
+  font-size: clamp(1.9rem, 2.6vw + 1.1rem, 3rem);
+  font-weight: 500;
+  line-height: 1.08;
+  margin: .8rem 0 1rem;
 }
-.home-hero-desc {
-  font-family: var(--font-body);
-  font-size: .95rem;
-  line-height: 1.65;
-  color: rgba(245, 239, 230, .82);
-  margin: 1.1rem 0 0;
-}
-.home-hero-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem 1.4rem;
-  margin-top: 1.85rem;
-}
-.home-hero-link {
-  font-family: var(--font-body);
-  font-size: .85rem;
-  color: rgba(245, 239, 230, .85);
-  border-bottom: 1px solid var(--gold);
-  padding-bottom: 1px;
-}
-.home-hero-link:hover { color: #fff; }
+.home-hero-title em { font-style: italic; color: var(--gold-dark); font-weight: 500; }
+.home-hero-desc { font-family: var(--font-body); font-size: 1rem; line-height: 1.65; color: var(--muted); max-width: 46ch; }
+.home-hero-actions { display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 1.75rem; }
+.home-hero-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; }
+.home-hero-meta div { font-family: var(--font-body); font-size: .78rem; color: var(--muted); }
+.home-hero-meta strong { display: block; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; color: var(--espresso); }
 
-.home-hero-photo { margin: 0; }
-.home-hero-photo-frame {
-  border: 1px solid var(--gold);
-  padding: 5px;
-}
-.home-hero-photo-frame img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-.home-hero-photo-caption {
-  font-family: var(--font-heading);
-  font-style: italic;
-  font-size: .78rem;
-  color: rgba(245, 239, 230, .6);
-  text-align: center;
-  margin: .65rem 0 0;
-}
-@media (max-width: 991.98px) {
-  .home-hero-grid { grid-template-columns: 1fr; text-align: center; }
-  .home-hero-actions { justify-content: center; }
-  .home-hero-photo { max-width: 420px; margin: 0 auto; }
-}
-
-/* Three short facts under the hero — the "data-driven messaging near the
-   hero" pattern real institutional/bank sites use to earn trust before the
-   scroll, done honestly (facts about how the system behaves, not vanity
-   numbers). Reuses .stat-tile as-is (the admin dashboard's plain-top-rule
-   tile) and .how-step-title/.how-step-desc for the text, rather than
-   inventing a new tile style. */
-.home-facts { margin-bottom: clamp(2rem, 4vw + 1rem, 3rem); }
-.home-facts .how-step-title { font-size: 1rem; }
-
-/* Each capability column becomes a bordered panel with the same top-rule
-   idiom as .table-card/.stat-tile elsewhere in the app, rather than a
-   list floating with no frame — gives the section real weight without
-   introducing a new "AI card" pattern (no shadow, no rounded corners on
-   every side, no icon). */
-.home-panel {
-  border: 1px solid var(--border);
-  border-top: 2px solid var(--espresso);
-  border-radius: var(--radius-sm);
+/* The mock invoice "ticket" — a tilted document card with a notched edge,
+   reusing .ref-chip/.ledger-divider (section 3b) rather than a second
+   set of reference-chip/divider styles. */
+.home-ticket {
   background: var(--paper);
-  padding: 1.5rem 1.5rem .25rem;
-  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px -30px rgba(62, 39, 35, .35);
+  padding: 1.6rem 1.7rem 1.4rem;
+  position: relative;
+  transform: rotate(1.2deg);
 }
-.home-panel-intro {
-  font-family: var(--font-heading);
-  font-style: italic;
-  font-size: .86rem;
-  color: var(--muted);
-  margin: .6rem 0 .25rem;
+.home-ticket::before, .home-ticket::after {
+  content: "";
+  position: absolute;
+  width: 22px; height: 22px;
+  background: var(--ivory);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
 }
-.home-panel .record-action-row { padding: 1.25rem 0; margin: 0; }
+.home-ticket::before { left: -11px; }
+.home-ticket::after  { right: -11px; }
+.home-ticket-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.home-ticket-brand { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+.home-ticket-amount { font-family: var(--font-heading); font-weight: 600; font-size: 2.1rem; margin: 1rem 0 .15rem; font-variant-numeric: tabular-nums; color: var(--espresso); }
+.home-ticket-desc { font-family: var(--font-body); font-size: .82rem; color: var(--muted); }
+.home-ticket-field { display: flex; justify-content: space-between; font-family: var(--font-body); font-size: .78rem; padding: .3rem 0; }
+.home-ticket-field span:first-child { color: var(--muted); }
+.home-ticket-field span:last-child { font-family: var(--font-mono); font-weight: 600; color: var(--ink); }
+@media (max-width: 991.98px) {
+  .home-hero-grid { grid-template-columns: 1fr; }
+  .home-hero-actions { justify-content: center; text-align: center; }
+  .home-hero-section > .container > .home-hero-grid > div:first-child { text-align: center; }
+  .home-hero-meta { justify-content: center; }
+  .home-ticket { transform: none; max-width: 380px; margin: 0 auto; }
+}
 
-/* A "ticket-tape" flow — three genuinely sequential steps (generate, pay,
-   confirmed), so a STEP tag is honest here, unlike a numbered badge on
-   something that isn't actually a sequence. Dashed rather than solid
-   dividers between steps, echoing the perforated-ticket motif used on
-   the invoice/receipt reference block. */
+/* ---- Stat stripe: full-bleed dark band, three facts about how the
+   system behaves (not vanity numbers) — broken out of .container the
+   same way .home-closing is. ---- */
+.stat-stripe {
+  background: var(--espresso);
+  margin: 0 calc(50% - 50vw);
+}
+.stat-stripe-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 2.1rem clamp(1.1rem, 4vw, 2rem);
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.stat-stripe-item { padding: 0 1.5rem; border-left: 1px solid rgba(245, 239, 230, .15); }
+.stat-stripe-item:first-child { border-left: none; padding-left: 0; }
+.stat-stripe-num { font-family: var(--font-heading); font-size: clamp(1.4rem, 1.4vw + 1rem, 1.9rem); font-weight: 600; color: var(--gold); }
+.stat-stripe-label { font-family: var(--font-body); font-size: .82rem; color: rgba(245, 239, 230, .72); margin-top: .3rem; line-height: 1.45; }
+@media (max-width: 767.98px) {
+  .stat-stripe-inner { grid-template-columns: 1fr; gap: 1.3rem; }
+  .stat-stripe-item { border-left: none; border-top: 1px solid rgba(245, 239, 230, .15); padding: 1.1rem 0 0; }
+  .stat-stripe-item:first-child { border-top: none; padding-top: 0; }
+}
+
+/* ---- "How It Works" ticket-tape flow — unchanged from the previous
+   pass, just promoted to --radius-lg for consistency with the other
+   rounded marketing cards on this page. ---- */
 .how-steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   background: var(--paper);
   overflow: hidden;
 }
-.how-step { padding: 1.6rem 1.6rem; }
+.how-step { padding: 1.8rem 1.7rem; }
 .how-step + .how-step { border-left: 1px dashed var(--border-strong); }
 .how-step-num {
   display: inline-block;
@@ -1348,51 +1331,47 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   border-radius: var(--radius-sm);
   margin-bottom: 1rem;
 }
-.how-step-title {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: var(--espresso);
-  margin-bottom: .3rem;
-}
-.how-step-desc { font-family: var(--font-body); font-size: .86rem; color: var(--muted); }
+.how-step-title { font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; color: var(--espresso); margin-bottom: .4rem; }
+.how-step-desc { font-family: var(--font-body); font-size: .87rem; color: var(--muted); line-height: 1.6; }
 
-/* A full-width flat espresso band closing the page — the same
-   .dashboard-header idiom used elsewhere (flat fill, no gradient, no
-   rounded card), broken out of the narrow .container so it reads as a
-   deliberate closing statement rather than another boxed section, the
-   way .site-footer directly below it already does. */
-.home-cta {
-  background: var(--espresso);
-  /* Negative bottom margin cancels out <main class="container py-4">'s
-     fixed 24px bottom padding, so this band sits flush against
-     .site-footer below it (also margin-top: 0, see 19b) — two full-bleed
-     dark bands back to back, not separated by a stray ivory sliver. */
-  margin: clamp(2.5rem, 5vw, 4rem) calc(50% - 50vw) -24px;
-  padding: clamp(2.25rem, 5vw, 3.25rem) 1.5rem;
-  text-align: center;
-}
-.home-cta-inner { max-width: 620px; margin: 0 auto; }
-.home-cta-eyebrow {
-  font-family: var(--font-body);
-  font-size: .72rem;
-  letter-spacing: .12em;
+/* ---- Roles: two bordered rounded cards, each a mono-numbered list —
+   distinct from .record-actions used inside the logged-in app, since
+   this page is read by an anonymous visitor deciding what the system
+   even does, not a signed-in student acting on their own record. ---- */
+.roles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.role-card { background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; }
+.role-card-title { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 500; color: var(--espresso); margin: .5rem 0 1.3rem; }
+.role-list { list-style: none; margin: 0; padding: 0; }
+.role-list li { display: flex; gap: .8rem; align-items: baseline; padding: .75rem 0; border-top: 1px solid var(--border); font-family: var(--font-body); font-size: .88rem; color: var(--ink); }
+.role-list li:first-child { border-top: none; }
+.role-num { font-family: var(--font-mono); color: var(--gold-dark); font-size: .72rem; flex-shrink: 0; width: 1.4rem; }
+
+/* ---- Fee structure: a real table + a session-year chip row ---- */
+.fee-table-shell { background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.fee-table-shell table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.fee-table-shell thead th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: .66rem;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  color: rgba(245, 239, 230, .65);
-  margin-bottom: .6rem;
+  color: var(--muted);
+  padding: .9rem 1.4rem;
+  border-bottom: 1px solid var(--border);
 }
-.home-cta-heading {
-  color: #fff;
-  font-size: clamp(1.25rem, 1.8vw + .8rem, 1.7rem);
-  line-height: 1.3;
-  margin-bottom: 1.6rem;
-}
-.home-cta-note {
-  font-family: var(--font-body);
-  font-size: .82rem;
-  color: rgba(245, 239, 230, .7);
-  margin: 1.1rem 0 0;
-}
+.fee-table-shell tbody td { padding: .85rem 1.4rem; border-bottom: 1px solid var(--border); font-family: var(--font-body); }
+.fee-table-shell tbody tr:last-child td { border-bottom: none; }
+.fee-table-shell td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; color: var(--espresso); }
+.fee-table-note { padding: .9rem 1.4rem; font-family: var(--font-mono); font-size: .76rem; color: var(--muted); border-top: 1px solid var(--border); }
+.session-scroll { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1.3rem; }
+.session-chip { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; border: 1px solid var(--border); border-radius: 100px; padding: .4rem .9rem; color: var(--ink); }
+.session-chip.current { background: var(--espresso); color: #fff; border-color: var(--espresso); }
+
+/* ---- Trust grid: three facts, plain top rule, no icons ---- */
+.trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+.trust-card { padding: 1.5rem 0 0; border-top: 2px solid var(--espresso); }
+.trust-card h3 { font-family: var(--font-heading); font-size: 1.05rem; font-weight: 600; color: var(--espresso); margin-bottom: .55rem; }
+.trust-card p { font-family: var(--font-body); font-size: .86rem; color: var(--muted); line-height: 1.6; }
 
 /* FAQ — a plain hairline-divided list matching .how-steps, not an accordion
    of shadowed cards. The chevron rotates 180° on open (a standard, purposeful
@@ -1400,7 +1379,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
    until the visitor actually clicks a question. */
 .home-faq {
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   background: var(--paper);
 }
 .home-faq-item { border-bottom: 1px solid var(--border); }
@@ -1436,12 +1415,43 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   margin: 0;
 }
 
+/* ---- Closing band: full-bleed dark, eyebrow + heading + two CTAs ---- */
+.home-closing {
+  background: var(--espresso);
+  /* Negative bottom margin cancels <main class="container py-4">'s fixed
+     24px bottom padding, so this band sits flush against .site-footer
+     below it (also margin-top: 0, see 19b). */
+  margin: clamp(2.5rem, 5vw, 4rem) calc(50% - 50vw) -24px;
+  padding: clamp(2.5rem, 6vw, 4rem) 1.5rem;
+  text-align: center;
+}
+.home-closing-inner { max-width: 620px; margin: 0 auto; }
+.home-closing-eyebrow { font-family: var(--font-mono); font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(245, 239, 230, .6); }
+.home-closing-heading { color: #fff; font-size: clamp(1.5rem, 2vw + 1rem, 2.2rem); font-weight: 500; margin: .8rem 0 1rem; }
+.home-closing-sub { font-family: var(--font-body); font-size: 1rem; color: rgba(245, 239, 230, .72); }
+.home-closing-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .9rem; margin-top: 1.9rem; }
+.home-closing .btn-outline-light { border-color: rgba(245, 239, 230, .35); color: #fff; }
+.home-closing .btn-outline-light:hover { border-color: #fff; background: rgba(245, 239, 230, .08); color: #fff; }
+
+section.home-section { padding: clamp(3rem, 6vw, 5rem) 0; }
+.home-section-head { max-width: 640px; margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem); }
+.home-section-head h2 { font-family: var(--font-heading); font-size: clamp(1.5rem, 1.6vw + 1rem, 2.1rem); font-weight: 500; margin-top: .5rem; }
+.home-section-head p { font-family: var(--font-body); color: var(--muted); margin-top: .8rem; font-size: .96rem; line-height: 1.6; }
+
 @media (max-width: 767.98px) {
   .how-steps { grid-template-columns: 1fr; }
   .how-step + .how-step { border-left: none; border-top: 1px dashed var(--border-strong); }
-  .home-panel { padding: 1.25rem 1.25rem .25rem; }
+  .roles-grid { grid-template-columns: 1fr; }
+  .trust-grid { grid-template-columns: 1fr; }
+  /* The table itself needs a real minimum width to scroll horizontally
+     inside .fee-table-shell — width:100% (the desktop rule) would just
+     cram all four columns into the narrow viewport instead. */
+  .fee-table-shell { overflow-x: auto; }
+  .fee-table-shell table { width: auto; min-width: 560px; font-size: .8rem; }
+  .fee-table-shell thead th, .fee-table-shell tbody td { padding: .7rem .9rem; }
   .home-faq-question { padding: 1rem 1.1rem; font-size: .92rem; }
   .home-faq-answer { padding: 0 1.1rem 1.1rem; }
+  .site-topbar-nav a:not(.btn) { display: none; }
 }
 
 /* =====================================================================

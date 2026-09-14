@@ -125,7 +125,10 @@
 
   {# ── Top strip (student) — a plain institutional strip, not the
        admin's boxed navbar; see DESIGN_BRIEF.md's "Academic Ledger"
-       student-section direction. ─────────────────────────────────── #}
+       student-section direction. Overridable per-page (home.html uses
+       its own sticky topbar with in-page nav, since it's the marketing
+       entry point, not an internal record page). ──────────────────── #}
+  {% block navbar %}
   <nav class="navbar record-strip">
     <div class="container-fluid">
       <a class="brand-link" href="{{ url_for('index') }}">
@@ -146,6 +149,7 @@
     </div>
   </nav>
   <div class="record-strip-accent"></div>
+  {% endblock %}
 
   {# ── Student / plain-app layout ─────────────────────────────── #}
   <main class="container py-4">
