@@ -707,3 +707,18 @@ campus" case anyway — no people were needed to land that point.
 The topbar's in-page nav and the footer's Quick Links both gained a
 "Campus" entry pointing at `#campus`, matching the existing pattern
 for every other homepage section.
+
+## Public homepage follow-up 5: the same campus photo behind the login showcase panel
+
+`.auth-showcase` (the dark left panel on the split login page — see the
+earlier "full to the page" follow-up) was a flat `--espresso` fill with
+no imagery of its own. It now uses the homepage gallery's faculty
+building photo as a background image, with a dark gradient overlay
+(`rgba(42,26,22,.35)` at the top fading to `.95` at the bottom) doing
+the same job `.home-ticket`'s plain card does elsewhere — keeping the
+existing white/gold text, the stat callouts, and the `.ref-chip` sample
+reference exactly as legible as they were on the flat color, just with
+a real place behind them instead of a solid fill. Nothing else on the
+panel changed. The 900px breakpoint that hides `.auth-showcase` on
+narrower screens is untouched, so this has no effect on the mobile
+form-only login.

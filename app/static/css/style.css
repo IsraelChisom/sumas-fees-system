@@ -705,8 +705,15 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   align-items: stretch;
   width: 100%;
 }
+/* A real campus photo sits behind the showcase panel, not just a flat
+   espresso fill — a dark gradient (top: mostly-clear so the photo reads;
+   bottom: solid espresso) sits over it so the existing white/gold text
+   and the ref-chip stay exactly as legible as they were on the plain
+   color. Same source photo as the homepage's campus gallery. */
 .auth-showcase {
-  background: var(--espresso);
+  background:
+    linear-gradient(180deg, rgba(42, 26, 22, .35) 0%, rgba(42, 26, 22, .82) 60%, rgba(42, 26, 22, .95) 100%),
+    url('../images/campus/campus-faculty-building.jpg') center / cover no-repeat;
   padding: clamp(2.5rem, 6vw, 6rem);
   display: flex;
   flex-direction: column;
