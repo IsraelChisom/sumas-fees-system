@@ -30,13 +30,24 @@
   {# ── Top Navbar (admin) ──────────────────────────────────────── #}
   <nav class="navbar app-navbar">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('index') }}">
-        <div class="brand-icon"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
-        <div class="brand-text">
-          SUMAS Fees
-          <small>State University of Medical &amp; Applied Sciences</small>
-        </div>
-      </a>
+      <div class="d-flex align-items-center gap-2">
+        {# Sidebar toggle — below 992px only (d-lg-none); the sidebar
+           itself is a Bootstrap .collapse (same component the homepage
+           FAQ uses), forced permanently open again above that width by
+           the ID rule in RESPONSIVE (section 20). #}
+        <button class="sidebar-toggle-btn d-lg-none" type="button"
+                data-bs-toggle="collapse" data-bs-target="#adminSidebarNav"
+                aria-expanded="false" aria-controls="adminSidebarNav" aria-label="Toggle navigation">
+          <i class="bi bi-list"></i>
+        </button>
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+          <div class="brand-icon"><img src="{{ url_for('static', filename='images/sumas-crest.png') }}" alt="SUMAS crest"></div>
+          <div class="brand-text">
+            SUMAS Fees
+            <small>State University of Medical &amp; Applied Sciences</small>
+          </div>
+        </a>
+      </div>
       <div class="d-flex align-items-center gap-2">
         {% if g.user %}
           <span class="who d-none d-md-inline">
@@ -56,7 +67,7 @@
       <aside class="sidebar">
         <div class="nav-section-label">Navigation</div>
 
-        <nav class="nav flex-lg-column">
+        <nav id="adminSidebarNav" class="nav flex-lg-column collapse">
           <a class="nav-link {{ 'active' if request.endpoint == 'admin.dashboard' }}"
              href="{{ url_for('admin.dashboard') }}">
             <i class="bi bi-speedometer2"></i> Dashboard

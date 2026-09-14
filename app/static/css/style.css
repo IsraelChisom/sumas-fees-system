@@ -309,6 +309,21 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   color: rgba(255, 255, 255, .55);
   letter-spacing: .04em;
 }
+.sidebar-toggle-btn {
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: var(--radius-sm);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.sidebar-toggle-btn:hover { background: rgba(255, 255, 255, .14); }
+
 .app-navbar .who {
   font-family: var(--font-body);
   color: rgba(255, 255, 255, .7);
@@ -1612,25 +1627,45 @@ section.home-section { padding: clamp(3rem, 6vw, 5rem) 0; }
    20. RESPONSIVE
 ===================================================================== */
 @media (max-width: 991.98px) {
+  /* The sidebar no longer sits as a permanent horizontal bar the page
+     has to scroll past — it's a toggled dropdown panel now (the
+     .sidebar-toggle-btn button in .app-navbar), collapsed by default.
+     #adminSidebarNav is a genuine Bootstrap .collapse (the same
+     component the homepage FAQ uses), so this is just letting its
+     default collapsed/expanded behavior apply at this width — the
+     min-width:992px rule below is what keeps it permanently open on
+     desktop instead. */
   .admin-shell { flex-direction: column; }
   .sidebar {
     width: 100%;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: .6rem .75rem;
-    gap: .2rem;
+    flex-direction: column;
+    padding: 0;
   }
-  .sidebar nav { display: flex; gap: .2rem; flex-grow: 0; }
   .sidebar .nav-section-label { display: none; }
-  .sidebar .nav-link {
-    white-space: nowrap;
-    border-left: none;
-    border-bottom: 3px solid transparent;
-    border-radius: var(--radius-sm);
-    padding: .5rem .8rem;
+  #adminSidebarNav {
+    padding: .6rem .75rem;
+    gap: .15rem;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
   }
-  .sidebar .nav-link.active { border-left-color: transparent; border-bottom-color: var(--gold); }
+  /* Bootstrap's own .collapse.show rule is display:block — overridden so
+     the nav links still lay out as the intended flex column with gap
+     while the panel is open. */
+  #adminSidebarNav.collapse.show { display: flex; flex-direction: column; }
+  .sidebar .nav-link {
+    border-left: 3px solid transparent;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
   .sidebar-footer { display: none; }
+}
+
+@media (min-width: 992px) {
+  /* Force the collapse permanently open on desktop, regardless of
+     whatever open/closed state Bootstrap's JS left it in the last time
+     the toggle button was used below 992px (the button itself is
+     d-lg-none, but the .show class it last set can persist across a
+     resize). #adminSidebarNav's ID gives this the specificity to beat
+     Bootstrap's own base .collapse:not(.show) { display: none } rule. */
+  #adminSidebarNav.collapse { display: flex; height: auto; visibility: visible; }
 }
 
 @media (max-width: 767.98px) {
