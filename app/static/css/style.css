@@ -1640,12 +1640,27 @@ section.home-section { padding: clamp(3rem, 6vw, 5rem) 0; }
     width: 100%;
     flex-direction: column;
     padding: 0;
+    /* Anchors the absolutely-positioned panel below — .sidebar itself
+       contributes no height on mobile (nav-section-label and the
+       profile chip are both hidden), so it never pushes .admin-main. */
+    position: relative;
   }
   .sidebar .nav-section-label { display: none; }
   #adminSidebarNav {
+    /* Floats over the page instead of pushing it down when opened — the
+       inline Bootstrap-default behavior read as the whole page suddenly
+       scrolling/jumping, not a menu opening. */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1020;
+    background: var(--espresso);
     padding: .6rem .75rem;
     gap: .15rem;
-    border-bottom: 1px solid rgba(255, 255, 255, .1);
+    box-shadow: 0 16px 32px -12px rgba(0, 0, 0, .4);
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
   }
   /* Bootstrap's own .collapse.show rule is display:block — overridden so
      the nav links still lay out as the intended flex column with gap
