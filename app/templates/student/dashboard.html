@@ -41,16 +41,22 @@
     <div class="section-label">Account Actions</div>
     <div class="record-actions">
       <a href="{{ url_for('student.generate_invoice') }}" class="record-action-row" style="color:inherit; text-decoration:none;">
-        <div>
-          <div class="record-action-title">Generate Invoice</div>
-          <div class="record-action-desc">Pick a fee category and payment plan, get a payment reference.</div>
+        <div class="d-flex align-items-baseline gap-3">
+          <span class="role-num">01</span>
+          <div>
+            <div class="record-action-title">Generate Invoice</div>
+            <div class="record-action-desc">Pick a fee category and payment plan, get a payment reference.</div>
+          </div>
         </div>
         <span class="record-action-link">Open</span>
       </a>
       <a href="{{ url_for('student.list_invoices') }}" class="record-action-row" style="color:inherit; text-decoration:none;">
-        <div>
-          <div class="record-action-title">My Invoices &amp; Receipts</div>
-          <div class="record-action-desc">Track payment status and print official receipts.</div>
+        <div class="d-flex align-items-baseline gap-3">
+          <span class="role-num">02</span>
+          <div>
+            <div class="record-action-title">My Invoices &amp; Receipts</div>
+            <div class="record-action-desc">Track payment status and print official receipts.</div>
+          </div>
         </div>
         {% if invoices_awaiting or invoices_paid %}
           <div class="d-flex align-items-center gap-2">
@@ -66,16 +72,22 @@
         {% endif %}
       </a>
       <a href="{{ url_for('student.view_balance') }}" class="record-action-row" style="color:inherit; text-decoration:none;">
-        <div>
-          <div class="record-action-title">Outstanding Balance</div>
-          <div class="record-action-desc">Full statement, across every fee category.</div>
+        <div class="d-flex align-items-baseline gap-3">
+          <span class="role-num">03</span>
+          <div>
+            <div class="record-action-title">Outstanding Balance</div>
+            <div class="record-action-desc">Full statement, across every fee category.</div>
+          </div>
         </div>
         <span class="record-action-link">Open</span>
       </a>
       <a href="{{ url_for('student.pay_simulator') }}" class="record-action-row" style="color:inherit; text-decoration:none;">
-        <div>
-          <div class="record-action-title">Payment Gateway Simulator</div>
-          <div class="record-action-desc">For demonstration &mdash; simulates paying an invoice.</div>
+        <div class="d-flex align-items-baseline gap-3">
+          <span class="role-num">04</span>
+          <div>
+            <div class="record-action-title">Payment Gateway Simulator</div>
+            <div class="record-action-desc">For demonstration &mdash; simulates paying an invoice.</div>
+          </div>
         </div>
         <span class="record-action-link">Open</span>
       </a>
