@@ -669,6 +669,51 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   background: var(--ivory);
 }
 
+/* login.html only (not the 404/500 pages, which keep the plain centered
+   .auth-page) — a showcase panel reusing the homepage hero's own voice
+   (mono eyebrow, serif headline with an italic gold accent word, the
+   same three mono stat callouts) sits beside the sign-in card, instead
+   of a bare form on its own. */
+.auth-page-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  max-width: 1000px;
+  width: 100%;
+}
+.auth-showcase {
+  background: var(--espresso);
+  border-radius: var(--radius-lg);
+  padding: clamp(2rem, 4vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.auth-showcase-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 2vw + 1rem, 2.1rem);
+  font-weight: 500;
+  line-height: 1.15;
+  color: #fff;
+  margin: .8rem 0 1rem;
+}
+.auth-showcase-title em { font-style: italic; color: var(--gold); font-weight: 500; }
+.auth-showcase-sub {
+  font-family: var(--font-body);
+  font-size: .92rem;
+  line-height: 1.6;
+  color: rgba(245, 239, 230, .78);
+  max-width: 34ch;
+}
+.auth-showcase-stats { margin-top: 2.2rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.auth-showcase-stats div { font-family: var(--font-body); font-size: .78rem; color: rgba(245, 239, 230, .6); }
+.auth-showcase-stats strong { display: block; font-family: var(--font-heading); font-size: 1.35rem; font-weight: 600; color: #fff; }
+@media (max-width: 900px) {
+  .auth-page-split { grid-template-columns: 1fr; max-width: 430px; }
+  .auth-showcase { display: none; }
+}
+
 .auth-card {
   width: 100%;
   max-width: 430px;
@@ -796,12 +841,22 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   font-size: 1.7rem;
   margin-bottom: .4rem;
 }
-.dashboard-header-tag {
-  font-family: var(--font-body);
-  font-size: .82rem;
-  color: rgba(245, 239, 230, .7);
+.dashboard-header-tag { display: flex; flex-wrap: wrap; gap: .45rem; }
+/* Mono chip pills — the same shape as the homepage's .session-chip,
+   reused here on a dark fill instead of .session-chip's light-page
+   colors, so the identity line reads as the same "Clinical Ledger"
+   vocabulary rather than plain middot-separated text. */
+.tag-chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .22rem .65rem;
+  border: 1px solid rgba(245, 239, 230, .28);
+  border-radius: 100px;
+  color: rgba(245, 239, 230, .88);
 }
-.dashboard-header-tag .reg-number { color: var(--gold); font-weight: 600; }
+.tag-chip.tag-chip-accent { background: var(--gold); border-color: var(--gold); color: var(--espresso-dark); }
 
 .dashboard-header-stats { display: flex; gap: 2.25rem; }
 .dashboard-stat-label {

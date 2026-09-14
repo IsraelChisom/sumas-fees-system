@@ -10,8 +10,10 @@
   <div class="dashboard-header-welcome">
     <h1>Welcome, {{ student['full_name'] }}</h1>
     <div class="dashboard-header-tag">
-      <span class="reg-number data-mono">{{ student['reg_number'] }}</span>
-      &middot; {{ student['department'] }} &middot; {{ student['faculty'] }} &middot; {{ student['level'] }} Level
+      <span class="tag-chip tag-chip-accent">{{ student['reg_number'] }}</span>
+      <span class="tag-chip">{{ student['department'] }}</span>
+      <span class="tag-chip">{{ student['faculty'] }}</span>
+      <span class="tag-chip">{{ student['level'] }} Level</span>
     </div>
   </div>
   <div class="dashboard-header-stats">
