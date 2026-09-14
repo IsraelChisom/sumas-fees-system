@@ -576,3 +576,64 @@ design."
   site, and the reference page was a marketing mockup with no such
   requirement to satisfy. FAQ content is additive, not a deviation from
   the reference — nothing in it was removed to make room for the rebuild.
+
+## The card language extended to the whole app, not just home.html
+
+Still correctly called out as incomplete: `home.html` matched the
+reference page's actual composition, but login, both dashboards, and
+every table/list elsewhere kept their old sharp `--radius-sm` shapes —
+only their fonts and colors had changed. Asked for explicitly: apply the
+same design everywhere — auth/login, the student portal, the
+administrator portal, "every aspect of the software."
+
+The reference page's cards (`.role-card`, `.home-ticket`,
+`.fee-table-shell`) all share one visual signature: `--radius-lg` (10px)
+corners, sometimes with a soft shadow — distinct from the sharper edges
+the rest of the app used. Rather than editing dozens of templates
+individually, this was rolled out at the **shared base component**
+level in `style.css`, the same leverage point the font swap used — every
+page that reuses `.card`, `.table-card`, `.stat-tile`, `.qa-list`,
+`.record-actions`, `.dashboard-header`, `.statement-summary`,
+`.balance-breakdown`, `.auth-card`, or `.print-document` picked up the
+rounded, softer-shadowed look in one pass, with no template changes:
+
+- **`.record-actions` became an actual bordered `--radius-lg` card**
+  (previously a bare hairline-divided list with no container at all) —
+  this is what every "Account Actions" list across the student section
+  renders through, so it now reads as the same kind of card as the
+  homepage's `.role-card`, without needing to touch
+  `student/dashboard.html` or anywhere else that uses it. Its row
+  hover color had to change too (`var(--paper)` → `var(--ivory)`) since
+  the row now sits *inside* a `--paper` card instead of directly on the
+  page — the old hover value would have been invisible against its own
+  new background.
+- **`.table-card`, `.balance-breakdown`, and `.qa-list`** all gained
+  `--radius-lg` and, where they didn't already clip their contents,
+  `overflow: hidden` (or `overflow-y: hidden` alongside the existing
+  `overflow-x: auto` on `.table-card`) — necessary because a table's
+  sharp-cornered header row will otherwise poke a visible square corner
+  past a parent's now-much-larger rounded corner; this didn't show at
+  the old 4px radius but does at 10px.
+- **`.auth-card`** (login, and the 404/500 error pages that reuse it)
+  gained the same shadow formula as `.home-ticket`
+  (`0 24px 60px -30px rgba(62,39,35,.35)`) in place of its old, much
+  flatter shadow, and its crest holder went from `--radius-sm` to
+  `--radius-md` to soften alongside it.
+- **`.dashboard-header` and `.statement-summary`** (both bounded,
+  contained bands, not edge-to-edge like `.stat-stripe`/`.home-closing`)
+  moved to `--radius-lg` for the same reason `.home-ticket` is rounded
+  while the full-bleed stripe isn't: a card gets the new rounded
+  treatment, a true full-bleed section stays square-edged either way —
+  that distinction is deliberate and consistent with how the reference
+  page itself behaves.
+- **`.print-document`** (invoices/receipts) also moved to `--radius-lg`,
+  matching the mock invoice card that inspired the whole reference
+  concept. Its `@media print` rule already strips the border/radius
+  entirely for the actual printed/PDF output, so this only affects the
+  on-screen preview.
+- **Left deliberately square**: the admin sidebar, both top navbars (the
+  admin `.app-navbar` and the student `.record-strip`), the homepage's
+  sticky topbar, and every genuinely full-bleed band (`.stat-stripe`,
+  `.home-closing`, `.site-footer`). A full-bleed section and a contained
+  card are different shapes in the reference page too; rounding the
+  former would look like a mistake, not a style.

@@ -509,7 +509,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 .card {
   background: var(--paper);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   box-shadow: none;
 }
 
@@ -526,7 +526,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   background: var(--paper);
   border: 1px solid var(--border);
   border-top: 2px solid var(--espresso);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   padding: 1.1rem 1.4rem;
 }
 .stat-tile .stat-num {
@@ -567,8 +567,12 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   background: var(--paper);
   border: 1px solid var(--border);
   border-top: 2px solid var(--espresso);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
+  /* overflow-y hidden (not just overflow-x: auto) so the table's own
+     sharp-cornered header row actually clips to the card's now-larger
+     rounded corners, instead of poking a square edge past them. */
   overflow-x: auto;
+  overflow-y: hidden;
 }
 .table-card .table { margin-bottom: 0; }
 
@@ -670,8 +674,8 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   max-width: 430px;
   background: var(--paper);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: 0 2px 4px rgba(43, 33, 29, .04), 0 12px 32px rgba(43, 33, 29, .1);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px -30px rgba(62, 39, 35, .35);
   padding: 2.25rem 2rem;
 }
 
@@ -679,7 +683,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 .auth-brand .brand-icon {
   width: 54px;
   height: 54px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: var(--espresso);
   color: var(--gold);
   display: flex;
@@ -778,7 +782,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 ===================================================================== */
 .dashboard-header {
   background: var(--espresso);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   padding: 1.75rem 2rem;
   margin-bottom: 2.25rem;
   display: flex;
@@ -864,7 +868,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
    own flat espresso band instead of sitting inside .dashboard-header. */
 .statement-summary {
   background: var(--espresso);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   padding: 1.75rem 2rem;
   margin-bottom: 2rem;
   text-align: center;
@@ -874,8 +878,9 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 
 .balance-breakdown {
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   background: var(--paper);
+  overflow: hidden;
 }
 .balance-breakdown-row {
   display: flex;
@@ -907,18 +912,29 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   margin-bottom: 0;
 }
 
-.record-actions { margin-top: 0; }
+/* A bordered, --radius-lg card (the same shape as the homepage's
+   .role-card) rather than a bare list floating on the page — this class
+   is shared by every "Account Actions"-style list across the student
+   section, so this one change carries the Clinical Ledger card language
+   to all of them without touching their templates. */
+.record-actions {
+  margin-top: 0;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0 1.5rem;
+}
 .record-action-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
   border-bottom: 1px solid var(--border);
-  padding: 1.5rem 1rem;
-  margin: 0 -1rem;
+  padding: 1.5rem 0;
+  margin: 0;
 }
 .record-action-row:last-child { border-bottom: none; }
-.record-action-row:hover { background: var(--paper); }
+.record-action-row:hover { background: var(--ivory); }
 .record-action-title {
   font-family: var(--font-heading);
   font-weight: 600;
@@ -957,7 +973,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 .qa-list {
   background: var(--paper);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 .qa-item {
@@ -1060,7 +1076,7 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   background: var(--paper);
   border: 1px solid var(--border);
   border-top: 4px double var(--espresso);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   padding: 2rem 2.25rem;
 }
 
