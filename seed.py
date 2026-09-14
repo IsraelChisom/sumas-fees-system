@@ -50,6 +50,7 @@ fee_categories = [
     ("School Fees", session, "200", None, None, 150000.00),
     ("School Fees", session, "300", None, None, 150000.00),
     ("School Fees", session, "400", None, None, 150000.00),
+    ("School Fees", session, "500", None, None, 150000.00),
     ("Departmental Fee", session, None, "Computer Science", None, 25000.00),
     ("Departmental Fee", session, None, "Nursing Science", None, 30000.00),
     ("Faculty Fee", session, None, None, "Natural Sciences", 10000.00),
@@ -61,6 +62,15 @@ for name, sess, level, dept, fac, amount in fee_categories:
         "VALUES (?, ?, ?, ?, ?, ?)",
         (name, sess, level, dept, fac, amount),
     )
+
+# --- Department programme lengths ---
+# Computer Science is left unlisted deliberately — it runs the common 400L
+# course, which is exactly the case _max_level_for() defaults to without a
+# row here. Nursing Science genuinely runs a level further.
+conn.execute(
+    "INSERT INTO department_program (department, max_level) VALUES (?, ?)",
+    ("Nursing Science", "500"),
+)
 
 conn.commit()
 conn.close()

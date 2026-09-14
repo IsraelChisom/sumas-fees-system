@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% set layout = 'admin' %}
+{% block title %}{{ 'Edit' if program else 'Add' }} Department Programme{% endblock %}
+{% block content %}
+
+<div class="page-heading">
+  <div>
+    <h1 class="h3 mb-1">{{ 'Edit Department Programme' if program else 'Add Department Programme' }}</h1>
+    <p class="muted-note mb-0">
+      {{ 'Update how far this department\'s course runs.' if program else 'Set a department whose course runs past the common 400 Level.' }}
+    </p>
+  </div>
+  <a href="{{ url_for('admin.list_programs') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back to Programmes
+  </a>
+</div>
+
+<div class="card p-4" style="max-width:520px;">
+  <form method="post">
+
+    {% if program %}
+      <div class="mb-4">
+        <div class="fw-semibold text-navy" style="font-size:1rem;">{{ program['department'] }}</div>
+      </div>
+    {% else %}
+      <div class="mb-3">
+        <label for="department" class="form-label">Department</label>
+        <div class="input-icon-wrap">
+          <i class="bi bi-building input-icon"></i>
+          <input type="text" name="department" id="department"
+                 class="form-control" placeholder="e.g. Nursing Science" required>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="mb-4">
+      <label for="max_level" class="form-label">Runs Through</label>
+      <div class="input-icon-wrap">
+        <i class="bi bi-layers-fill input-icon"></i>
+        <select name="max_level" id="max_level" class="form-select" required>
+          {% for lvl in level_choices %}
+          <option value="{{ lvl }}" {{ 'selected' if program and program['max_level'] == lvl }}>{{ lvl }} Level</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-text">The highest level a student in this department reaches.</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">
+      <i class="bi bi-check-lg me-1"></i> {{ 'Save Changes' if program else 'Add Department' }}
+    </button>
+  </form>
+</div>
+
+{% endblock %}

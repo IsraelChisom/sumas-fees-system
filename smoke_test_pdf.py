@@ -53,7 +53,7 @@ client = app.test_client()
 
 # Eze Ezekiel generates and pays one invoice; generates a second, unpaid one.
 client.post("/auth/login", data={"role": "student", "login_id": "SUMAS/2022/0697", "password": "student123"})
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "Full Payment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "level": "400", "session": "2025/2026", "payment_plan": "Full Payment"})
 with app.app_context():
     db = get_db()
     paid_invoice = db.execute(
@@ -62,7 +62,7 @@ with app.app_context():
     ).fetchone()
     handle_payment_notification(db, paid_invoice["payment_reference"], paid_invoice["amount"])
     paid_invoice_id = paid_invoice["invoice_id"]
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "First Installment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "level": "400", "session": "2025/2026", "payment_plan": "First Installment"})
 with app.app_context():
     db = get_db()
     unpaid_invoice = db.execute(

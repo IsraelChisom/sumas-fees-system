@@ -287,6 +287,100 @@ def edit_fee(fee_category_id):
 
 
 # ---------------------------------------------------------------------------
+# Department programme lengths — how far each department's own course
+# actually runs (most run to 400 Level; some, like Nursing Science, run
+# longer). A department with no row here defaults to 400 in code (see
+# `_max_level_for()` in app/student.py) — this list only ever needs an
+# entry for a department whose programme is NOT that common 400L case.
+# Drives the Level select's range on the student invoice-generation form.
+# ---------------------------------------------------------------------------
+
+LEVEL_CHOICES = ("400", "500", "600")
+
+
+@bp.route("/programs")
+@admin_required
+def list_programs():
+    db = get_db()
+    programs = db.execute(
+        "SELECT * FROM department_program ORDER BY department"
+    ).fetchall()
+    return render_template("admin/programs_list.html", programs=programs)
+
+
+@bp.route("/programs/add", methods=("GET", "POST"))
+@admin_required
+def add_program():
+    if request.method == "POST":
+        department = request.form.get("department", "").strip()
+        max_level = request.form.get("max_level", "").strip()
+
+        error = None
+        if not (department and max_level):
+            error = "Department and maximum level are both required."
+        if error is None and max_level not in LEVEL_CHOICES:
+            error = "Invalid maximum level."
+
+        if error is None:
+            db = get_db()
+            try:
+                db.execute(
+                    "INSERT INTO department_program (department, max_level) VALUES (?, ?)",
+                    (department, max_level),
+                )
+                db.commit()
+                flash(f"{department} set to run through {max_level} Level.", "success")
+                return redirect(url_for("admin.list_programs"))
+            except sqlite3.IntegrityError:
+                error = f"{department} already has a programme length set — edit it instead."
+
+        flash(error, "danger")
+
+    return render_template("admin/program_form.html", program=None, level_choices=LEVEL_CHOICES)
+
+
+@bp.route("/programs/<department>/edit", methods=("GET", "POST"))
+@admin_required
+def edit_program(department):
+    db = get_db()
+    program = db.execute(
+        "SELECT * FROM department_program WHERE department = ?", (department,)
+    ).fetchone()
+    if program is None:
+        flash("That department has no programme length set yet.", "danger")
+        return redirect(url_for("admin.list_programs"))
+
+    if request.method == "POST":
+        max_level = request.form.get("max_level", "").strip()
+        error = None
+        if max_level not in LEVEL_CHOICES:
+            error = "Invalid maximum level."
+
+        if error is None:
+            db.execute(
+                "UPDATE department_program SET max_level = ? WHERE department = ?",
+                (max_level, department),
+            )
+            db.commit()
+            flash("Programme length updated.", "success")
+            return redirect(url_for("admin.list_programs"))
+
+        flash(error, "danger")
+
+    return render_template("admin/program_form.html", program=program, level_choices=LEVEL_CHOICES)
+
+
+@bp.route("/programs/<department>/delete", methods=("POST",))
+@admin_required
+def delete_program(department):
+    db = get_db()
+    db.execute("DELETE FROM department_program WHERE department = ?", (department,))
+    db.commit()
+    flash(f"{department} now defaults back to 400 Level.", "success")
+    return redirect(url_for("admin.list_programs"))
+
+
+# ---------------------------------------------------------------------------
 # Exception queue — payment notifications that couldn't be automatically
 # matched to an invoice. This is the ONLY payment-related admin screen
 # now; a normal successful payment never appears here at all.

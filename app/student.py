@@ -36,6 +36,32 @@ bp = Blueprint("student", __name__, url_prefix="/student")
 
 PAYMENT_PLANS = ("Full Payment", "First Installment", "Second Installment")
 
+# The Academic Session select on the invoice-generation form always offers
+# this fixed range, regardless of which sessions the admin has actually
+# created fee categories for yet (a real portal shows the whole run of
+# sessions a student could plausibly need — including future ones the
+# Bursary hasn't opened fees for, and past ones a carried-over balance
+# might still reference). Newest first for display.
+SESSIONS = (
+    "2027/2028", "2026/2027", "2025/2026",
+    "2024/2025", "2023/2024", "2022/2023",
+)
+
+DEFAULT_MAX_LEVEL = 400
+
+
+def _max_level_for(db, department):
+    """The highest level a department's own course reaches — most run to
+    DEFAULT_MAX_LEVEL; a department with a row in department_program (e.g.
+    Nursing Science, which runs to 500) overrides that. Drives the Level
+    select's range on the invoice-generation form (see LEVEL_CHOICES's
+    admin-side counterpart in admin.py)."""
+    row = db.execute(
+        "SELECT max_level FROM department_program WHERE department = ?",
+        (department,),
+    ).fetchone()
+    return int(row["max_level"]) if row else DEFAULT_MAX_LEVEL
+
 
 @bp.route("/dashboard")
 @student_required
@@ -179,8 +205,9 @@ def list_invoices():
 def generate_invoice():
     db = get_db()
     fee_categories = _fee_categories_for_invoice_form(db, g.user)
-    levels = sorted({f["level"] for f in fee_categories if f["level"]})
-    sessions = sorted({f["session"] for f in fee_categories}, reverse=True)
+    max_level = _max_level_for(db, g.user["department"])
+    levels = [str(lvl) for lvl in range(100, max_level + 1, 100)]
+    sessions = list(SESSIONS)
 
     if request.method == "POST":
         # Security NFR: which student an invoice belongs to is always
@@ -196,11 +223,8 @@ def generate_invoice():
         level = request.form.get("level", "").strip()
         academic_session = request.form.get("session", "").strip()
 
-        # Level is only required if at least one fee category is actually
-        # level-scoped (see `levels` above) — if none are, there's nothing
-        # to pick, and the "All Levels" fallback option submits blank.
         error = None
-        if not (academic_session and fee_category_id and payment_plan) or (levels and not level):
+        if not (level and academic_session and fee_category_id and payment_plan):
             error = "Level, session, fee category, and payment plan are all required."
         if error is None and payment_plan not in PAYMENT_PLANS:
             error = "Invalid payment plan."
@@ -257,12 +281,14 @@ def generate_invoice():
         if error:
             flash(error, "danger")
 
-    # Default the Level/Session selects to the student's own level (if any
-    # fee category actually offers it) and the most recent session, so the
-    # Fee Category list is pre-filtered to the common case on first load —
-    # the student only needs to change either select for a carried-over fee.
+    # Default the Level/Session selects to the student's own level and a
+    # session that actually has fee categories set up, so the Fee Category
+    # list is pre-filtered to the common case on first load — the student
+    # only needs to change either select for a carried-over fee, or once
+    # the Bursary opens fees for a session newer than any seen here yet.
     default_level = g.user["level"] if g.user["level"] in levels else (levels[0] if levels else "")
-    default_session = sessions[0] if sessions else ""
+    existing_sessions = sorted({f["session"] for f in fee_categories}, reverse=True)
+    default_session = existing_sessions[0] if existing_sessions else sessions[0]
 
     return render_template(
         "student/invoice_generate.html",

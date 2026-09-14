@@ -14,19 +14,24 @@
       &middot; {{ student['department'] }} &middot; {{ student['faculty'] }} &middot; {{ student['level'] }} Level
     </div>
   </div>
-  <div class="dashboard-header-stats">
-    <div class="dashboard-stat">
-      <div class="dashboard-stat-label">Total Owed</div>
-      <div class="dashboard-stat-value">&#8358;{{ "{:,.2f}".format(total_owed) }}</div>
+  {# Bank-statement hierarchy: the Balance is the one figure a student
+     needs to act on, so it leads — Billed/Paid sit underneath it as
+     supporting context, not three equal-weight tiles. #}
+  <div class="dashboard-header-balance">
+    <div class="balance-hero-label">{{ 'Balance Due' if total_balance > 0 else 'Balance' }}</div>
+    <div class="balance-hero-value"
+         style="color: var({{ '--status-rejected-on-dark' if total_balance > 0 else '--status-confirmed-on-dark' }});">
+      &#8358;{{ "{:,.2f}".format(total_balance) }}
     </div>
-    <div class="dashboard-stat">
-      <div class="dashboard-stat-label">Total Paid</div>
-      <div class="dashboard-stat-value">&#8358;{{ "{:,.2f}".format(total_paid) }}</div>
-    </div>
-    <div class="dashboard-stat">
-      <div class="dashboard-stat-label">Balance</div>
-      <div class="dashboard-stat-value" style="color:{{ '#E8A0A0' if total_balance > 0 else '#9EE0BC' }};">
-        &#8358;{{ "{:,.2f}".format(total_balance) }}
+    <div class="balance-hero-sub">
+      <div class="balance-hero-sub-item">
+        <span class="balance-hero-sub-label">Billed</span>
+        <span class="balance-hero-sub-value">&#8358;{{ "{:,.2f}".format(total_owed) }}</span>
+      </div>
+      <div class="balance-hero-sub-divider"></div>
+      <div class="balance-hero-sub-item">
+        <span class="balance-hero-sub-label">Paid</span>
+        <span class="balance-hero-sub-value">&#8358;{{ "{:,.2f}".format(total_paid) }}</span>
       </div>
     </div>
   </div>

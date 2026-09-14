@@ -58,7 +58,7 @@ client = app.test_client()
 
 # Eze Ezekiel pays his School Fees in full; the other two never do.
 client.post("/auth/login", data={"role": "student", "login_id": "SUMAS/2022/0697", "password": "student123"})
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "Full Payment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "level": "400", "session": "2025/2026", "payment_plan": "Full Payment"})
 with app.app_context():
     db = get_db()
     invoice = db.execute("SELECT * FROM invoice WHERE student_id = 1").fetchone()

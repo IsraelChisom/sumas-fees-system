@@ -60,6 +60,10 @@
             {% endfor %}
           </select>
         </div>
+        <p id="feeEmptyNote" class="muted-note mt-2 mb-0" style="font-size:.82rem;" hidden>
+          No fee categories are set up yet for that level and session &mdash; try a different
+          combination, or contact the SUMAS Bursary office if you believe there should be one.
+        </p>
       </div>
 
       <div class="mb-4">
@@ -74,7 +78,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary w-100">
+      <button type="submit" id="generateBtn" class="btn btn-primary w-100">
         <i class="bi bi-receipt-cutoff me-1"></i> Generate Invoice
       </button>
 
@@ -87,11 +91,19 @@
     // above, rather than making the student read session/level out of each
     // option's label — the fee_category_id is still re-validated against
     // the chosen level/session server-side, so this is a UX aid only.
+    //
+    // Level and Session are now a fixed range (see student.py's SESSIONS
+    // and _max_level_for()) rather than derived from what fee categories
+    // happen to exist, so a combination with nothing set up for it yet is
+    // an expected, normal state — not an error — handled below rather
+    // than left as a silently-empty dropdown.
     (function () {
       var levelSelect = document.getElementById("level");
       var sessionSelect = document.getElementById("session");
       var feeSelect = document.getElementById("fee_category_id");
       var feeOptions = Array.prototype.slice.call(feeSelect.options);
+      var emptyNote = document.getElementById("feeEmptyNote");
+      var submitBtn = document.getElementById("generateBtn");
 
       function filterFeeOptions() {
         var level = levelSelect.value;
@@ -103,9 +115,12 @@
           opt.hidden = !matches;
           if (matches && firstVisible === null) firstVisible = opt;
         });
-        if (firstVisible) {
-          feeSelect.value = firstVisible.value;
-        }
+
+        var hasMatch = firstVisible !== null;
+        feeSelect.disabled = !hasMatch;
+        emptyNote.hidden = hasMatch;
+        submitBtn.disabled = !hasMatch;
+        feeSelect.value = hasMatch ? firstVisible.value : "";
       }
 
       levelSelect.addEventListener("change", filterFeeOptions);

@@ -333,3 +333,83 @@ reference's top utility bar — no real Bursary phone/email exists anywhere
 else in this project's copy (every other page says "contact the SUMAS
 Bursary office" without a specific number), and inventing one here would
 break the no-placeholder-content rule this brief itself sets.
+
+## Student account area: bank-statement hierarchy for Total Owed/Paid/Balance
+
+Requested explicitly: make the student "account section" — the dashboard's
+balance summary and the Outstanding Balance page — "look proper, like
+those Bank UI[s]." Also asked directly whether Total Owed / Total Paid /
+Balance are even needed there, or whether there's an alternative.
+
+They're kept — a fees system's core job is telling a student what they
+owe, so removing that entirely isn't the right answer — but the
+*presentation* changes to match how a real bank or credit-card statement
+actually weighs these three numbers: they are not equally important. The
+Balance is the one figure a student needs to act on; Billed and Paid are
+supporting context that explains *how* the balance got there. The old
+`.dashboard-header-stats` gave all three equal visual weight (three
+same-size tiles in a row) — a spreadsheet instinct, not a statement one.
+
+- **`.balance-hero-*`** (new, in both `.dashboard-header` and the new
+  `.statement-summary` on `student/balance.html`): a single large serif
+  figure for the Balance (labelled "Balance Due" while positive, "Balance"
+  once settled), colored with two new tokens —
+  `--status-confirmed-on-dark` / `--status-rejected-on-dark` — lighter
+  tints of the existing status green/red, needed because the plain
+  `--status-confirmed`/`--status-rejected` values are tuned for dark text
+  on a light background and lose contrast on the espresso-dark fill here.
+  Billed and Paid sit underneath as two small right-aligned figures
+  separated by a hairline divider, the way a bank app tucks "Money In /
+  Money Out" beneath the headline "Available Balance" — not removed, just
+  demoted to supporting detail.
+- **`student/balance.html`** gained a `.statement-summary` — the same
+  `.balance-hero-*` figures, centered in their own flat espresso band at
+  the top of the page (reusing the component rather than inventing a
+  second figure style) — above the existing per-category ledger table,
+  which stays as the itemized detail a statement always has beneath its
+  headline total. The table's own total row was left in place beneath the
+  ledger; a real statement shows the headline figure both at the top and
+  reconciled again at the bottom of the itemized detail, not just once.
+- No new "AI dashboard" tells: `.balance-hero-value` is plain flat text at
+  large size, not a donut/gauge/progress-ring (a specifically common
+  "bank UI, AI-generated" default this brief's avoid-list would also
+  reject if it were more explicit about it) — the "bank" feel comes from
+  typographic hierarchy and restraint, the same vocabulary already used
+  everywhere else in this app, not from a new chart widget.
+
+## Invoice-generation form: Level and Academic Session became real, independent selects
+
+Previously, the Level and Session selects on `student/invoices/generate`
+were *derived* from whatever fee categories happened to exist — so the
+Session list only ever showed sessions the admin had already configured
+fees for, and Level only showed values up to whatever the widest existing
+fee category happened to use. Requested: Session should offer a real
+run of academic years (2022/2023 through 2027/2028) regardless of what's
+been configured yet, and Level should go past 400 for departments whose
+course genuinely runs longer (Nursing Science to 500 Level was the
+concrete example given).
+
+Both are now independent of fee-category data entirely:
+
+- **Session** is `student.py`'s fixed `SESSIONS` tuple, always shown in
+  full. A session with nothing set up yet is not an error state — the
+  Fee Category select simply has nothing to offer for that combination
+  (see below), same as a real portal before the Bursary has opened fees
+  for an upcoming session.
+- **Level** is generated at request time as `100` up to that student's own
+  department's maximum, via `_max_level_for()` — which reads the new
+  `department_program` table (department → max_level) and falls back to
+  400 (`DEFAULT_MAX_LEVEL`) for any department with no row there. Admin
+  manages this from a new **Programmes** page (`/admin/programs`,
+  `admin/programs_list.html` / `program_form.html`, same
+  list-plus-add/edit-form idiom as Fee Categories) — deliberately only
+  needs an entry for a department whose course is NOT the common 400L
+  case, so seeding stayed to one row (Nursing Science → 500) rather than
+  enumerating every department.
+- Because Level/Session no longer guarantee a matching Fee Category
+  exists, `invoice_generate.html`'s filtering script now handles the
+  "nothing set up for this combination" case explicitly — the Fee
+  Category select and Generate button both disable, and a plain
+  `<p class="muted-note">` explains why, rather than leaving a select
+  with every `<option>` hidden and a stale, confusing blank value
+  (the previous script's actual behavior whenever this could happen).

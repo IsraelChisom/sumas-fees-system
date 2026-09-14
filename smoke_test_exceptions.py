@@ -50,7 +50,7 @@ client = app.test_client()
 # Student generates an invoice, then "pays" using the WRONG reference —
 # this is what lands the payment in the exception queue.
 client.post("/auth/login", data={"role": "student", "login_id": "SUMAS/2022/0697", "password": "student123"})
-client.post("/student/invoices/generate", data={"fee_category_id": 1, "session": "2025/2026", "payment_plan": "Full Payment"})
+client.post("/student/invoices/generate", data={"fee_category_id": 1, "level": "400", "session": "2025/2026", "payment_plan": "Full Payment"})
 with app.app_context():
     db = get_db()
     invoice = db.execute("SELECT * FROM invoice").fetchone()

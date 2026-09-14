@@ -7,7 +7,7 @@
 -- eye" workflow. See PROJECT_BRIEF.md for the full rationale.
 --
 -- Tables: student, administrator, fee_category, invoice, receipt,
--- unmatched_payment
+-- unmatched_payment, department_program
 
 PRAGMA foreign_keys = ON;
 
@@ -20,6 +20,20 @@ CREATE TABLE IF NOT EXISTS student (
     level            TEXT NOT NULL,
     password_hash    TEXT NOT NULL,
     date_registered  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- How far a department's own programme actually runs — most run to 400
+-- Level, but some (Nursing Science, for instance) run longer. Keyed by
+-- department name (matching student.department/fee_category.department's
+-- loose free-text convention — no separate `department` table exists
+-- elsewhere in this schema either) rather than a foreign key, since a
+-- department can exist here before or after any student/fee_category row
+-- mentions it by name. A department with no row here defaults to 400 in
+-- code (see `_max_level_for()` in app/student.py) — this table only needs
+-- an entry for a department whose programme is NOT the common 400L case.
+CREATE TABLE IF NOT EXISTS department_program (
+    department  TEXT PRIMARY KEY,
+    max_level   TEXT NOT NULL   -- e.g. '500' — the highest level students in this department reach
 );
 
 CREATE TABLE IF NOT EXISTS administrator (

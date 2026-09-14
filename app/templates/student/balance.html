@@ -12,6 +12,30 @@
   </a>
 </div>
 
+{# Statement summary: same bank-statement hierarchy as the dashboard header
+   — the Balance leads, Billed/Paid are supporting context beneath it —
+   reusing its .balance-hero-* components rather than inventing a second
+   figure style for the same three numbers. #}
+<div class="statement-summary">
+  <div class="balance-hero-label">{{ 'Balance Due' if total_balance > 0 else 'Balance' }}</div>
+  <div class="balance-hero-value"
+       style="color: var({{ '--status-rejected-on-dark' if total_balance > 0 else '--status-confirmed-on-dark' }});">
+    &#8358;{{ "{:,.2f}".format(total_balance) }}
+  </div>
+  <div class="balance-hero-sub">
+    <div class="balance-hero-sub-item">
+      <span class="balance-hero-sub-label">Total Billed</span>
+      <span class="balance-hero-sub-value">&#8358;{{ "{:,.2f}".format(total_owed) }}</span>
+    </div>
+    <div class="balance-hero-sub-divider"></div>
+    <div class="balance-hero-sub-item">
+      <span class="balance-hero-sub-label">Total Paid</span>
+      <span class="balance-hero-sub-value">&#8358;{{ "{:,.2f}".format(total_paid) }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-label mb-2">By Fee Category</div>
 <div class="table-card">
   <table class="table mb-0">
     <thead>

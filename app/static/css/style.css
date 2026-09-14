@@ -42,6 +42,12 @@
   --status-rejected:        #c53030;
   --status-rejected-bg:     #fbe8e8;
   --status-rejected-border: #f2b8b8;
+  /* Lighter tints of the same two status colors, for text on an espresso-
+     dark fill (.dashboard-header, .statement-summary) — the plain
+     --status-confirmed/--status-rejected values above are tuned for dark
+     text on a light background and lose contrast on a dark one. */
+  --status-confirmed-on-dark: #9ee0bc;
+  --status-rejected-on-dark:  #e8a0a0;
 
   --font-heading: "Lora", Georgia, "Times New Roman", serif;
   --font-body:    "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
@@ -725,21 +731,65 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
   color: rgba(245, 239, 230, .7);
 }
 .dashboard-header-tag .reg-number { color: var(--gold); font-weight: 600; }
-.dashboard-header-stats { display: flex; gap: 2.25rem; }
-.dashboard-stat-label {
+
+/* Bank-statement hierarchy, not three equally-weighted figures: the
+   Balance is the one number a student needs to act on, so it's the
+   dominant figure — Billed/Paid are supporting context underneath it,
+   the way a bank app leads with "Available Balance" and tucks the
+   transaction totals in smaller type beneath. */
+.dashboard-header-balance { text-align: right; }
+.balance-hero-label {
   font-family: var(--font-body);
-  font-size: .64rem;
+  font-size: .68rem;
   letter-spacing: .08em;
   text-transform: uppercase;
   color: rgba(245, 239, 230, .55);
   margin-bottom: .3rem;
 }
-.dashboard-stat-value {
+.balance-hero-value {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 1.3rem;
-  color: #fff;
+  font-size: clamp(1.6rem, 1.4vw + 1.1rem, 2.2rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
+.balance-hero-sub {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .85rem;
+  margin-top: .7rem;
+}
+.balance-hero-sub-item { display: flex; flex-direction: column; align-items: flex-end; }
+.balance-hero-sub-label {
+  font-family: var(--font-body);
+  font-size: .6rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, .45);
+  margin-bottom: .1rem;
+}
+.balance-hero-sub-value {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .82rem;
+  color: rgba(245, 239, 230, .85);
+  font-variant-numeric: tabular-nums;
+}
+.balance-hero-sub-divider { width: 1px; height: 22px; background: rgba(245, 239, 230, .2); }
+
+/* Standalone statement summary (student/balance.html) — the same
+   .balance-hero-* figures as the dashboard header, just centered in their
+   own flat espresso band instead of sitting inside .dashboard-header. */
+.statement-summary {
+  background: var(--espresso);
+  border-radius: var(--radius-sm);
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.statement-summary .balance-hero-value { font-size: clamp(1.9rem, 2vw + 1.2rem, 2.6rem); }
+.statement-summary .balance-hero-sub { justify-content: center; }
 
 .balance-breakdown {
   border: 1px solid var(--border);
@@ -762,7 +812,9 @@ a, .btn, .nav-link, .qa-item, .table-hover tbody tr {
 
 @media (max-width: 767.98px) {
   .dashboard-header { flex-direction: column; align-items: flex-start; }
-  .dashboard-header-stats { width: 100%; justify-content: space-between; gap: 1rem; }
+  .dashboard-header-balance { text-align: left; width: 100%; }
+  .balance-hero-sub { justify-content: flex-start; }
+  .balance-hero-sub-item { align-items: flex-start; }
 }
 
 .section-label {

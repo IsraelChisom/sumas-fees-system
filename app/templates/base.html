@@ -72,6 +72,11 @@
             <i class="bi bi-cash-coin"></i> Fees
           </a>
 
+          <a class="nav-link {{ 'active' if request.endpoint in ['admin.list_programs', 'admin.add_program', 'admin.edit_program'] }}"
+             href="{{ url_for('admin.list_programs') }}">
+            <i class="bi bi-mortarboard"></i> Programmes
+          </a>
+
           <a class="nav-link {{ 'active' if request.endpoint in ['admin.list_unmatched'] }}"
              href="{{ url_for('admin.list_unmatched') }}">
             <i class="bi bi-exclamation-triangle"></i> Unmatched Payments

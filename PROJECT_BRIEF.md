@@ -106,8 +106,8 @@ summary of the mechanics:
 
 ## Database schema (`schema.sql`)
 
-Six tables: `student`, `administrator`, `fee_category`, `invoice`, `receipt`,
-`unmatched_payment`.
+Seven tables: `student`, `administrator`, `fee_category`, `invoice`, `receipt`,
+`unmatched_payment`, `department_program`.
 
 Important business rule for `fee_category`: `category_name` is one of
 `'School Fees'`, `'Departmental Fee'`, `'Faculty Fee'`.
@@ -132,6 +132,26 @@ invoice a level other than their current one — e.g. a fee carried over from
 an earlier session — with the Level and Academic Session fields filtering the
 Fee Category options client-side and the chosen category re-validated
 server-side against whatever level/session was actually submitted.
+
+On that same form, Level and Academic Session are **not** derived from
+existing `fee_category` rows at all — they're independent, always-offered
+ranges, since a real portal shows every session/level a student could
+plausibly need rather than only what's already been configured:
+- Academic Session is `student.py`'s fixed `SESSIONS` tuple (currently
+  `2022/2023` through `2027/2028`).
+- Level runs `100` up to that student's own department's maximum, via
+  `_max_level_for()`, which reads the new **`department_program`** table
+  (`department` TEXT PRIMARY KEY, `max_level` TEXT) and falls back to
+  `DEFAULT_MAX_LEVEL = 400` for any department with no row there — most
+  departments run the common 4-year course, so the table only needs an
+  entry for one that runs longer (seeded: Nursing Science → 500). Admin
+  manages this from **Programmes** (`/admin/programs`, `app/admin.py`),
+  the same list-plus-add/edit-form pattern as Fee Categories.
+
+A level/session combination with no matching fee category yet is an
+expected, normal state under this model (not an error) — the Fee Category
+select and Generate button both disable, with an explanatory note, rather
+than silently showing an empty dropdown.
 
 **Known gotcha already fixed once:** SQLite's `UNIQUE` constraint does NOT catch
 duplicates when the differentiating column is NULL (NULL ≠ NULL in SQL). See
