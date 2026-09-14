@@ -88,6 +88,13 @@ dashboard.
 Respect `prefers-reduced-motion` — skip animations and show the end state
 instantly if a user has that setting on.
 
+*(Revised by "Public homepage follow-up 4" below: the public homepage's
+hero now plays a once-only, non-repeating entrance animation on first
+load, and its campus photo gallery has a contained hover-zoom on each
+photo. Both are still tightly scoped exceptions — one-shot on load, or
+tied to an explicit hover — not the ambient/scroll-triggered motion this
+brief otherwise rules out.)*
+
 ### Framework
 
 Use Bootstrap 5 via CDN for the underlying structure (navbars, forms,
@@ -637,3 +644,66 @@ rounded, softer-shadowed look in one pass, with no template changes:
   `.home-closing`, `.site-footer`). A full-bleed section and a contained
   card are different shapes in the reference page too; rounding the
   former would look like a mistake, not a style.
+
+## Public homepage follow-up 4: a hero entrance animation, and a real campus photo gallery
+
+Two requests: give the homepage some animation, and bring back real
+photographs of the campus (a single campus photo — `sumas-campus.jpg` —
+had been deliberately dropped from the hero during the Clinical Ledger
+rebuild; see follow-up 3) "to give it a rich feeling."
+
+**The hero entrance.** The Motion section above (and the file header in
+`style.css`) commits to *deliberate, purposeful* motion tied to something
+the user did — nothing decorative or automatic. A page-load animation is
+a genuine exception to "tied to something the user did," so it earns
+tight limits rather than being waved through: it plays exactly once per
+load, never re-triggers on scroll or revisit, and is short (under a
+second, staggered ~80ms per element). The hero's eyebrow, heading,
+description, buttons, and stat row rise and fade in with a short stagger
+(`.hero-enter`, `--enter-delay` per element); the mock-invoice ticket
+gets its own variant (`.ticket-enter`) that settles into its existing
+1.2° resting tilt rather than a plain straight-on landing, so the motion
+reinforces the "ticket" object rather than just being a generic
+fade-up applied uniformly. Below 991.98px the ticket loses its resting
+tilt entirely (see the existing mobile hero rule), so its entrance drops
+the rotation too rather than animating a tilt the page never settles
+into. `prefers-reduced-motion` is already handled globally at the bottom
+of `style.css` (forces near-zero animation duration), so no separate
+override was needed — reduced-motion visitors land on the fully-visible
+end state almost instantly instead of seeing the rise.
+
+**The campus gallery.** Rather than reinstating the single dropped hero
+photo, this pulls from four *new* real photographs the project owner
+supplied from the school's own gallery: the Faculty of Natural & Applied
+Sciences building, the computer laboratory, a lecture hall, and the
+library shelving. A new section (`#campus`, "On Campus") sits between
+Roles and Fee Structure — a deliberate placement: it's a grounding,
+human/place moment breaking up the run of functional, data-heavy
+sections (fees table, trust grid) rather than being bolted onto the
+hero. The layout is an asymmetric grid (one larger feature photo + three
+supporting ones, `.campus-gallery`/`.campus-photo`) so it reads as a
+curated set instead of a uniform stock-photo strip, stacking to a single
+column below 767.98px. Each photo carries a mono, pill-shaped caption
+chip (`.campus-photo-tag`) over its bottom-left corner instead of a bare
+`alt`-only image, keeping the same reference/ticket typographic
+vocabulary as the rest of the page. The only motion on the photos
+themselves is a slow (600ms), contained zoom on hover inside a fixed,
+`overflow: hidden` frame — an editorial-gallery convention distinct from
+the "no hover-lift" avoid-list, which is specifically about cards
+floating up with a shadow bloom; nothing here lifts, tilts, or casts a
+new shadow on hover.
+
+**Left out on purpose.** The project owner also supplied three other
+photographs from the same gallery visit — a staff/visitor group photo, a
+corridor walk-through, and an outdoor group shot — all with identifiable
+faces of named individuals (university officials and guests) in what
+were clearly official-visit photos. Those were deliberately excluded
+from the public gallery: publishing recognizable people on a public
+marketing page isn't something to do by default without their
+individual consent, and the four facility photos already used (building,
+lab, lecture hall, library) make the stronger "this is a real, working
+campus" case anyway — no people were needed to land that point.
+
+The topbar's in-page nav and the footer's Quick Links both gained a
+"Campus" entry pointing at `#campus`, matching the existing pattern
+for every other homepage section.

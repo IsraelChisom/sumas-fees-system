@@ -11,6 +11,7 @@
     <nav class="site-topbar-nav">
       <a href="#how-it-works">How it works</a>
       <a href="#roles">For you</a>
+      <a href="#campus">Campus</a>
       <a href="#fees">Fee structure</a>
       <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
         <i class="bi bi-box-arrow-in-right me-1"></i> Log In
@@ -25,27 +26,27 @@
 <section class="home-hero-section">
   <div class="home-hero-grid">
     <div>
-      <span class="home-eyebrow">State University of Medical &amp; Applied Sciences</span>
-      <h1 class="home-hero-title">Pay once.<br>Prove it <em>forever</em>.</h1>
-      <p class="home-hero-desc">
+      <span class="home-eyebrow hero-enter" style="--enter-delay:0s">State University of Medical &amp; Applied Sciences</span>
+      <h1 class="home-hero-title hero-enter" style="--enter-delay:.08s">Pay once.<br>Prove it <em>forever</em>.</h1>
+      <p class="home-hero-desc hero-enter" style="--enter-delay:.16s">
         Generate a fee invoice, pay against its reference through the payment gateway, and get
         an official receipt the instant payment clears — automatically matched, automatically
         issued. No queue at the Bursary, no admin sign-off in the normal path.
       </p>
-      <div class="home-hero-actions">
+      <div class="home-hero-actions hero-enter" style="--enter-delay:.24s">
         <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
           <i class="bi bi-box-arrow-in-right me-1"></i> Log In
         </a>
         <a href="#how-it-works" class="btn btn-outline-primary btn-lg">See how it works</a>
       </div>
-      <div class="home-hero-meta">
+      <div class="home-hero-meta hero-enter" style="--enter-delay:.32s">
         <div><strong>0</strong>admin steps for a normal payment</div>
         <div><strong>12-digit</strong>unique payment reference, every invoice</div>
         <div><strong>2022&ndash;2028</strong>sessions supported</div>
       </div>
     </div>
 
-    <div class="home-ticket">
+    <div class="home-ticket ticket-enter" style="--enter-delay:.3s">
       <div class="home-ticket-row">
         <span class="home-ticket-brand">Fees Invoice</span>
         <span class="badge rounded-pill badge-status-pending">Awaiting Payment</span>
@@ -132,6 +133,36 @@
         <li><span class="role-num">04</span><span>Generate a departmental payment-status report &mdash; CSV, print, or PDF.</span></li>
       </ul>
     </div>
+  </div>
+</section>
+
+<section id="campus" class="home-section">
+  <div class="home-section-head">
+    <span class="home-eyebrow">On Campus</span>
+    <h2>A real university, not a demo</h2>
+    <p>SUMAS's campus in Igbo-Eno, Enugu State &mdash; where every invoice this system generates is actually settled.</p>
+  </div>
+  <div class="campus-gallery">
+    <figure class="campus-photo campus-photo-feature">
+      <img src="{{ url_for('static', filename='images/campus/campus-faculty-building.jpg') }}"
+           alt="Faculty of Natural and Applied Sciences building on the SUMAS campus" loading="lazy">
+      <figcaption class="campus-photo-tag">Faculty of Natural &amp; Applied Sciences</figcaption>
+    </figure>
+    <figure class="campus-photo">
+      <img src="{{ url_for('static', filename='images/campus/campus-computer-lab.jpg') }}"
+           alt="Computer laboratory at SUMAS" loading="lazy">
+      <figcaption class="campus-photo-tag">Computer Laboratory</figcaption>
+    </figure>
+    <figure class="campus-photo">
+      <img src="{{ url_for('static', filename='images/campus/campus-lecture-hall.jpg') }}"
+           alt="Lecture hall at SUMAS" loading="lazy">
+      <figcaption class="campus-photo-tag">Lecture Hall</figcaption>
+    </figure>
+    <figure class="campus-photo">
+      <img src="{{ url_for('static', filename='images/campus/campus-library.jpg') }}"
+           alt="Library shelving at SUMAS, organized by department" loading="lazy">
+      <figcaption class="campus-photo-tag">Library</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -287,6 +318,7 @@
         <div class="site-footer-heading">Quick Links</div>
         <a href="{{ url_for('auth.login') }}">Log In</a>
         <a href="#how-it-works">How It Works</a>
+        <a href="#campus">Campus</a>
         <a href="#fees">Fee Structure</a>
         <a href="#faq">FAQ</a>
       </div>
