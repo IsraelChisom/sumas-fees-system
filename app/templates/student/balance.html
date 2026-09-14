@@ -53,9 +53,9 @@
       <tr>
         <td class="fw-semibold">{{ row['category_name'] }}</td>
         <td class="text-muted" style="font-size:.85rem;">{{ row['session'] }}</td>
-        <td class="text-end" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['amount_owed']) }}</td>
-        <td class="text-end" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['amount_paid']) }}</td>
-        <td class="text-end">
+        <td class="text-end data-mono" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['amount_owed']) }}</td>
+        <td class="text-end data-mono" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['amount_paid']) }}</td>
+        <td class="text-end data-mono">
           <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(row['balance']) }}</span>
         </td>
         <td>
@@ -79,9 +79,9 @@
     <tfoot>
       <tr style="border-top: 2px solid var(--ink);">
         <td colspan="2" class="fw-semibold" style="font-family:var(--font-heading);">Total</td>
-        <td class="text-end fw-semibold" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(total_owed) }}</td>
-        <td class="text-end fw-semibold" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(total_paid) }}</td>
-        <td class="text-end fw-semibold" style="color:var(--espresso); font-size:1rem;">&#8358;{{ "{:,.2f}".format(total_balance) }}</td>
+        <td class="text-end fw-semibold data-mono" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(total_owed) }}</td>
+        <td class="text-end fw-semibold data-mono" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(total_paid) }}</td>
+        <td class="text-end fw-semibold data-mono" style="color:var(--espresso); font-size:1rem;">&#8358;{{ "{:,.2f}".format(total_balance) }}</td>
         <td></td>
       </tr>
     </tfoot>

@@ -36,9 +36,9 @@
         </td>
         <td class="text-muted" style="font-size:.85rem;">{{ inv['payment_plan'] }}</td>
         <td class="text-end">
-          <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(inv['amount']) }}</span>
+          <span class="fw-semibold data-mono" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(inv['amount']) }}</span>
         </td>
-        <td style="font-size:.83rem; font-family:var(--font-body); color:var(--muted);">{{ inv['payment_reference'] }}</td>
+        <td class="data-mono" style="font-size:.83rem; color:var(--muted);">{{ inv['payment_reference'] }}</td>
         <td class="text-muted" style="font-size:.83rem;">{{ inv['date_generated'] }}</td>
         <td>
           {% if inv['status'] == 'Paid' %}

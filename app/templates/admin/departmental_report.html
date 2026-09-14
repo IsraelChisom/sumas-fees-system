@@ -72,12 +72,12 @@
       {% for row in rows %}
       <tr>
         <td class="fw-semibold">{{ row['full_name'] }}</td>
-        <td class="text-muted" style="font-size:.85rem;">{{ row['reg_number'] }}</td>
+        <td class="text-muted data-mono" style="font-size:.85rem;">{{ row['reg_number'] }}</td>
         <td>{{ row['department'] }}</td>
         <td class="text-muted" style="font-size:.85rem;">{{ row['level'] }}</td>
-        <td class="text-end" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['total_owed']) }}</td>
-        <td class="text-end" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['total_paid']) }}</td>
-        <td class="text-end">
+        <td class="text-end data-mono" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['total_owed']) }}</td>
+        <td class="text-end data-mono" style="color:var(--muted);">&#8358;{{ "{:,.2f}".format(row['total_paid']) }}</td>
+        <td class="text-end data-mono">
           <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(row['balance']) }}</span>
         </td>
         <td>

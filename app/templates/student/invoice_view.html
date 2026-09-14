@@ -47,7 +47,7 @@
 
   <div class="print-field-grid">
     <div class="print-field"><div class="print-field-label">Student</div><div class="print-field-value">{{ student['full_name'] }}</div></div>
-    <div class="print-field"><div class="print-field-label">Reg. Number</div><div class="print-field-value">{{ student['reg_number'] }}</div></div>
+    <div class="print-field"><div class="print-field-label">Reg. Number</div><div class="print-field-value data-mono">{{ student['reg_number'] }}</div></div>
     <div class="print-field"><div class="print-field-label">Department</div><div class="print-field-value">{{ student['department'] }}</div></div>
     <div class="print-field"><div class="print-field-label">Faculty</div><div class="print-field-value">{{ student['faculty'] }}</div></div>
     <div class="print-field"><div class="print-field-label">Level</div><div class="print-field-value">{{ invoice['level'] or student['level'] }} Level</div></div>
@@ -61,6 +61,8 @@
     <div class="print-field-label">Amount Payable</div>
     <div class="print-amount">&#8358;{{ "{:,.2f}".format(invoice['amount']) }}</div>
   </div>
+
+  <hr class="ledger-divider">
 
   <div class="print-reference-block">
     <div class="print-field-label">Payment Reference</div>

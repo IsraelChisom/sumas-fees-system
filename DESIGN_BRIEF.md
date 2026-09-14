@@ -53,6 +53,11 @@ dashboard.
   letterhead feel appropriate to a university document
 - **Body, data, and tables:** "IBM Plex Sans" (via Google Fonts)
 
+  **Superseded — see "The Clinical Ledger rebrand" near the end of this
+  file.** Headings are now "Fraunces", body is "Archivo", and a third
+  face, "JetBrains Mono", was added for every reference number, amount,
+  and code. The color palette below is unchanged and still authoritative.
+
 ### Layout and motifs — grounded in the subject matter (fees, receipts, official records)
 
 - The receipt page should visually resemble an actual official
@@ -419,3 +424,79 @@ Both are now independent of fee-category data entirely:
   `<p class="muted-note">` explains why, rather than leaving a select
   with every `<option>` hidden and a stale, confusing blank value
   (the previous script's actual behavior whenever this could happen).
+
+## The Clinical Ledger rebrand
+
+A test run of the `/anthropic-skills:frontend-design` skill was asked for,
+explicitly framed as a throwaway exploration and deliberately given no
+brand constraints, to see what an unconstrained pass would produce for
+this project. It came back as a distinct concept — "Clinical Ledger":
+grounded in what SUMAS's fees system actually is (a medical-sciences
+university's payment/receipt system), built around Fraunces, Archivo and
+JetBrains Mono, a deep clinical green, and a set of motifs literal to
+receipts and payment references — a perforated dashed divider standing in
+for a torn ticket edge, monospace treatment for every reference number
+and amount, small mono pill tags. The reaction was strongly positive, and
+it was asked for across the whole application — on the explicit condition
+that the brand's actual brown/gold stayed, not the test's green.
+
+That's exactly what changed and what didn't:
+
+- **Unchanged:** every color token in `style.css` — `--espresso`,
+  `--gold`, `--ivory`, `--paper`, `--border`, all three `--status-*`
+  triads. The "brand color is brown" instruction was taken literally:
+  this is a typography and motif rebuild on the existing palette, not a
+  recolor. `--accent-soft` (new) is just the existing gold-tinted
+  `--bs-primary-bg-subtle` value given a semantic name for the new
+  mono-chip components that needed it.
+- **Typeface swap:** `--font-heading` (Fraunces) and `--font-body`
+  (Archivo) replace Lora/IBM Plex Sans at the token level in
+  `app/static/css/style.css`, and `base.html`'s Google Fonts `<link>`
+  was updated to match — because nearly every heading and body element
+  in this codebase already read its font from those two variables
+  rather than a hardcoded family name, this one change retyped the
+  entire application in a single edit. A third token, `--font-mono`
+  (JetBrains Mono), is new — this system runs on payment references and
+  account numbers, so a monospace face earns a real structural role here,
+  not decoration.
+- **New "Ledger Motifs" component layer** (`style.css`, section 3b):
+  - `.data-mono` — the monospace/tabular-nums utility, applied to every
+    reference number, registration number, and table amount across the
+    app (`invoices_list.html`, `payment_search.html`, `students_list.html`,
+    `departmental_report.html`, `unmatched_list.html`, `fees_list.html`,
+    `balance.html`, the dashboard's reg-number tag and
+    `.balance-breakdown-amount`). A large *display* amount — the print
+    documents' "Amount Payable", `.balance-hero-value`,
+    `.dashboard-stat-value` — deliberately stays in the Fraunces heading
+    face instead: the same distinction the test page drew between its
+    large serif `.ticket-amount` and its small mono `.ticket-ref-value`,
+    carried through consistently rather than making everything numeric
+    monospace indiscriminately.
+  - `.ledger-divider` / `.ref-chip` — the perforated dashed rule and
+    gold-tinted reference chip. Applied to `invoice_view.html`'s and
+    `receipt_view.html`'s print documents: `.print-reference-block` now
+    sits on `--accent-soft` with a `.ledger-divider` above it, and
+    `.print-reference` itself is mono — the same "torn ticket stub"
+    reading the test page's hero mock invoice had, now on the real
+    document.
+  - `.mono-tag` / the rebuilt `.how-steps` — the homepage's "How It
+    Works" is a genuine three-step sequence, so a `Step 0X` tag is
+    honest here (unlike a numbered badge on something that isn't
+    actually a sequence, still avoided everywhere else). Rebuilt from a
+    vertical list with a large gold numeral into a three-column strip
+    with dashed dividers between steps and a small mono `Step 0X` chip
+    per step — the test page's ticket-tape flow, reapplied.
+- **Real assets, not the test page's placeholder mark:** the test page
+  used an abstract "SU" ticket-notch mark in its top bar since it had no
+  asset access at the time. The real app already used the actual SUMAS
+  crest and the real campus photograph (`sumas-crest.png`,
+  `sumas-campus.jpg` — see the earlier homepage follow-ups above) on
+  every page that carries a brand mark or hero image; nothing needed to
+  change there, so none of the rebuild introduced a new placeholder mark.
+- **Deliberately not touched:** the ReportLab-generated PDFs
+  (`app/pdf.py`) still use ReportLab's built-in fonts, not Fraunces/
+  Archivo/JetBrains Mono — those aren't web fonts and would need actual
+  TTF files registered with `reportlab.pdfbase.ttfonts` to match. The
+  browser-printed HTML versions of every invoice/receipt/report (the
+  default view) carry the full rebrand; only the "Download PDF" button's
+  output doesn't yet. A known follow-up, not an oversight.

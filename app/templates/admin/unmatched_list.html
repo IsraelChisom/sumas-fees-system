@@ -29,9 +29,9 @@
     <tbody>
       {% for row in unmatched %}
       <tr>
-        <td style="font-size:.85rem; font-family:var(--font-body);">{{ row['reference_received'] }}</td>
+        <td class="data-mono" style="font-size:.85rem;">{{ row['reference_received'] }}</td>
         <td class="text-end">
-          <span class="fw-semibold" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(row['amount_received']) }}</span>
+          <span class="fw-semibold data-mono" style="color:var(--espresso);">&#8358;{{ "{:,.2f}".format(row['amount_received']) }}</span>
         </td>
         <td class="text-muted" style="font-size:.83rem;">{{ row['date_received'] }}</td>
         <td class="text-end">
